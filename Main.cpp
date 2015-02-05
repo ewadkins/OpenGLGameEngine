@@ -9,8 +9,6 @@
 
 #include "Main.h"
 
-GLFWwindow* window;
-
 void error_callback(int error, const char* description)
 
 {
@@ -23,21 +21,14 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action,
 		glfwSetWindowShouldClose(window, GL_TRUE);
 }
 
-void initGLFW() {
-	//Initialize GLFW, if it fails, then exit
-	if (!glfwInit()) {
-		exit(EXIT_FAILURE);
-	}
+void framebuffer_size_callback(GLFWwindow* window, int width, int height)
+{
+    glViewport(0, 0, width, height);
 }
 
-void createErrorListener() {
-	//Creates error listener
-	glfwSetErrorCallback(error_callback);
-}
-
-void setupWindow() {
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
+GLFWwindow* setupWindow(GLFWwindow *window) {
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
@@ -56,6 +47,8 @@ void setupWindow() {
 
 	//Creates an OpenGL context in the window
 	glfwMakeContextCurrent(window);
+
+	return window;
 }
 
 void setupDisplay() {
@@ -65,47 +58,50 @@ void setupDisplay() {
 	glClearColor(0, 0, 0, 1);
 }
 
-void createKeyListener() {
-	//Creates key listener
-	glfwSetKeyCallback(window, key_callback);
-}
+void OpenGLApplication::initialize() {
+	//Initialize GLFW, if it fails, then exit
+	if ( !glfwInit() )
+	{
+		fprintf(stderr, "Failed to initialize GLFW\n");
+		exit(EXIT_FAILURE);
+	}
 
-void initGLEW() {
+	//Creates error listener
+	glfwSetErrorCallback(error_callback);
+
+	_window = setupWindow(_window);
+
+	//Creates key callback
+	glfwSetKeyCallback(_window, key_callback);
+	//Creates framebuffer callback
+	glfwSetFramebufferSizeCallback(_window, framebuffer_size_callback);
+
 	//Initialize GLEW
 	glewExperimental = GL_TRUE;
 	glewInit();
+
+	setupDisplay();
+
+
 }
 
-int main() {
+int OpenGLApplication::start() {
 
-	/*
-	 // Specify prototype of function
-	 typedef void (*GENBUFFERS) (GLsizei, GLuint*);
+	initialize();
 
-	 GENBUFFERS glGenBuffers = (GENBUFFERS)glfwGetProcAddress("glGenBuffers");
-
-	 // Call function as normal
-	 GLuint buffer;
-	 glGenBuffers(1, &buffer);
-	 */
-
-	initGLFW();
-	createErrorListener();
-	setupWindow();
-	setupDisplay();
-	createKeyListener();
-	initGLEW();
+	// Get info of GPU and supported OpenGL version
+	printf("Renderer: %s\n", glGetString(GL_RENDERER));
+	printf("OpenGL version supported %s\n", glGetString(GL_VERSION));
 
 	//Game loop, while window close is not requested
-	while (!glfwWindowShouldClose(window)) {
+	while (!glfwWindowShouldClose(_window)) {
 
 		float ratio;
 		int width, height;
 
-		glfwGetFramebufferSize(window, &width, &height);
+		glfwGetFramebufferSize(_window, &width, &height);
 		ratio = width / (float) height;
 
-		glViewport(0, 0, width, height);
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		glMatrixMode(GL_PROJECTION);
@@ -131,10 +127,10 @@ int main() {
 		// This will identify our vertex buffer
 		GLuint vbo;
 
-		// Generate 1 buffer, put the resulting identifier in vertexbuffer
+		// Generate 1 buffer, put the resulting identifier in vbo
 		glGenBuffers(1, &vbo);
 
-		// The following commands will talk about our 'vertexbuffer' buffer
+		// The following commands will talk about our 'vbo' buffer
 		glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
 		// Give our vertices to OpenGL.
@@ -159,7 +155,7 @@ int main() {
 		////
 
 		//Swap buffers
-		glfwSwapBuffers(window);
+		glfwSwapBuffers(_window);
 
 		//Processes the events that have been received, then returns
 		glfwPollEvents();
@@ -167,10 +163,14 @@ int main() {
 		//glfwWaitEvents();
 	}
 
-	glfwDestroyWindow(window);
-
 	glfwTerminate();
 
 	return 0;
 
+}
+
+int main()
+{
+	OpenGLApplication _application;
+	return _application.start();
 }

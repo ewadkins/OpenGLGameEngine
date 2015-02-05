@@ -15,10 +15,15 @@
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 
-class Main {
+class OpenGLApplication {
 public:
-	Main();
-	virtual ~Main();
+	OpenGLApplication(){}
+	virtual ~OpenGLApplication(){}
+	int start();
+private:
+	void initialize();
+	GLFWwindow* _window;
+
 };
 
 #endif /* MAIN_H_ */
