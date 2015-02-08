@@ -4,13 +4,16 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 CPP_SRCS += \
-../Main.cpp 
+../Main.cpp \
+../ShaderProgram.cpp 
 
 OBJS += \
-./Main.o 
+./Main.o \
+./ShaderProgram.o 
 
 CPP_DEPS += \
-./Main.d 
+./Main.d \
+./ShaderProgram.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes

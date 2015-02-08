@@ -17,59 +17,76 @@ void error_callback(int error, const char* description)
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action,
 		int mods) {
+	if (action == GLFW_PRESS)
+		std::cout << "Key pressed " << char(key) << std::endl;
+	if (action == GLFW_RELEASE)
+		std::cout << "Key released " << char(key) << std::endl;
+	if (action == GLFW_REPEAT)
+		std::cout << "Key repeated " << char(key) << std::endl;
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, GL_TRUE);
 }
 
-void framebuffer_size_callback(GLFWwindow* window, int width, int height)
-{
-    glViewport(0, 0, width, height);
+void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
+	glViewport(0, 0, width, height);
 }
 
-GLFWwindow* setupWindow(GLFWwindow *window) {
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+void OpenGLApplication::setupWindow() {
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, VERSION_MAJOR);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, VERSION_MINOR);
+	//Make it so you can't resize the window
 	glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
-
-	//For windowed application
-	window = glfwCreateWindow(800, 600, "OpenGL", nullptr, nullptr);
-	//For fullscreen application
-	//GLFWwindow* window = glfwCreateWindow(800, 600, "OpenGL", glfwGetPrimaryMonitor(), nullptr);
+	if (!_fullScreen)
+		_window = glfwCreateWindow(_screenSizeX, _screenSizeY,
+				"OpenGL Tutorial", NULL, NULL);
+	else
+		_window = glfwCreateWindow(_screenSizeX, _screenSizeY,
+				"OpenGL Application", glfwGetPrimaryMonitor(), NULL);
 
 	//If window creation fails, then exit
-	if (!window) {
-		glfwTerminate();
+	if (!_window) {
+		std::string s(
+				"Window creation failed. Can your hardware handle OpenGL version "
+						+ std::to_string(VERSION_MAJOR) + "."
+						+ std::to_string(VERSION_MAJOR) + "?");
+		throw std::runtime_error(s.c_str());
 		exit(EXIT_FAILURE);
 	}
 
 	//Creates an OpenGL context in the window
-	glfwMakeContextCurrent(window);
+	glfwMakeContextCurrent(_window);
 
-	return window;
 }
 
-void setupDisplay() {
-    glClearDepth(1.0f);                      // Depth Buffer Setup
-    glEnable(GL_DEPTH_TEST);              // Enables Depth Testing
-    glDepthFunc(GL_LEQUAL);               // The Type Of Depth Testing To Do
+void OpenGLApplication::setupDisplay() {
+	//Depth buffer setup
+	glClearDepth(1.0f);
+	//Enables depth testing
+	glEnable(GL_DEPTH_TEST);
+	//Type of depth testing
+	glDepthFunc(GL_LEQUAL);
 	glClearColor(0, 0, 0, 1);
+}
+
+void OpenGLApplication::setupShaders() {
+	shaderProgram = new ShaderProgram("shaders/vertex.glsl", "shaders/fragment.glsl");
+	shaderProgram->use();
 }
 
 void OpenGLApplication::initialize() {
 	//Initialize GLFW, if it fails, then exit
-	if ( !glfwInit() )
-	{
-		fprintf(stderr, "Failed to initialize GLFW\n");
+	if (!glfwInit()) {
+		throw std::runtime_error("GLFW failed to initialize");
 		exit(EXIT_FAILURE);
 	}
 
 	//Creates error listener
 	glfwSetErrorCallback(error_callback);
 
-	_window = setupWindow(_window);
+	//Creates and setups the window
+	setupWindow();
 
 	//Creates key callback
 	glfwSetKeyCallback(_window, key_callback);
@@ -78,20 +95,18 @@ void OpenGLApplication::initialize() {
 
 	//Initialize GLEW
 	glewExperimental = GL_TRUE;
-	glewInit();
+	if (glewInit() != GLEW_OK) {
+		throw std::runtime_error("GLEW failed to initialize");
+		exit(EXIT_FAILURE);
+	}
 
 	setupDisplay();
 
+	setupShaders();
 
 }
 
-int OpenGLApplication::start() {
-
-	initialize();
-
-	// Get info of GPU and supported OpenGL version
-	printf("Renderer: %s\n", glGetString(GL_RENDERER));
-	printf("OpenGL version supported %s\n", glGetString(GL_VERSION));
+void OpenGLApplication::gameLoop() {
 
 	//Game loop, while window close is not requested
 	while (!glfwWindowShouldClose(_window)) {
@@ -118,11 +133,8 @@ int OpenGLApplication::start() {
 		//FIXME Not drawing the triangle
 
 		// An array of 3 vectors which represents 3 vertices
-		static const GLfloat vertices[] = {
-				-1.0f, -1.0f, 0.0f,
-				1.0f, -1.0f, 0.0f,
-				0.0f, 1.0f, 0.0f,
-		};
+		static const GLfloat vertices[] = { -1.0f, -1.0f, 0.0f, 1.0f, -1.0f,
+				0.0f, 0.0f, 1.0f, 0.0f, };
 
 		// This will identify our vertex buffer
 		GLuint vbo;
@@ -134,7 +146,8 @@ int OpenGLApplication::start() {
 		glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
 		// Give our vertices to OpenGL.
-		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices,
+		GL_STATIC_DRAW);
 
 		// 1rst attribute buffer : vertices
 		glEnableVertexAttribArray(0);
@@ -162,6 +175,20 @@ int OpenGLApplication::start() {
 		//Puts the thread to sleep until another event is received, used when no need to update continuously
 		//glfwWaitEvents();
 	}
+}
+
+int OpenGLApplication::start() {
+
+	initialize();
+
+	// Get info of GPU and supported OpenGL version
+	std::cout << "OpenGL version: " << glGetString(GL_VERSION) << std::endl;
+	std::cout << "GLSL version: " << glGetString(GL_SHADING_LANGUAGE_VERSION)
+			<< std::endl;
+	std::cout << "Vendor: " << glGetString(GL_VENDOR) << std::endl;
+	std::cout << "Renderer: " << glGetString(GL_RENDERER) << std::endl;
+
+	gameLoop();
 
 	glfwTerminate();
 
@@ -169,8 +196,7 @@ int OpenGLApplication::start() {
 
 }
 
-int main()
-{
-	OpenGLApplication _application;
+int main() {
+	OpenGLApplication _application(800, 600, false);
 	return _application.start();
 }

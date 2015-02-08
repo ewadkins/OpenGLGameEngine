@@ -8,6 +8,8 @@
 #ifndef MAIN_H_
 #define MAIN_H_
 
+#include "ShaderProgram.h"
+#include <string>
 #include <iostream>
 #include <stdio.h>
 #include <stdlib.h>
@@ -17,12 +19,29 @@
 
 class OpenGLApplication {
 public:
-	OpenGLApplication(){}
-	virtual ~OpenGLApplication(){}
+	OpenGLApplication(int screenSizeX, int screenSizeY, bool fullScreen) {
+		_window = nullptr;
+		_screenSizeX = screenSizeX;
+		_screenSizeY = screenSizeY;
+		_fullScreen = fullScreen;
+		shaderProgram = nullptr;
+	}
+	virtual ~OpenGLApplication() {
+	}
 	int start();
-private:
-	void initialize();
+	const static int VERSION_MAJOR = 4;
+	const static int VERSION_MINOR = 1;
 	GLFWwindow* _window;
+	int _screenSizeX;
+	int _screenSizeY;
+	bool _fullScreen;
+	ShaderProgram* shaderProgram;
+private:
+	void setupWindow();
+	void setupDisplay();
+	void setupShaders();
+	void initialize();
+	void gameLoop();
 
 };
 
