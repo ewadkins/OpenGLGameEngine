@@ -8,8 +8,9 @@
 #ifndef MAIN_H_
 #define MAIN_H_
 
-#include "ShaderProgram.h"
+#include "Renderer.h"
 #include <string>
+#include <ctime>
 #include <iostream>
 #include <stdio.h>
 #include <stdlib.h>
@@ -24,7 +25,7 @@ public:
 		_screenSizeX = screenSizeX;
 		_screenSizeY = screenSizeY;
 		_fullScreen = fullScreen;
-		shaderProgram = nullptr;
+		renderer = nullptr;
 	}
 	virtual ~OpenGLApplication() {
 	}
@@ -35,14 +36,13 @@ public:
 	int _screenSizeX;
 	int _screenSizeY;
 	bool _fullScreen;
-	ShaderProgram* shaderProgram;
 private:
 	void setupWindow();
 	void setupDisplay();
 	void setupShaders();
 	void initialize();
 	void gameLoop();
-
+	Renderer* renderer;
 };
 
 #endif /* MAIN_H_ */

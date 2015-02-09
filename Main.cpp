@@ -70,39 +70,72 @@ void OpenGLApplication::setupDisplay() {
 	glClearColor(0, 0, 0, 1);
 }
 
-void OpenGLApplication::setupShaders() {
-	shaderProgram = new ShaderProgram("shaders/vertex.glsl", "shaders/fragment.glsl");
-	shaderProgram->use();
-}
-
 void OpenGLApplication::initialize() {
-	//Initialize GLFW, if it fails, then exit
-	if (!glfwInit()) {
-		throw std::runtime_error("GLFW failed to initialize");
-		exit(EXIT_FAILURE);
+	clock_t start, finish;
+
+	start = clock();
+	std::cout << "Initializing GLFW.." << std::endl;
+	{
+		//Initialize GLFW, if it fails, then exit
+		if (!glfwInit()) {
+			throw std::runtime_error("GLFW failed to initialize");
+			exit(EXIT_FAILURE);
+		}
+
+		//Creates error listener
+		glfwSetErrorCallback(error_callback);
 	}
+	finish = clock();
+	std::cout << "- (Took " << (double(finish) - double(start)) / CLOCKS_PER_SEC * 1000
+			<< " ms)" << std::endl;
 
-	//Creates error listener
-	glfwSetErrorCallback(error_callback);
+	start = clock();
+	std::cout << "Setting up window.." << std::endl;
+	{
+		//Creates and setups the window
+		setupWindow();
 
-	//Creates and setups the window
-	setupWindow();
-
-	//Creates key callback
-	glfwSetKeyCallback(_window, key_callback);
-	//Creates framebuffer callback
-	glfwSetFramebufferSizeCallback(_window, framebuffer_size_callback);
-
-	//Initialize GLEW
-	glewExperimental = GL_TRUE;
-	if (glewInit() != GLEW_OK) {
-		throw std::runtime_error("GLEW failed to initialize");
-		exit(EXIT_FAILURE);
+		//Creates key callback
+		glfwSetKeyCallback(_window, key_callback);
+		//Creates framebuffer callback
+		glfwSetFramebufferSizeCallback(_window, framebuffer_size_callback);
 	}
+	finish = clock();
+	std::cout << "- (Took " << (double(finish) - double(start)) / CLOCKS_PER_SEC * 1000
+			<< " ms)" << std::endl;
 
-	setupDisplay();
+	start = clock();
+	std::cout << "Initializing GLEW.." << std::endl;
+	{
+		//Initialize GLEW
+		glewExperimental = GL_TRUE;
+		if (glewInit() != GLEW_OK) {
+			throw std::runtime_error("GLEW failed to initialize");
+			exit(EXIT_FAILURE);
+		}
+	}
+	finish = clock();
+	std::cout << "- (Took " << (double(finish) - double(start)) / CLOCKS_PER_SEC * 1000
+			<< " ms)" << std::endl;
 
-	setupShaders();
+	start = clock();
+	std::cout << "Setting up display.." << std::endl;
+	{
+		setupDisplay();
+	}
+	finish = clock();
+	std::cout << "- (Took " << (double(finish) - double(start)) / CLOCKS_PER_SEC * 1000
+			<< " ms)" << std::endl;
+
+	start = clock();
+	std::cout << "Setting up renderer.." << std::endl;
+	{
+		renderer = new Renderer();
+		renderer->initialize();
+	}
+	finish = clock();
+	std::cout << "- (Took " << (double(finish) - double(start)) / CLOCKS_PER_SEC * 1000
+			<< " ms)" << std::endl;
 
 }
 
@@ -179,15 +212,20 @@ void OpenGLApplication::gameLoop() {
 
 int OpenGLApplication::start() {
 
+	std::cout << "*** Starting OpenGLApplication ***" << std::endl << std::endl;
 	initialize();
 
 	// Get info of GPU and supported OpenGL version
+	std::cout << std::endl << "###" << std::endl;
 	std::cout << "OpenGL version: " << glGetString(GL_VERSION) << std::endl;
 	std::cout << "GLSL version: " << glGetString(GL_SHADING_LANGUAGE_VERSION)
 			<< std::endl;
 	std::cout << "Vendor: " << glGetString(GL_VENDOR) << std::endl;
 	std::cout << "Renderer: " << glGetString(GL_RENDERER) << std::endl;
+	std::cout << "###" << std::endl << std::endl;
 
+	std::cout << "Starting game loop.." << std::endl << std::endl << "***"
+			<< std::endl << std::endl;
 	gameLoop();
 
 	glfwTerminate();

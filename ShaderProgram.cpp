@@ -14,8 +14,8 @@ GLuint ShaderProgram::loadShader(const char* shaderFile, GLenum type) {
 	std::string src = "";
 	std::string line = "";
 	while (std::getline(in, line))
-		src += line + "\n";
-	std::cout << src;
+		src += "        " + line + "\n";
+	std::cout << "    Source code:" << std::endl << std::endl << src << std::endl;
 	GLuint shader;
 	shader = glCreateShader(type);
 
@@ -34,23 +34,24 @@ GLuint ShaderProgram::create() {
 	GLuint vertexShader, fragmentShader;
 	GLint linked;
 
-	std::cout << "Loading vertex shader.." << std::endl << std::endl;
+	std::cout << "    Loading vertex shader.." << std::endl;
 	vertexShader = loadShader(_vertexPath, GL_VERTEX_SHADER);
-	std::cout << std::endl;
+	std::cout << "    Vertex shader loaded successfully!" << std::endl;
 
-	std::cout << "Loading fragment shader.." << std::endl << std::endl;
+	std::cout << "    Loading fragment shader.." << std::endl;
 	fragmentShader = loadShader(_fragmentPath, GL_FRAGMENT_SHADER);
-	std::cout << std::endl;
+	std::cout << "    Fragment shader loaded successfully!" << std::endl;
 
 	if (!vertexShader || !fragmentShader)
 		return 0;
 
-	std::cout << "Creating shader program..";
+	std::cout << "    Creating shader program.." << std::endl;
 	program = glCreateProgram();
 	if (!program) {
 		throw std::runtime_error("Shader program creation failed");
 		return 0;
 	}
+	std::cout << "    Shader program created successfully!" << std::endl;
 
 	glAttachShader(program, vertexShader);
 	glAttachShader(program, fragmentShader);
@@ -66,11 +67,12 @@ GLuint ShaderProgram::create() {
 	return program;
 }
 
+const char* ShaderProgram::getName() {
+	return _name;
+}
+
 int ShaderProgram::getProgramId() {
 	return program;
 }
 
-void ShaderProgram::use() {
-	glUseProgram(program);
-}
 
