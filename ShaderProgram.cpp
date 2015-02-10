@@ -8,6 +8,7 @@
 #define GLEW_STATIC
 
 #include "ShaderProgram.h"
+#include "OpenGLApplication.h"
 
 GLuint ShaderProgram::loadShader(const char* shaderFile, GLenum type) {
 	std::ifstream in(shaderFile);
@@ -23,7 +24,7 @@ GLuint ShaderProgram::loadShader(const char* shaderFile, GLenum type) {
 	glShaderSource(shader, 1, &source, NULL);
 	glCompileShader(shader);
 	if (!shader) {
-		throw std::runtime_error("Could not compile the shader");
+		OpenGLApplication::warn("Could not compile the shader");
 		return 0;
 	}
 	return shader;
@@ -32,37 +33,34 @@ GLuint ShaderProgram::loadShader(const char* shaderFile, GLenum type) {
 GLuint ShaderProgram::create() {
 
 	GLuint vertexShader, fragmentShader;
-	GLint linked;
+	GLint linked = false;
 
 	std::cout << "    Loading vertex shader.." << std::endl;
 	vertexShader = loadShader(_vertexPath, GL_VERTEX_SHADER);
-	std::cout << "    Vertex shader loaded successfully!" << std::endl;
+	if(vertexShader)
+		std::cout << "    Vertex shader loaded successfully!" << std::endl;
 
 	std::cout << "    Loading fragment shader.." << std::endl;
 	fragmentShader = loadShader(_fragmentPath, GL_FRAGMENT_SHADER);
-	std::cout << "    Fragment shader loaded successfully!" << std::endl;
-
-	if (!vertexShader || !fragmentShader)
-		return 0;
+	if(fragmentShader)
+		std::cout << "    Fragment shader loaded successfully!" << std::endl;
 
 	std::cout << "    Creating shader program.." << std::endl;
 	program = glCreateProgram();
-	if (!program) {
-		throw std::runtime_error("Shader program creation failed");
+	if (program) {
+		glAttachShader(program, vertexShader);
+		glAttachShader(program, fragmentShader);
+
+		glBindAttribLocation(program, 0, "vPosition");
+		glLinkProgram(program);
+		glGetProgramiv(program, GL_LINK_STATUS, &linked);
+	}
+	if (!linked || !program || !vertexShader || !fragmentShader) {
+		OpenGLApplication::warn("Could not create/link the shader");
 		return 0;
 	}
-	std::cout << "    Shader program created successfully!" << std::endl;
-
-	glAttachShader(program, vertexShader);
-	glAttachShader(program, fragmentShader);
-
-	glBindAttribLocation(program, 0, "vPosition");
-	glLinkProgram(program);
-	glGetProgramiv(program, GL_LINK_STATUS, &linked);
-	if (!linked) {
-		throw std::runtime_error("Could not link the shader");
-		return 0;
-	}
+	else
+		std::cout << "    Shader program created and linked successfully!" << std::endl;
 
 	return program;
 }

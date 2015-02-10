@@ -1,4 +1,5 @@
-Main.d: ../Main.cpp ../Main.h ../Renderer.h ../ShaderProgram.h \
+OpenGLApplication.d: ../OpenGLApplication.cpp ../OpenGLApplication.h \
+  ../Renderer.h ../ShaderProgram.h \
   /usr/local/Cellar/glew/1.11.0/include/GL/glew.h \
   /usr/local/Cellar/glfw3/3.0.4/include/GLFW/glfw3.h \
   /usr/local/Cellar/glm/0.9.6.1/include/glm/glm.hpp \
@@ -76,7 +77,7 @@ Main.d: ../Main.cpp ../Main.h ../Renderer.h ../ShaderProgram.h \
   /usr/local/Cellar/glm/0.9.6.1/include/glm/detail/func_integer.hpp \
   /usr/local/Cellar/glm/0.9.6.1/include/glm/detail/func_integer.inl
 
-../Main.h:
+../OpenGLApplication.h:
 
 ../Renderer.h:
 

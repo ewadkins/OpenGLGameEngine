@@ -18,7 +18,10 @@ void Renderer::useProgram(ShaderProgram* program) {
 
 void Renderer::initialize() {
 	setupShaders();
-	useProgram(shaderProgram);
+	if(shaderProgram->getProgramId() != 0)
+		useProgram(shaderProgram);
+	else
+		throw "No shader assigned";
 }
 
 void Renderer::initTriangle() {

@@ -1,5 +1,5 @@
 /*
- * Main.cpp
+ * OpenGLApplication.cpp
  *
  *  Created on: Feb 3, 2015
  *      Author: ericwadkins
@@ -7,7 +7,7 @@
 
 #define GLEW_STATIC
 
-#include "Main.h"
+#include "OpenGLApplication.h"
 
 void error_callback(int error, const char* description)
 
@@ -50,9 +50,8 @@ void OpenGLApplication::setupWindow() {
 		std::string s(
 				"Window creation failed. Can your hardware handle OpenGL version "
 						+ std::to_string(VERSION_MAJOR) + "."
-						+ std::to_string(VERSION_MAJOR) + "?");
-		throw std::runtime_error(s.c_str());
-		exit(EXIT_FAILURE);
+						+ std::to_string(VERSION_MINOR) + "?");
+		stop(s.c_str());
 	}
 
 	//Creates an OpenGL context in the window
@@ -78,15 +77,15 @@ void OpenGLApplication::initialize() {
 	{
 		//Initialize GLFW, if it fails, then exit
 		if (!glfwInit()) {
-			throw std::runtime_error("GLFW failed to initialize");
-			exit(EXIT_FAILURE);
+			stop("GLFW failed to initialize");
 		}
 
 		//Creates error listener
 		glfwSetErrorCallback(error_callback);
 	}
 	finish = clock();
-	std::cout << "- (Took " << (double(finish) - double(start)) / CLOCKS_PER_SEC * 1000
+	std::cout << "- (Took "
+			<< (double(finish) - double(start)) / CLOCKS_PER_SEC * 1000
 			<< " ms)" << std::endl;
 
 	start = clock();
@@ -101,7 +100,8 @@ void OpenGLApplication::initialize() {
 		glfwSetFramebufferSizeCallback(_window, framebuffer_size_callback);
 	}
 	finish = clock();
-	std::cout << "- (Took " << (double(finish) - double(start)) / CLOCKS_PER_SEC * 1000
+	std::cout << "- (Took "
+			<< (double(finish) - double(start)) / CLOCKS_PER_SEC * 1000
 			<< " ms)" << std::endl;
 
 	start = clock();
@@ -110,12 +110,12 @@ void OpenGLApplication::initialize() {
 		//Initialize GLEW
 		glewExperimental = GL_TRUE;
 		if (glewInit() != GLEW_OK) {
-			throw std::runtime_error("GLEW failed to initialize");
-			exit(EXIT_FAILURE);
+			stop("GLEW failed to initialize");
 		}
 	}
 	finish = clock();
-	std::cout << "- (Took " << (double(finish) - double(start)) / CLOCKS_PER_SEC * 1000
+	std::cout << "- (Took "
+			<< (double(finish) - double(start)) / CLOCKS_PER_SEC * 1000
 			<< " ms)" << std::endl;
 
 	start = clock();
@@ -124,7 +124,8 @@ void OpenGLApplication::initialize() {
 		setupDisplay();
 	}
 	finish = clock();
-	std::cout << "- (Took " << (double(finish) - double(start)) / CLOCKS_PER_SEC * 1000
+	std::cout << "- (Took "
+			<< (double(finish) - double(start)) / CLOCKS_PER_SEC * 1000
 			<< " ms)" << std::endl;
 
 	start = clock();
@@ -134,15 +135,28 @@ void OpenGLApplication::initialize() {
 		renderer->initialize();
 	}
 	finish = clock();
-	std::cout << "- (Took " << (double(finish) - double(start)) / CLOCKS_PER_SEC * 1000
+	std::cout << "- (Took "
+			<< (double(finish) - double(start)) / CLOCKS_PER_SEC * 1000
 			<< " ms)" << std::endl;
 
+	// Get info of GPU and supported OpenGL version
+	std::cout << std::endl << "###" << std::endl;
+	std::cout << "OpenGL version: " << glGetString(GL_VERSION) << std::endl;
+	std::cout << "GLSL version: " << glGetString(GL_SHADING_LANGUAGE_VERSION)
+			<< std::endl;
+	std::cout << "Vendor: " << glGetString(GL_VENDOR) << std::endl;
+	std::cout << "Renderer: " << glGetString(GL_RENDERER) << std::endl;
+	std::cout << "###" << std::endl << std::endl;
 }
 
 void OpenGLApplication::gameLoop() {
 
 	//Game loop, while window close is not requested
 	while (!glfwWindowShouldClose(_window)) {
+
+		static int count = 0;
+		count++;
+		//std::cout << count << std::endl;
 
 		float ratio;
 		int width, height;
@@ -211,30 +225,62 @@ void OpenGLApplication::gameLoop() {
 }
 
 int OpenGLApplication::start() {
+	int result = 0;
 
 	std::cout << "*** Starting OpenGLApplication ***" << std::endl << std::endl;
-	initialize();
+	try {
+		try {
+			try {
 
-	// Get info of GPU and supported OpenGL version
-	std::cout << std::endl << "###" << std::endl;
-	std::cout << "OpenGL version: " << glGetString(GL_VERSION) << std::endl;
-	std::cout << "GLSL version: " << glGetString(GL_SHADING_LANGUAGE_VERSION)
-			<< std::endl;
-	std::cout << "Vendor: " << glGetString(GL_VENDOR) << std::endl;
-	std::cout << "Renderer: " << glGetString(GL_RENDERER) << std::endl;
-	std::cout << "###" << std::endl << std::endl;
+				initialize();
 
-	std::cout << "Starting game loop.." << std::endl << std::endl << "***"
-			<< std::endl << std::endl;
-	gameLoop();
+				std::cout << "** Starting game loop **" << std::endl
+						<< std::endl;
+				gameLoop();
+
+				stop();
+
+			} catch (const char* str) {
+				std::cout << std::endl << "*** Stopping OpenGLApplication ("
+						<< str << ") ***" << std::endl;
+				result = -1;
+			}
+		} catch (int e) {
+			if (e == 0)
+				std::cout << std::endl << "*** Stopping OpenGLApplication ***"
+						<< std::endl;
+			else
+				throw;
+		}
+	} catch (...) {
+		std::cout << std::endl
+				<< "*** Stopping OpenGLApplication (Unknown reason) ***"
+				<< std::endl;
+		result = -1;
+		throw;
+	}
 
 	glfwTerminate();
 
-	return 0;
+	return result;
 
 }
 
+void OpenGLApplication::warn(const char* warning) {
+	std::cout << std::endl << "* WARNING: " << warning << " *" << std::endl;
+}
+
+void OpenGLApplication::stop(const char* reason) {
+	throw reason;
+}
+
+void OpenGLApplication::stop() {
+	throw 0;
+}
+
 int main() {
-	OpenGLApplication _application(800, 600, false);
-	return _application.start();
+	OpenGLApplication* application = new OpenGLApplication(800, 600, false);
+	int result = application->start();
+	std::cout << "Exit code: " << result << std::endl;
+	return result;
 }

@@ -1,12 +1,12 @@
 /*
- * Main.h
+ * OpenGLApplication.h
  *
  *  Created on: Feb 3, 2015
  *      Author: ericwadkins
  */
 
-#ifndef MAIN_H_
-#define MAIN_H_
+#ifndef OPENGLAPPLICATION_H_
+#define OPENGLAPPLICATION_H_
 
 #include "Renderer.h"
 #include <string>
@@ -30,6 +30,9 @@ public:
 	virtual ~OpenGLApplication() {
 	}
 	int start();
+	static void warn(const char*);
+	static void stop(const char*);
+	static void stop();
 	const static int VERSION_MAJOR = 4;
 	const static int VERSION_MINOR = 1;
 	GLFWwindow* _window;
@@ -45,4 +48,4 @@ private:
 	Renderer* renderer;
 };
 
-#endif /* MAIN_H_ */
+#endif /* OPENGLAPPLICATION_H_ */
