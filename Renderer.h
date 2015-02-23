@@ -14,20 +14,23 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
+class OpenGLApplication;
+
 class Renderer {
 public:
-	Renderer() {
-		shaderProgram = nullptr;
-	}
+	Renderer(OpenGLApplication* application);
 	virtual ~Renderer() {
 	}
 	void initialize();
 	void initTriangle();
 	void renderTriangle();
+	void display();
 	void useProgram(ShaderProgram*);
 	ShaderProgram* shaderProgram;
 private:
 	void setupShaders();
+	OpenGLApplication* _application;
+	GLuint vao, vbo;
 };
 
 #endif /* RENDERER_H_ */

@@ -8,6 +8,7 @@
 #ifndef OPENGLAPPLICATION_H_
 #define OPENGLAPPLICATION_H_
 
+#include "Logger.h"
 #include "Renderer.h"
 #include <string>
 #include <ctime>
@@ -20,22 +21,19 @@
 
 class OpenGLApplication {
 public:
-	OpenGLApplication(int screenSizeX, int screenSizeY, bool fullScreen) {
-		_window = nullptr;
-		_screenSizeX = screenSizeX;
-		_screenSizeY = screenSizeY;
-		_fullScreen = fullScreen;
-		renderer = nullptr;
-	}
+	OpenGLApplication(int screenSizeX, int screenSizeY, bool fullScreen);
 	virtual ~OpenGLApplication() {
 	}
 	int start();
-	static void warn(const char*);
-	static void stop(const char*);
-	static void stop();
+	void log(const char*);
+	void warn(const char*);
+	void stop(const char*);
+	void stop();
 	const static int VERSION_MAJOR = 4;
 	const static int VERSION_MINOR = 1;
+	OpenGLApplication* _application;
 	GLFWwindow* _window;
+	Logger* _logger;
 	int _screenSizeX;
 	int _screenSizeY;
 	bool _fullScreen;

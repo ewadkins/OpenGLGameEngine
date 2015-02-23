@@ -8,27 +8,43 @@
 #define GLEW_STATIC
 
 #include "OpenGLApplication.h"
+#include "Main.h"
 
-void error_callback(int error, const char* description)
-
-{
+void error_callback(int error, const char* description) {
 	fputs(description, stderr);
 }
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action,
 		int mods) {
+
+	/*OpenGLApplication* application = nullptr;
+	for (int i = 0; i < Main::applications.size(); i++)
+		if (Main::applications[i]->_window == window)
+			application = Main::applications[i];
+
 	if (action == GLFW_PRESS)
-		std::cout << "Key pressed " << char(key) << std::endl;
+		application->_logger->log("Key pressed ").log(char(key)).endLine();
 	if (action == GLFW_RELEASE)
-		std::cout << "Key released " << char(key) << std::endl;
+		application->_logger->log("Key released ").log(char(key)).endLine();
 	if (action == GLFW_REPEAT)
-		std::cout << "Key repeated " << char(key) << std::endl;
+		application->_logger->log("Key repeated ").log(char(key)).endLine();
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
-		glfwSetWindowShouldClose(window, GL_TRUE);
+		glfwSetWindowShouldClose(window, GL_TRUE);*/
 }
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
 	glViewport(0, 0, width, height);
+}
+
+OpenGLApplication::OpenGLApplication(int screenSizeX, int screenSizeY,
+		bool fullScreen) {
+	_application = this;
+	_window = nullptr;
+	_logger = new Logger();
+	_screenSizeX = screenSizeX;
+	_screenSizeY = screenSizeY;
+	_fullScreen = fullScreen;
+	renderer = nullptr;
 }
 
 void OpenGLApplication::setupWindow() {
@@ -72,8 +88,8 @@ void OpenGLApplication::setupDisplay() {
 void OpenGLApplication::initialize() {
 	clock_t start, finish;
 
+	_logger->log("Initializing GLFW..").endLine().increaseIndent();
 	start = clock();
-	std::cout << "Initializing GLFW.." << std::endl;
 	{
 		//Initialize GLFW, if it fails, then exit
 		if (!glfwInit()) {
@@ -84,12 +100,12 @@ void OpenGLApplication::initialize() {
 		glfwSetErrorCallback(error_callback);
 	}
 	finish = clock();
-	std::cout << "- (Took "
-			<< (double(finish) - double(start)) / CLOCKS_PER_SEC * 1000
-			<< " ms)" << std::endl;
+	_logger->log("(Took ").log(
+			(double(finish) - double(start)) / CLOCKS_PER_SEC * 1000).log(
+			" ms)").endLine().decreaseIndent();
 
+	_logger->log("Setting up window..").endLine().increaseIndent();
 	start = clock();
-	std::cout << "Setting up window.." << std::endl;
 	{
 		//Creates and setups the window
 		setupWindow();
@@ -100,12 +116,12 @@ void OpenGLApplication::initialize() {
 		glfwSetFramebufferSizeCallback(_window, framebuffer_size_callback);
 	}
 	finish = clock();
-	std::cout << "- (Took "
-			<< (double(finish) - double(start)) / CLOCKS_PER_SEC * 1000
-			<< " ms)" << std::endl;
+	_logger->log("(Took ").log(
+			(double(finish) - double(start)) / CLOCKS_PER_SEC * 1000).log(
+			" ms)").endLine().decreaseIndent();
 
+	_logger->log("Initializing GLEW..").endLine().increaseIndent();
 	start = clock();
-	std::cout << "Initializing GLEW.." << std::endl;
 	{
 		//Initialize GLEW
 		glewExperimental = GL_TRUE;
@@ -114,39 +130,38 @@ void OpenGLApplication::initialize() {
 		}
 	}
 	finish = clock();
-	std::cout << "- (Took "
-			<< (double(finish) - double(start)) / CLOCKS_PER_SEC * 1000
-			<< " ms)" << std::endl;
+	_logger->log("(Took ").log(
+			(double(finish) - double(start)) / CLOCKS_PER_SEC * 1000).log(
+			" ms)").endLine().decreaseIndent();
 
+	_logger->log("Setting up display..").endLine().decreaseIndent();
 	start = clock();
-	std::cout << "Setting up display.." << std::endl;
 	{
 		setupDisplay();
 	}
 	finish = clock();
-	std::cout << "- (Took "
-			<< (double(finish) - double(start)) / CLOCKS_PER_SEC * 1000
-			<< " ms)" << std::endl;
+	_logger->log("(Took ").log(
+			(double(finish) - double(start)) / CLOCKS_PER_SEC * 1000).log(
+			" ms)").endLine().decreaseIndent();
 
+	_logger->log("Setting up renderer..").endLine().increaseIndent();
 	start = clock();
-	std::cout << "Setting up renderer.." << std::endl;
 	{
-		renderer = new Renderer();
+		renderer = new Renderer(_application);
 		renderer->initialize();
 	}
 	finish = clock();
-	std::cout << "- (Took "
-			<< (double(finish) - double(start)) / CLOCKS_PER_SEC * 1000
-			<< " ms)" << std::endl;
+	_logger->log("(Took ").log(
+			(double(finish) - double(start)) / CLOCKS_PER_SEC * 1000).log(
+			" ms)").endLine().decreaseIndent();
 
 	// Get info of GPU and supported OpenGL version
-	std::cout << std::endl << "###" << std::endl;
-	std::cout << "OpenGL version: " << glGetString(GL_VERSION) << std::endl;
-	std::cout << "GLSL version: " << glGetString(GL_SHADING_LANGUAGE_VERSION)
-			<< std::endl;
-	std::cout << "Vendor: " << glGetString(GL_VENDOR) << std::endl;
-	std::cout << "Renderer: " << glGetString(GL_RENDERER) << std::endl;
-	std::cout << "###" << std::endl << std::endl;
+	_logger->endLine().log("###").endLine();
+	_logger->log("OpenGL version: ").log(glGetString(GL_VERSION)).endLine();
+	_logger->log("GLSL version: ").log(glGetString(GL_SHADING_LANGUAGE_VERSION)).endLine();
+	_logger->log("Vendor: ").log(glGetString(GL_VENDOR)).endLine();
+	_logger->log("Renderer: ").log(glGetString(GL_RENDERER)).endLine();
+	_logger->log("###").endLine().endLine();
 }
 
 void OpenGLApplication::gameLoop() {
@@ -156,106 +171,113 @@ void OpenGLApplication::gameLoop() {
 
 		static int count = 0;
 		count++;
-		//std::cout << count << std::endl;
+		//_logger->log(count).endLine();
 
-		float ratio;
-		int width, height;
+		renderer->renderTriangle();
+		renderer->display();
 
-		glfwGetFramebufferSize(_window, &width, &height);
-		ratio = width / (float) height;
+		/*
+		 //Old drawing
+		 float ratio;
+		 int width, height;
 
-		glClear(GL_COLOR_BUFFER_BIT);
+		 glfwGetFramebufferSize(_window, &width, &height);
+		 ratio = width / (float) height;
 
-		glMatrixMode(GL_PROJECTION);
-		glLoadIdentity();
-		glOrtho(-ratio, ratio, -1.f, 1.f, 1.f, -1.f);
-		glMatrixMode(GL_MODELVIEW);
+		 glClear(GL_COLOR_BUFFER_BIT);
 
-		glLoadIdentity();
+		 glMatrixMode(GL_PROJECTION);
+		 glLoadIdentity();
+		 glOrtho(-ratio, ratio, -1.f, 1.f, 1.f, -1.f);
+		 glMatrixMode(GL_MODELVIEW);
 
-		//// Render
+		 glLoadIdentity();
 
-		//Triangle test
+		 //// Render
 
-		//FIXME Not drawing the triangle
+		 //Triangle test
 
-		// An array of 3 vectors which represents 3 vertices
-		static const GLfloat vertices[] = { -1.0f, -1.0f, 0.0f, 1.0f, -1.0f,
-				0.0f, 0.0f, 1.0f, 0.0f, };
+		 //FIXME Not drawing the triangle
 
-		// This will identify our vertex buffer
-		GLuint vbo;
+		 // An array of 3 vectors which represents 3 vertices
+		 static const GLfloat vertices[] = { -1.0f, -1.0f, 0.0f, 1.0f, -1.0f,
+		 0.0f, 0.0f, 1.0f, 0.0f, };
 
-		// Generate 1 buffer, put the resulting identifier in vbo
-		glGenBuffers(1, &vbo);
+		 // This will identify our vertex buffer
+		 GLuint vbo;
 
-		// The following commands will talk about our 'vbo' buffer
-		glBindBuffer(GL_ARRAY_BUFFER, vbo);
+		 // Generate 1 buffer, put the resulting identifier in vbo
+		 glGenBuffers(1, &vbo);
 
-		// Give our vertices to OpenGL.
-		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices,
-		GL_STATIC_DRAW);
+		 // The following commands will talk about our 'vbo' buffer
+		 glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
-		// 1rst attribute buffer : vertices
-		glEnableVertexAttribArray(0);
-		glBindBuffer(GL_ARRAY_BUFFER, vbo);
-		glVertexAttribPointer(0, // attribute 0. No particular reason for 0, but must match the layout in the shader.
-				3,                  // size
-				GL_FLOAT,           // type
-				GL_FALSE,           // normalized?
-				0,                  // stride
-				(void*) 0            // array buffer offset
-				);
+		 // Give our vertices to OpenGL.
+		 glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices,
+		 GL_STATIC_DRAW);
 
-		// Draw the triangle !
-		glDrawArrays(GL_TRIANGLES, 0, 3); // Starting from vertex 0; 3 vertices total -> 1 triangle
+		 // 1rst attribute buffer : vertices
+		 glEnableVertexAttribArray(0);
+		 glBindBuffer(GL_ARRAY_BUFFER, vbo);
+		 glVertexAttribPointer(0, // attribute 0. No particular reason for 0, but must match the layout in the shader.
+		 3,                  // size
+		 GL_FLOAT,           // type
+		 GL_FALSE,           // normalized?
+		 0,                  // stride
+		 (void*) 0            // array buffer offset
+		 );
 
-		glDisableVertexAttribArray(0);
+		 // Draw the triangle !
+		 glDrawArrays(GL_TRIANGLES, 0, 3); // Starting from vertex 0; 3 vertices total -> 1 triangle
 
-		////
+		 glDisableVertexAttribArray(0);
 
-		//Swap buffers
-		glfwSwapBuffers(_window);
+		 ////
 
-		//Processes the events that have been received, then returns
-		glfwPollEvents();
-		//Puts the thread to sleep until another event is received, used when no need to update continuously
-		//glfwWaitEvents();
+		 //Swap buffers
+		 glfwSwapBuffers(_window);
+
+		 //Processes the events that have been received, then returns
+		 glfwPollEvents();
+		 //Puts the thread to sleep until another event is received, used when no need to update continuously
+		 //glfwWaitEvents();
+		 */
+
 	}
 }
 
 int OpenGLApplication::start() {
 	int result = 0;
 
-	std::cout << "*** Starting OpenGLApplication ***" << std::endl << std::endl;
+	_logger->log("*** Starting OpenGLApplication ***").endLine().endLine();
 	try {
 		try {
 			try {
 
 				initialize();
 
-				std::cout << "** Starting game loop **" << std::endl
-						<< std::endl;
+				_logger->log("** Starting game loop **").endLine().endLine();
+
+				_logger->log("Hello").log(9).endLine();
+
 				gameLoop();
 
 				stop();
 
 			} catch (const char* str) {
-				std::cout << std::endl << "*** Stopping OpenGLApplication ("
-						<< str << ") ***" << std::endl;
+				_logger->endLine().log("*** Stopping OpenGLApplication (").log(
+						str).log(") ***").endLine();
 				result = -1;
 			}
 		} catch (int e) {
 			if (e == 0)
-				std::cout << std::endl << "*** Stopping OpenGLApplication ***"
-						<< std::endl;
+				_logger->endLine().log("*** Stopping OpenGLApplication ***").endLine();
 			else
 				throw;
 		}
 	} catch (...) {
-		std::cout << std::endl
-				<< "*** Stopping OpenGLApplication (Unknown reason) ***"
-				<< std::endl;
+		_logger->endLine().log(
+				"*** Stopping OpenGLApplication (Unknown reason) ***").endLine();
 		result = -1;
 		throw;
 	}
@@ -267,7 +289,7 @@ int OpenGLApplication::start() {
 }
 
 void OpenGLApplication::warn(const char* warning) {
-	std::cout << std::endl << "* WARNING: " << warning << " *" << std::endl;
+	_logger->endLine().log("* WARNING: ").log(warning).log(" *").endLine();
 }
 
 void OpenGLApplication::stop(const char* reason) {
@@ -280,6 +302,7 @@ void OpenGLApplication::stop() {
 
 int main() {
 	OpenGLApplication* application = new OpenGLApplication(800, 600, false);
+	Main::applications.push_back(application);
 	int result = application->start();
 	std::cout << "Exit code: " << result << std::endl;
 	return result;

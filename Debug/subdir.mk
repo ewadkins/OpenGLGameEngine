@@ -4,16 +4,19 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 CPP_SRCS += \
+../Logger.cpp \
 ../OpenGLApplication.cpp \
 ../Renderer.cpp \
 ../ShaderProgram.cpp 
 
 OBJS += \
+./Logger.o \
 ./OpenGLApplication.o \
 ./Renderer.o \
 ./ShaderProgram.o 
 
 CPP_DEPS += \
+./Logger.d \
 ./OpenGLApplication.d \
 ./Renderer.d \
 ./ShaderProgram.d 

@@ -13,14 +13,11 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
+class OpenGLApplication;
+
 class ShaderProgram {
 public:
-	ShaderProgram(const char* name, const char* vertexPath, const char* fragmentPath) {
-		_name = name;
-		_vertexPath = vertexPath;
-		_fragmentPath = fragmentPath;
-		program = create();
-	}
+	ShaderProgram(OpenGLApplication* application, const char* name, const char* vertexPath, const char* fragmentPath);
 	virtual ~ShaderProgram() {
 	}
 	const char* getName();
@@ -28,6 +25,7 @@ public:
 private:
 	GLuint loadShader(const char*, GLenum);
 	GLuint create();
+	OpenGLApplication* _application;
 	const char* _name;
 	const char* _vertexPath;
 	const char* _fragmentPath;
