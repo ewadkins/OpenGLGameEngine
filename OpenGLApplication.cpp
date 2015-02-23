@@ -17,7 +17,7 @@ void error_callback(int error, const char* description) {
 void key_callback(GLFWwindow* window, int key, int scancode, int action,
 		int mods) {
 
-	/*OpenGLApplication* application = nullptr;
+	OpenGLApplication* application = nullptr;
 	for (int i = 0; i < Main::applications.size(); i++)
 		if (Main::applications[i]->_window == window)
 			application = Main::applications[i];
@@ -29,7 +29,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action,
 	if (action == GLFW_REPEAT)
 		application->_logger->log("Key repeated ").log(char(key)).endLine();
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
-		glfwSetWindowShouldClose(window, GL_TRUE);*/
+		glfwSetWindowShouldClose(window, GL_TRUE);
 }
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
@@ -134,7 +134,7 @@ void OpenGLApplication::initialize() {
 			(double(finish) - double(start)) / CLOCKS_PER_SEC * 1000).log(
 			" ms)").endLine().decreaseIndent();
 
-	_logger->log("Setting up display..").endLine().decreaseIndent();
+	_logger->log("Setting up display..").endLine().increaseIndent();
 	start = clock();
 	{
 		setupDisplay();
@@ -250,6 +250,7 @@ int OpenGLApplication::start() {
 	int result = 0;
 
 	_logger->log("*** Starting OpenGLApplication ***").endLine().endLine();
+
 	try {
 		try {
 			try {
@@ -298,12 +299,4 @@ void OpenGLApplication::stop(const char* reason) {
 
 void OpenGLApplication::stop() {
 	throw 0;
-}
-
-int main() {
-	OpenGLApplication* application = new OpenGLApplication(800, 600, false);
-	Main::applications.push_back(application);
-	int result = application->start();
-	std::cout << "Exit code: " << result << std::endl;
-	return result;
 }

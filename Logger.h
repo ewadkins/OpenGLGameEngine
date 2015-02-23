@@ -18,9 +18,10 @@ public:
 	virtual ~Logger() {
 	}
 	Logger& log(const std::string str);
-	template<typename T>
-	Logger& log(const T t);
+	//template<typename T>
+	//Logger& log(const T t);
 	Logger& log(const char* c);
+	Logger& log(const unsigned char* c);
 	Logger& log(const int i);
 	Logger& log(const float f);
 	Logger& log(const double d);

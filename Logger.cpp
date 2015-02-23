@@ -12,6 +12,7 @@ Logger::Logger() {
 	newLine = true;
 	numIndents = 0;
 	indentString = "    ";
+	_log.push_back(std::string(""));
 }
 
 Logger& Logger::log(std::string str) {
@@ -22,13 +23,17 @@ Logger& Logger::log(std::string str) {
 	return *this;
 }
 
-template<typename T>
+/*template<typename T>
 Logger& Logger::log(T t) {
 	return log(std::to_string(t));
-}
+}*/
 
 Logger& Logger::log(const char* c) {
 	return log(std::string(c));
+}
+
+Logger& Logger::log(const unsigned char* c) {
+	return log(std::string(reinterpret_cast<const char*>(c)));
 }
 
 Logger& Logger::log(const int i) {
