@@ -29,6 +29,7 @@ public:
 	Logger& endLine();
 	Logger& increaseIndent();
 	Logger& decreaseIndent();
+	Logger& setIndent(int i);
 	Logger& clear();
 	std::vector<std::string> getLog();
 private:

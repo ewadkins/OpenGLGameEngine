@@ -17,11 +17,13 @@ void error_callback(int error, const char* description) {
 void key_callback(GLFWwindow* window, int key, int scancode, int action,
 		int mods) {
 
+	// Get the OpenGLApplication context running in the window
 	OpenGLApplication* application = nullptr;
 	for (int i = 0; i < Main::applications.size(); i++)
 		if (Main::applications[i]->_window == window)
 			application = Main::applications[i];
 
+	// Handle key events
 	if (action == GLFW_PRESS)
 		application->_logger->log("Key pressed ").log(char(key)).endLine();
 	if (action == GLFW_RELEASE)
@@ -33,6 +35,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action,
 }
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
+	// Handle window resizes
 	glViewport(0, 0, width, height);
 }
 
@@ -48,12 +51,16 @@ OpenGLApplication::OpenGLApplication(int screenSizeX, int screenSizeY,
 }
 
 void OpenGLApplication::setupWindow() {
+	// Basic window setup
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, VERSION_MAJOR);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, VERSION_MINOR);
-	//Make it so you can't resize the window
+
+	// Make the window non-resizable
 	glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
+
+	// Create the window
 	if (!_fullScreen)
 		_window = glfwCreateWindow(_screenSizeX, _screenSizeY,
 				"OpenGL Tutorial", NULL, NULL);
@@ -61,7 +68,7 @@ void OpenGLApplication::setupWindow() {
 		_window = glfwCreateWindow(_screenSizeX, _screenSizeY,
 				"OpenGL Application", glfwGetPrimaryMonitor(), NULL);
 
-	//If window creation fails, then exit
+	// If window creation fails, then exit
 	if (!_window) {
 		std::string s(
 				"Window creation failed. Can your hardware handle OpenGL version "
@@ -70,18 +77,22 @@ void OpenGLApplication::setupWindow() {
 		stop(s.c_str());
 	}
 
-	//Creates an OpenGL context in the window
+	// Creates an OpenGL context in the window
 	glfwMakeContextCurrent(_window);
 
 }
 
 void OpenGLApplication::setupDisplay() {
-	//Depth buffer setup
+	// Depth buffer setup
 	glClearDepth(1.0f);
-	//Enables depth testing
+
+	// Enables depth testing
 	glEnable(GL_DEPTH_TEST);
-	//Type of depth testing
+
+	// Type of depth testing
 	glDepthFunc(GL_LEQUAL);
+
+	// Sets background color
 	glClearColor(0, 0, 0, 1);
 }
 
@@ -91,12 +102,12 @@ void OpenGLApplication::initialize() {
 	_logger->log("Initializing GLFW..").endLine().increaseIndent();
 	start = clock();
 	{
-		//Initialize GLFW, if it fails, then exit
+		// Initialize GLFW, if it fails, then exit
 		if (!glfwInit()) {
 			stop("GLFW failed to initialize");
 		}
 
-		//Creates error listener
+		// Creates error listener
 		glfwSetErrorCallback(error_callback);
 	}
 	finish = clock();
@@ -107,12 +118,13 @@ void OpenGLApplication::initialize() {
 	_logger->log("Setting up window..").endLine().increaseIndent();
 	start = clock();
 	{
-		//Creates and setups the window
+		// Creates and setups the window
 		setupWindow();
 
-		//Creates key callback
+		// Creates key callback
 		glfwSetKeyCallback(_window, key_callback);
-		//Creates framebuffer callback
+
+		// Creates framebuffer callback
 		glfwSetFramebufferSizeCallback(_window, framebuffer_size_callback);
 	}
 	finish = clock();
@@ -123,7 +135,7 @@ void OpenGLApplication::initialize() {
 	_logger->log("Initializing GLEW..").endLine().increaseIndent();
 	start = clock();
 	{
-		//Initialize GLEW
+		// Initialize GLEW
 		glewExperimental = GL_TRUE;
 		if (glewInit() != GLEW_OK) {
 			stop("GLEW failed to initialize");
@@ -137,6 +149,7 @@ void OpenGLApplication::initialize() {
 	_logger->log("Setting up display..").endLine().increaseIndent();
 	start = clock();
 	{
+		// Setup the display
 		setupDisplay();
 	}
 	finish = clock();
@@ -147,6 +160,7 @@ void OpenGLApplication::initialize() {
 	_logger->log("Setting up renderer..").endLine().increaseIndent();
 	start = clock();
 	{
+		// Create and initialize the renderer
 		renderer = new Renderer(_application);
 		renderer->initialize();
 	}
@@ -166,12 +180,11 @@ void OpenGLApplication::initialize() {
 
 void OpenGLApplication::gameLoop() {
 
-	//Game loop, while window close is not requested
+	// Game loop, while window close is not requested
 	while (!glfwWindowShouldClose(_window)) {
 
 		static int count = 0;
 		count++;
-		//_logger->log(count).endLine();
 
 		renderer->renderTriangle();
 		renderer->display();
@@ -249,35 +262,36 @@ void OpenGLApplication::gameLoop() {
 int OpenGLApplication::start() {
 	int result = 0;
 
-	_logger->log("*** Starting OpenGLApplication ***").endLine().endLine();
-
 	try {
 		try {
 			try {
-
+				// Initialization
+				_logger->log("*** Starting OpenGLApplication ***").endLine().endLine();
 				initialize();
 
+				// Start the game loop
 				_logger->log("** Starting game loop **").endLine().endLine();
-
-				_logger->log("Hello").log(9).endLine();
-
 				gameLoop();
 
+				// Upon exiting the game loop, stop the application
 				stop();
 
 			} catch (const char* str) {
-				_logger->endLine().log("*** Stopping OpenGLApplication (").log(
+				// Fatal error purposely thrown from within the application
+				_logger->endLine().setIndent(0).log("*** Stopping OpenGLApplication (").log(
 						str).log(") ***").endLine();
 				result = -1;
 			}
 		} catch (int e) {
+			// Error thrown to signify the end of the application
 			if (e == 0)
-				_logger->endLine().log("*** Stopping OpenGLApplication ***").endLine();
+				_logger->endLine().setIndent(0).log("*** Stopping OpenGLApplication ***").endLine();
 			else
 				throw;
 		}
 	} catch (...) {
-		_logger->endLine().log(
+		// Fatal error caused the application to crash
+		_logger->endLine().setIndent(0).log(
 				"*** Stopping OpenGLApplication (Unknown reason) ***").endLine();
 		result = -1;
 		throw;
@@ -290,6 +304,7 @@ int OpenGLApplication::start() {
 }
 
 void OpenGLApplication::warn(const char* warning) {
+	// Logs a warning message
 	_logger->endLine().log("* WARNING: ").log(warning).log(" *").endLine();
 }
 
