@@ -31,6 +31,7 @@ private:
 	void setupShaders();
 	OpenGLApplication* _application;
 	GLuint vao, vbo;
+	ShaderProgram* currentProgram;
 };
 
 #endif /* RENDERER_H_ */

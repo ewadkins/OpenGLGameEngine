@@ -15,7 +15,27 @@ ShaderProgram::ShaderProgram(OpenGLApplication* application, const char* name, c
 	_name = name;
 	_vertexPath = vertexPath;
 	_fragmentPath = fragmentPath;
-	program = create();
+	_program = create();
+}
+
+void ShaderProgram::setUniform(const char* name, GLint i) {
+	GLint loc = glGetUniformLocation(_program, name);
+	glProgramUniform1i(_program, loc, i);
+}
+
+void ShaderProgram::setUniform(const char* name, GLfloat f) {
+	GLint loc = glGetUniformLocation(_program, name);
+	glProgramUniform1f(_program, loc, f);
+}
+
+void ShaderProgram::setUniform(const char* name, GLfloat f1, GLfloat f2, GLfloat f3) {
+	GLint loc = glGetUniformLocation(_program, name);
+	glProgramUniform3f(_program, loc, f1, f2, f3);
+}
+
+void ShaderProgram::setUniform(const char* name, GLfloat f1, GLfloat f2, GLfloat f3, GLfloat f4) {
+	GLint loc = glGetUniformLocation(_program, name);
+	glProgramUniform4f(_program, loc, f1, f2, f3, f4);
 }
 
 GLuint ShaderProgram::loadShader(const char* shaderFile, GLenum type) {
@@ -63,27 +83,27 @@ GLuint ShaderProgram::create() {
 
 	// Creates shader program
 	_application->_logger->log("Creating shader program..").endLine();
-	program = glCreateProgram();
-	if (program) {
-		glAttachShader(program, vertexShader);
-		glAttachShader(program, fragmentShader);
+	_program = glCreateProgram();
+	if (_program) {
+		glAttachShader(_program, vertexShader);
+		glAttachShader(_program, fragmentShader);
 
 		// Links attribute variables
-		glBindAttribLocation(program, 0, "inPosition");
-		glBindAttribLocation(program, 1, "inColor");
+		glBindAttribLocation(_program, 0, "inPosition");
+		glBindAttribLocation(_program, 1, "inColor");
 
 		// Links shader program
-		glLinkProgram(program);
-		glGetProgramiv(program, GL_LINK_STATUS, &linked);
+		glLinkProgram(_program);
+		glGetProgramiv(_program, GL_LINK_STATUS, &linked);
 	}
-	if (!linked || !program || !vertexShader || !fragmentShader) {
+	if (!linked || !_program || !vertexShader || !fragmentShader) {
 		_application->warn("Could not create/link the shader");
 		return 0;
 	}
 	else
 		_application->_logger->log("Shader program created and linked successfully!").endLine();
 
-	return program;
+	return _program;
 }
 
 const char* ShaderProgram::getName() {
@@ -93,7 +113,7 @@ const char* ShaderProgram::getName() {
 
 int ShaderProgram::getProgramId() {
 	// Returns the program ID used by OpenGL
-	return program;
+	return _program;
 }
 
 

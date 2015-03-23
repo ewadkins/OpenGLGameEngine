@@ -1,7 +1,7 @@
 Renderer.d: ../Renderer.cpp ../Renderer.h ../ShaderProgram.h \
   /usr/local/Cellar/glew/1.11.0/include/GL/glew.h \
   /usr/local/Cellar/glfw3/3.0.4/include/GLFW/glfw3.h \
-  ../OpenGLApplication.h ../Logger.h \
+  ../OpenGLApplication.h ../Logger.h ../Camera.h \
   /usr/local/Cellar/glm/0.9.6.1/include/glm/glm.hpp \
   /usr/local/Cellar/glm/0.9.6.1/include/glm/detail/_fixes.hpp \
   /usr/local/Cellar/glm/0.9.6.1/include/glm/fwd.hpp \
@@ -75,7 +75,13 @@ Renderer.d: ../Renderer.cpp ../Renderer.h ../ShaderProgram.h \
   /usr/local/Cellar/glm/0.9.6.1/include/glm/vector_relational.hpp \
   /usr/local/Cellar/glm/0.9.6.1/include/glm/integer.hpp \
   /usr/local/Cellar/glm/0.9.6.1/include/glm/detail/func_integer.hpp \
-  /usr/local/Cellar/glm/0.9.6.1/include/glm/detail/func_integer.inl
+  /usr/local/Cellar/glm/0.9.6.1/include/glm/detail/func_integer.inl \
+  /usr/local/Cellar/glm/0.9.6.1/include/glm/gtx/transform.hpp \
+  /usr/local/Cellar/glm/0.9.6.1/include/glm/gtx/../gtc/matrix_transform.hpp \
+  /usr/local/Cellar/glm/0.9.6.1/include/glm/gtx/../gtc/../gtc/constants.hpp \
+  /usr/local/Cellar/glm/0.9.6.1/include/glm/gtx/../gtc/constants.inl \
+  /usr/local/Cellar/glm/0.9.6.1/include/glm/gtx/../gtc/matrix_transform.inl \
+  /usr/local/Cellar/glm/0.9.6.1/include/glm/gtx/transform.inl
 
 ../Renderer.h:
 
@@ -88,6 +94,8 @@ Renderer.d: ../Renderer.cpp ../Renderer.h ../ShaderProgram.h \
 ../OpenGLApplication.h:
 
 ../Logger.h:
+
+../Camera.h:
 
 /usr/local/Cellar/glm/0.9.6.1/include/glm/glm.hpp:
 
@@ -236,3 +244,15 @@ Renderer.d: ../Renderer.cpp ../Renderer.h ../ShaderProgram.h \
 /usr/local/Cellar/glm/0.9.6.1/include/glm/detail/func_integer.hpp:
 
 /usr/local/Cellar/glm/0.9.6.1/include/glm/detail/func_integer.inl:
+
+/usr/local/Cellar/glm/0.9.6.1/include/glm/gtx/transform.hpp:
+
+/usr/local/Cellar/glm/0.9.6.1/include/glm/gtx/../gtc/matrix_transform.hpp:
+
+/usr/local/Cellar/glm/0.9.6.1/include/glm/gtx/../gtc/../gtc/constants.hpp:
+
+/usr/local/Cellar/glm/0.9.6.1/include/glm/gtx/../gtc/constants.inl:
+
+/usr/local/Cellar/glm/0.9.6.1/include/glm/gtx/../gtc/matrix_transform.inl:
+
+/usr/local/Cellar/glm/0.9.6.1/include/glm/gtx/transform.inl:

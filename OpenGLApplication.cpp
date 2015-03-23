@@ -47,7 +47,8 @@ OpenGLApplication::OpenGLApplication(int screenSizeX, int screenSizeY,
 	_screenSizeX = screenSizeX;
 	_screenSizeY = screenSizeY;
 	_fullScreen = fullScreen;
-	renderer = nullptr;
+	_renderer = nullptr;
+	_camera = nullptr;
 }
 
 void OpenGLApplication::setupWindow() {
@@ -161,8 +162,20 @@ void OpenGLApplication::initialize() {
 	start = clock();
 	{
 		// Create and initialize the renderer
-		renderer = new Renderer(_application);
-		renderer->initialize();
+		_renderer = new Renderer(_application);
+		_renderer->initialize();
+	}
+	finish = clock();
+	_logger->log("(Took ").log(
+			(double(finish) - double(start)) / CLOCKS_PER_SEC * 1000).log(
+			" ms)").endLine().decreaseIndent();
+
+	_logger->log("Setting up camera..").endLine().increaseIndent();
+	start = clock();
+	{
+		// Create and initialize the renderer
+		_camera = new Camera(this, 0, 0, 0, 0, 0, 0);
+		_camera->initialize();
 	}
 	finish = clock();
 	_logger->log("(Took ").log(
@@ -186,8 +199,8 @@ void OpenGLApplication::gameLoop() {
 		static int count = 0;
 		count++;
 
-		renderer->renderTriangle();
-		renderer->display();
+		_renderer->renderTriangle();
+		_renderer->display();
 
 		/*
 		 //Old drawing

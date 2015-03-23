@@ -9,10 +9,11 @@
 #include "OpenGLApplication.h"
 
 Renderer::Renderer(OpenGLApplication* application) {
-	shaderProgram = nullptr;
 	_application = application;
+	shaderProgram = nullptr;
 	vao = 0;
 	vbo = 0;
+	currentProgram = nullptr;
 }
 
 void Renderer::setupShaders() {
@@ -22,6 +23,7 @@ void Renderer::setupShaders() {
 
 void Renderer::useProgram(ShaderProgram* program) {
 	glUseProgram(program->getProgramId());
+	currentProgram = program;
 	_application->_logger->log("Using shader program: ").log(program->getName()).endLine().endLine();
 }
 

@@ -10,6 +10,7 @@
 
 #include "Logger.h"
 #include "Renderer.h"
+#include "Camera.h"
 #include <string>
 #include <ctime>
 #include <iostream>
@@ -17,7 +18,6 @@
 #include <stdlib.h>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
-#include <glm/glm.hpp>
 
 class OpenGLApplication {
 public:
@@ -34,6 +34,8 @@ public:
 	OpenGLApplication* _application;
 	GLFWwindow* _window;
 	Logger* _logger;
+	Renderer* _renderer;
+	Camera* _camera;
 	int _screenSizeX;
 	int _screenSizeY;
 	bool _fullScreen;
@@ -43,7 +45,6 @@ private:
 	void setupShaders();
 	void initialize();
 	void gameLoop();
-	Renderer* renderer;
 };
 
 #endif /* OPENGLAPPLICATION_H_ */
