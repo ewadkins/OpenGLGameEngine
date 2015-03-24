@@ -11,6 +11,7 @@
 #include "Logger.h"
 #include "Renderer.h"
 #include "Camera.h"
+#include "GLMatrix.h"
 #include <string>
 #include <ctime>
 #include <iostream>

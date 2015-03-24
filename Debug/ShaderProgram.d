@@ -81,7 +81,8 @@ ShaderProgram.d: ../ShaderProgram.cpp ../ShaderProgram.h \
   /usr/local/Cellar/glm/0.9.6.1/include/glm/gtx/../gtc/../gtc/constants.hpp \
   /usr/local/Cellar/glm/0.9.6.1/include/glm/gtx/../gtc/constants.inl \
   /usr/local/Cellar/glm/0.9.6.1/include/glm/gtx/../gtc/matrix_transform.inl \
-  /usr/local/Cellar/glm/0.9.6.1/include/glm/gtx/transform.inl
+  /usr/local/Cellar/glm/0.9.6.1/include/glm/gtx/transform.inl \
+  ../GLMatrix.h
 
 ../ShaderProgram.h:
 
@@ -256,3 +257,5 @@ ShaderProgram.d: ../ShaderProgram.cpp ../ShaderProgram.h \
 /usr/local/Cellar/glm/0.9.6.1/include/glm/gtx/../gtc/matrix_transform.inl:
 
 /usr/local/Cellar/glm/0.9.6.1/include/glm/gtx/transform.inl:
+
+../GLMatrix.h:

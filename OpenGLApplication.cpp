@@ -98,6 +98,35 @@ void OpenGLApplication::setupDisplay() {
 }
 
 void OpenGLApplication::initialize() {
+
+	GLMatrix<float> m1 = GLMatrix<float>(3, 5);
+	float arr[] = {1, 0, 0, 1, 2, 0, 1, 0, 2, 3, 0, 0, 1, 3, 4};
+	std::vector<float> values(arr, arr + sizeof(arr)/sizeof(arr[0]));
+	m1.set(values);
+
+	//m1.print();
+	//m1.transpose().print();
+
+	GLMatrix<float> m2 = GLMatrix<float>(3, 5);
+	float arr2[] = {1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1};
+	std::vector<float> values2(arr2, arr2 + sizeof(arr2)/sizeof(arr2[0]));
+	m2.set(values2);
+
+	//m2.print();
+
+	//m1.transpose().mul(m1).print();
+	//m1.mul(m1.transpose()).print();
+
+
+	GLMatrix<float> m3 = GLMatrix<float>(3, 5);
+	float arr3[] = {1, 3, 2, 0, 1, 1, 3, 1, 3, 1, 2, 6, 0, 1, 1};
+	std::vector<float> values3(arr3, arr3 + sizeof(arr3)/sizeof(arr3[0]));
+	m3.set(values3);
+
+	m3.print();
+	m3.reducedRowEchelon().print();
+
+
 	clock_t start, finish;
 
 	_logger->log("Initializing GLFW..").endLine().increaseIndent();
