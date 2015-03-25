@@ -8,8 +8,9 @@
 #ifndef CAMERA_H_
 #define CAMERA_H_
 
-#include <glm/glm.hpp>
-#include <glm/gtx/transform.hpp>
+#include "GLMatrix.h"
+//#include <glm/glm.hpp>
+//#include <glm/gtx/transform.hpp>
 
 class OpenGLApplication;
 
@@ -34,6 +35,12 @@ public:
 	void setRotationY();
 	void setRotationZ();
 private:
+	template<typename T>
+	static GLMatrix<T> translate(T deltaX, T deltaY, T deltaZ);
+	template<typename T>
+	static GLMatrix<T> scale(T scaleX, T scaleY, T scaleZ);
+	template<typename T>
+	static GLMatrix<T> rotate(T thetaX, T thetaY, T thetaZ);
 	OpenGLApplication* _application;
 	float _x, _y, _z, _rotationX, _rotationY, _rotationZ;
 };

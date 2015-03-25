@@ -10,14 +10,14 @@
 
 Renderer::Renderer(OpenGLApplication* application) {
 	_application = application;
-	shaderProgram = nullptr;
+	shaderProgram1 = nullptr;
 	vao = 0;
 	vbo = 0;
 	currentProgram = nullptr;
 }
 
 void Renderer::setupShaders() {
-	shaderProgram = new ShaderProgram(_application, "Shader 1",
+	shaderProgram1 = new ShaderProgram(_application, "Shader 1",
 			"shaders/vertex.glsl", "shaders/fragment.glsl");
 }
 
@@ -32,8 +32,8 @@ void Renderer::initialize() {
 	setupShaders();
 
 	// Attempt to assign a shader program
-	if (shaderProgram->getProgramId() != 0)
-		useProgram(shaderProgram);
+	if (shaderProgram1->getProgramId() != 0)
+		useProgram(shaderProgram1);
 	else
 		throw "No shader assigned";
 

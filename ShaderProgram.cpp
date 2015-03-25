@@ -19,26 +19,75 @@ ShaderProgram::ShaderProgram(OpenGLApplication* application, const char* name,
 	_program = create();
 }
 
-void ShaderProgram::setUniform(const char* name, GLint i) {
+void ShaderProgram::setUniform1i(const char* name, GLint i) {
 	GLint loc = glGetUniformLocation(_program, name);
 	glProgramUniform1i(_program, loc, i);
 }
 
-void ShaderProgram::setUniform(const char* name, GLfloat f) {
+void ShaderProgram::setUniform3i(const char* name, GLint i1, GLint i2,
+		GLint i3) {
+	GLint loc = glGetUniformLocation(_program, name);
+	glProgramUniform3i(_program, loc, i1, i2, i3);
+}
+
+void ShaderProgram::setUniform4i(const char* name, GLint i1, GLint i2, GLint i3,
+		GLint i4) {
+	GLint loc = glGetUniformLocation(_program, name);
+	glProgramUniform4f(_program, loc, i1, i2, i3, i4);
+}
+
+void ShaderProgram::setUniform1f(const char* name, GLfloat f) {
 	GLint loc = glGetUniformLocation(_program, name);
 	glProgramUniform1f(_program, loc, f);
 }
 
-void ShaderProgram::setUniform(const char* name, GLfloat f1, GLfloat f2,
+void ShaderProgram::setUniform3f(const char* name, GLfloat f1, GLfloat f2,
 		GLfloat f3) {
 	GLint loc = glGetUniformLocation(_program, name);
 	glProgramUniform3f(_program, loc, f1, f2, f3);
 }
 
-void ShaderProgram::setUniform(const char* name, GLfloat f1, GLfloat f2,
+void ShaderProgram::setUniform4f(const char* name, GLfloat f1, GLfloat f2,
 		GLfloat f3, GLfloat f4) {
 	GLint loc = glGetUniformLocation(_program, name);
 	glProgramUniform4f(_program, loc, f1, f2, f3, f4);
+}
+
+void ShaderProgram::setUniform1d(const char* name, GLdouble d) {
+	GLint loc = glGetUniformLocation(_program, name);
+	glProgramUniform1d(_program, loc, d);
+}
+
+void ShaderProgram::setUniform3d(const char* name, GLdouble d1, GLdouble d2,
+		GLdouble d3) {
+	GLint loc = glGetUniformLocation(_program, name);
+	glProgramUniform3d(_program, loc, d1, d2, d3);
+}
+
+void ShaderProgram::setUniform4d(const char* name, GLdouble d1, GLdouble d2, GLdouble d3,
+		GLdouble d4) {
+	GLint loc = glGetUniformLocation(_program, name);
+	glProgramUniform4d(_program, loc, d1, d2, d3, d4);
+}
+
+void ShaderProgram::setUniformMatrix3x3f(const char* name, GLfloat* values) {
+	GLint loc = glGetUniformLocation(_program, name);
+	glProgramUniformMatrix3fv(_program, loc, 1, false, values);
+}
+
+void ShaderProgram::setUniformMatrix3x3d(const char* name, GLdouble* values) {
+	GLint loc = glGetUniformLocation(_program, name);
+	glProgramUniformMatrix3dv(_program, loc, 1, false, values);
+}
+
+void ShaderProgram::setUniformMatrix4x4f(const char* name, GLfloat* values) {
+	GLint loc = glGetUniformLocation(_program, name);
+	glProgramUniformMatrix4fv(_program, loc, 1, false, values);
+}
+
+void ShaderProgram::setUniformMatrix4x4d(const char* name, GLdouble* values) {
+	GLint loc = glGetUniformLocation(_program, name);
+	glProgramUniformMatrix4dv(_program, loc, 1, false, values);
 }
 
 GLuint ShaderProgram::loadShader(const char* shaderFile, GLenum type) {

@@ -64,7 +64,7 @@ void OpenGLApplication::setupWindow() {
 	// Create the window
 	if (!_fullScreen)
 		_window = glfwCreateWindow(_screenSizeX, _screenSizeY,
-				"OpenGL Tutorial", NULL, NULL);
+				"OpenGL Application", NULL, NULL);
 	else
 		_window = glfwCreateWindow(_screenSizeX, _screenSizeY,
 				"OpenGL Application", glfwGetPrimaryMonitor(), NULL);
@@ -107,7 +107,7 @@ void OpenGLApplication::initialize() {
 	/*GLMatrix<float> m1 = GLMatrix<float>(3, 5);
 	float arr[] = { 1, 0, 0, 1, 2, 0, 1, 0, 2, 3, 0, 0, 1, 3, 4 };
 	std::vector<float> values(arr, arr + sizeof(arr) / sizeof(arr[0]));
-	m1.set(values);
+	m1.setValues(values);
 
 	//m1.print();
 	//m1.transpose().print();
@@ -115,7 +115,7 @@ void OpenGLApplication::initialize() {
 	GLMatrix<float> m2 = GLMatrix<float>(3, 5);
 	float arr2[] = { 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1 };
 	std::vector<float> values2(arr2, arr2 + sizeof(arr2) / sizeof(arr2[0]));
-	m2.set(values2);
+	m2.setValues(values2);
 
 	//m2.print();
 	//(m1 + m2).print();
@@ -128,7 +128,7 @@ void OpenGLApplication::initialize() {
 	//float arr3[] = {1, 3, 2, 1, 0, 1, 4, -4, 2, 5, -2, 9, 3, 7, 0, 1};
 	float arr3[] = { 0, 1, 2, 1, 0, 3, 4, -3, 8 };
 	std::vector<float> values3(arr3, arr3 + sizeof(arr3) / sizeof(arr3[0]));
-	m3.set(values3);
+	m3.setValues(values3);
 
 	//m3.print();
 	//m3.rref().print();
@@ -148,7 +148,7 @@ void OpenGLApplication::initialize() {
 	GLMatrix<float> pos = GLMatrix<float>(4, 1);
 	float arr[] = {0, 0, 10, 0};
 	std::vector<float> values(arr, arr + sizeof(arr)/sizeof(arr[0]));
-	pos.set(values);
+	pos.setValues(values);
 
 	GLMatrix<float> rotationMatrix = GLMatrix<float>::rotationMatrixXYZ(0, 45, 0);
 

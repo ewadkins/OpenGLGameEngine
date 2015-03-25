@@ -26,12 +26,12 @@ public:
 	void renderTriangle();
 	void display();
 	void useProgram(ShaderProgram*);
-	ShaderProgram* shaderProgram;
+	ShaderProgram* shaderProgram1;
+	ShaderProgram* currentProgram;
 private:
 	void setupShaders();
 	OpenGLApplication* _application;
 	GLuint vao, vbo;
-	ShaderProgram* currentProgram;
 };
 
 #endif /* RENDERER_H_ */

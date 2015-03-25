@@ -255,9 +255,18 @@ void GLMatrix<T>::fill(T value) {
 }
 
 template<typename T>
-void GLMatrix<T>::set(std::vector<T> values) {
+void GLMatrix<T>::setMatrix(T** matrix) {
+	for (int i = 0; i < _rows; i++)
+		for (int j = 0; j < _cols; j++) {
+			set(i, j, matrix[i][j]);
+		}
+}
+
+template<typename T>
+void GLMatrix<T>::setValues(std::vector<T> values) {
 	if (values.size() != _rows * _cols)
-		throw std::invalid_argument("Incorrect number of input values");
+		throw std::invalid_argument(
+				"Incorrect number of input values to fill matrix");
 
 	for (int i = 0; i < _rows * _cols; i++) {
 		set(i / _cols, i % _cols, values[i]);
@@ -270,8 +279,26 @@ void GLMatrix<T>::set(int i, int j, T value) {
 }
 
 template<typename T>
-T** GLMatrix<T>::matrix() {
+T** GLMatrix<T>::getMatrix() {
 	return _matrix;
+}
+
+template<typename T>
+std::vector<T> GLMatrix<T>::getValues() {
+	std::vector<T> values;
+	for (int i = 0; i < _rows; i++)
+		for (int j = 0; j < _cols; j++)
+			values.push_back(_matrix[i][j]);
+	return values;
+}
+
+template<typename T>
+T* GLMatrix<T>::getValuesArray() {
+	T* values = new T[_rows * _cols];
+	for (int i = 0; i < _rows; i++)
+		for (int j = 0; j < _cols; j++)
+			values[i * _cols + j] = _matrix[i][j];
+	return values;
 }
 
 template<typename T>
@@ -282,15 +309,13 @@ T GLMatrix<T>::get(int i, int j) {
 template<typename T>
 GLMatrix<T> GLMatrix<T>::clone() {
 	GLMatrix<T> result = GLMatrix<T>(_rows, _cols);
-	for (int i = 0; i < _rows; i++)
-		for (int j = 0; j < _cols; j++) {
-			result.set(i, j, get(i, j));
-		}
+	result.setMatrix(_matrix);
 	return result;
 }
 
 template<typename T>
-void GLMatrix<T>::print() {
+std::vector<std::string> GLMatrix<T>::toStringVector() {
+	std::vector<std::string> strings;
 	std::string** arr = new std::string*[_rows];
 	for (int i = 0; i < _rows; i++) {
 		arr[i] = new std::string[_cols];
@@ -316,15 +341,24 @@ void GLMatrix<T>::print() {
 				arr[i][j] = " " + arr[i][j];
 	}
 	for (int i = 0; i < _rows; i++) {
+		std::string str = "";
 		for (int j = 0; j < _cols; j++) {
 			if (j == 0)
-				std::cout << "[";
-			std::cout << " " << arr[i][j] << " ";
+				str += "[";
+			str += " " + arr[i][j] + " ";
 			if (j == _cols - 1)
-				std::cout << "]";
+				str += "]";
 		}
-		std::cout << std::endl;
+		strings.push_back(str);
 	}
+	return strings;
+}
+
+template<typename T>
+void GLMatrix<T>::print() {
+	std::vector<std::string> strings = toStringVector();
+	for (int i = 0; i < strings.size(); i++)
+		std::cout << strings[i] << std::endl;
 	std::cout << std::endl;
 }
 
@@ -341,6 +375,11 @@ GLMatrix<T> GLMatrix<T>::operator*(T rhs) {
 template<typename T>
 GLMatrix<T> GLMatrix<T>::operator*(GLMatrix<T> rhs) {
 	return mul(rhs);
+}
+
+template<typename T>
+GLMatrix<T> GLMatrix<T>::operator<<(GLMatrix<T> rhs) {
+	return rhs.mul(clone());
 }
 
 template<typename T>

@@ -25,10 +25,32 @@ void Camera::initialize() {
 
 void Camera::useView() {
 
-	glm::mat4 camera = glm::lookAt(glm::vec3(3, 3, 3), glm::vec3(0, 0, 0),
-			glm::vec3(0, 1, 0));
-	//FIXME create suitable setUniform function
-	//_application->_renderer->currentProgram->setUniform("camera", camera);
+	GLMatrix<float> viewMatrix = GLMatrix<float>(4, 1);
+	viewMatrix = viewMatrix << rotate(getRotationX(), getRotationY(), getRotationZ())
+			<< translate(getX(), getY(), getZ());
+	_application->_renderer->currentProgram->setUniformMatrix4x4f("viewMatrix", viewMatrix.getValuesArray());
+
+	/*
+	 glm::mat4 camera = glm::lookAt(glm::vec3(3, 3, 3), glm::vec3(0, 0, 0),
+	 glm::vec3(0, 1, 0));
+	 //FIXME create suitable setUniform function
+	 //_application->_renderer->currentProgram->setUniform("camera", camera);
+	 */
+}
+
+template<typename T>
+GLMatrix<T> Camera::translate(T deltaX, T deltaY, T deltaZ) {
+	return GLMatrix<T>::translationMatrix(deltaX, deltaY, deltaZ);
+}
+
+template<typename T>
+GLMatrix<T> Camera::scale(T scaleX, T scaleY, T scaleZ) {
+	return GLMatrix<T>::scalingMatrix(scaleX, scaleY, scaleZ);
+}
+
+template<typename T>
+GLMatrix<T> Camera::rotate(T thetaX, T thetaY, T thetaZ) {
+	return GLMatrix<T>::rotationMatrixXYZ(thetaX, thetaY, thetaZ);
 }
 
 float Camera::getX() {
