@@ -10,7 +10,8 @@
 #include "ShaderProgram.h"
 #include "OpenGLApplication.h"
 
-ShaderProgram::ShaderProgram(OpenGLApplication* application, const char* name, const char* vertexPath, const char* fragmentPath) {
+ShaderProgram::ShaderProgram(OpenGLApplication* application, const char* name,
+		const char* vertexPath, const char* fragmentPath) {
 	_application = application;
 	_name = name;
 	_vertexPath = vertexPath;
@@ -28,12 +29,14 @@ void ShaderProgram::setUniform(const char* name, GLfloat f) {
 	glProgramUniform1f(_program, loc, f);
 }
 
-void ShaderProgram::setUniform(const char* name, GLfloat f1, GLfloat f2, GLfloat f3) {
+void ShaderProgram::setUniform(const char* name, GLfloat f1, GLfloat f2,
+		GLfloat f3) {
 	GLint loc = glGetUniformLocation(_program, name);
 	glProgramUniform3f(_program, loc, f1, f2, f3);
 }
 
-void ShaderProgram::setUniform(const char* name, GLfloat f1, GLfloat f2, GLfloat f3, GLfloat f4) {
+void ShaderProgram::setUniform(const char* name, GLfloat f1, GLfloat f2,
+		GLfloat f3, GLfloat f4) {
 	GLint loc = glGetUniformLocation(_program, name);
 	glProgramUniform4f(_program, loc, f1, f2, f3, f4);
 }
@@ -72,14 +75,16 @@ GLuint ShaderProgram::create() {
 	// Loads vertex shader
 	_application->_logger->log("Loading vertex shader..").endLine().increaseIndent();
 	vertexShader = loadShader(_vertexPath, GL_VERTEX_SHADER);
-	if(vertexShader)
-		_application->_logger->decreaseIndent().log("Vertex shader loaded successfully!").endLine();
+	if (vertexShader)
+		_application->_logger->decreaseIndent().log(
+				"Vertex shader loaded successfully!").endLine();
 
 	// Loads fragment shader
 	_application->_logger->log("Loading fragment shader..").endLine().increaseIndent();
 	fragmentShader = loadShader(_fragmentPath, GL_FRAGMENT_SHADER);
-	if(fragmentShader)
-		_application->_logger->decreaseIndent().log("Fragment shader loaded successfully!").endLine();
+	if (fragmentShader)
+		_application->_logger->decreaseIndent().log(
+				"Fragment shader loaded successfully!").endLine();
 
 	// Creates shader program
 	_application->_logger->log("Creating shader program..").endLine();
@@ -99,9 +104,9 @@ GLuint ShaderProgram::create() {
 	if (!linked || !_program || !vertexShader || !fragmentShader) {
 		_application->warn("Could not create/link the shader");
 		return 0;
-	}
-	else
-		_application->_logger->log("Shader program created and linked successfully!").endLine();
+	} else
+		_application->_logger->log(
+				"Shader program created and linked successfully!").endLine();
 
 	return _program;
 }
@@ -115,5 +120,4 @@ int ShaderProgram::getProgramId() {
 	// Returns the program ID used by OpenGL
 	return _program;
 }
-
 

@@ -99,35 +99,58 @@ void OpenGLApplication::setupDisplay() {
 
 void OpenGLApplication::initialize() {
 
-	GLMatrix<float> m1 = GLMatrix<float>(3, 5);
-	float arr[] = {1, 0, 0, 1, 2, 0, 1, 0, 2, 3, 0, 0, 1, 3, 4};
-	std::vector<float> values(arr, arr + sizeof(arr)/sizeof(arr[0]));
+	clock_t start, finish;
+
+	_logger->log("Testing matrices...").endLine().increaseIndent();
+	start = clock();
+
+	/*GLMatrix<float> m1 = GLMatrix<float>(3, 5);
+	float arr[] = { 1, 0, 0, 1, 2, 0, 1, 0, 2, 3, 0, 0, 1, 3, 4 };
+	std::vector<float> values(arr, arr + sizeof(arr) / sizeof(arr[0]));
 	m1.set(values);
 
 	//m1.print();
 	//m1.transpose().print();
 
 	GLMatrix<float> m2 = GLMatrix<float>(3, 5);
-	float arr2[] = {1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1};
-	std::vector<float> values2(arr2, arr2 + sizeof(arr2)/sizeof(arr2[0]));
+	float arr2[] = { 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1 };
+	std::vector<float> values2(arr2, arr2 + sizeof(arr2) / sizeof(arr2[0]));
 	m2.set(values2);
 
 	//m2.print();
+	//(m1 + m2).print();
+	//(m1.transpose() * m1).print();
+	//(m1 * m1.transpose()).print();
+	//(m2 * 2).print();
 
-	//m1.transpose().mul(m1).print();
-	//m1.mul(m1.transpose()).print();
-
-
-	GLMatrix<float> m3 = GLMatrix<float>(3, 5);
-	float arr3[] = {1, 3, 2, 0, 1, 1, 3, 1, 3, 1, 2, 6, 0, 1, 1};
-	std::vector<float> values3(arr3, arr3 + sizeof(arr3)/sizeof(arr3[0]));
+	GLMatrix<float> m3 = GLMatrix<float>(3, 3);
+	//float arr3[] = {1, 3, 2, 0, 1, 1, 0, 1, 3, 1, 2, 3, 0, 1, 1};
+	//float arr3[] = {1, 3, 2, 1, 0, 1, 4, -4, 2, 5, -2, 9, 3, 7, 0, 1};
+	float arr3[] = { 0, 1, 2, 1, 0, 3, 4, -3, 8 };
+	std::vector<float> values3(arr3, arr3 + sizeof(arr3) / sizeof(arr3[0]));
 	m3.set(values3);
 
-	m3.print();
-	m3.reducedRowEchelon().print();
+	//m3.print();
+	//m3.rref().print();
+	//m3.upperTriangular().print();
+	//std::cout << m3.determinant() << std::endl << std::endl;
+	m3.inverse().print();*/
+
+	GLMatrix<float>::identity(4).print();
+	GLMatrix<float>::translationMatrix(10, 20, 30).print();
+	GLMatrix<float>::scalingMatrix(10, 20, 30).print();
+	GLMatrix<float>::rotationMatrixX(45).print();
+	GLMatrix<float>::rotationMatrixY(45).print();
+	GLMatrix<float>::rotationMatrixZ(45).print();
+	GLMatrix<float>::rotationMatrixXYZ(45, 45, 45).print();
+	GLMatrix<float>::rotationMatrixLine(10, 20, 30, 1, 1, 1, 45).print();
 
 
-	clock_t start, finish;
+
+	finish = clock();
+	_logger->log("(Took ").log(
+			(double(finish) - double(start)) / CLOCKS_PER_SEC * 1000).log(
+			" ms)").endLine().decreaseIndent();
 
 	_logger->log("Initializing GLFW..").endLine().increaseIndent();
 	start = clock();
@@ -320,14 +343,16 @@ int OpenGLApplication::start() {
 
 			} catch (const char* str) {
 				// Fatal error purposely thrown from within the application
-				_logger->endLine().setIndent(0).log("*** Stopping OpenGLApplication (").log(
-						str).log(") ***").endLine();
+				_logger->endLine().setIndent(0).log(
+						"*** Stopping OpenGLApplication (").log(str).log(
+						") ***").endLine();
 				result = -1;
 			}
 		} catch (int e) {
 			// Error thrown to signify the end of the application
 			if (e == 0)
-				_logger->endLine().setIndent(0).log("*** Stopping OpenGLApplication ***").endLine();
+				_logger->endLine().setIndent(0).log(
+						"*** Stopping OpenGLApplication ***").endLine();
 			else
 				throw;
 		}

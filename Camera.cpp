@@ -8,7 +8,8 @@
 #include "Camera.h"
 #include "OpenGLApplication.h"
 
-Camera::Camera(OpenGLApplication* application, float x, float y, float z, float rotationX, float rotationY, float rotationZ) {
+Camera::Camera(OpenGLApplication* application, float x, float y, float z,
+		float rotationX, float rotationY, float rotationZ) {
 	_application = application;
 	_x = x;
 	_y = y;
@@ -24,7 +25,8 @@ void Camera::initialize() {
 
 void Camera::useView() {
 
-	glm::mat4 camera = glm::lookAt(glm::vec3(3,3,3), glm::vec3(0,0,0), glm::vec3(0,1,0));
+	glm::mat4 camera = glm::lookAt(glm::vec3(3, 3, 3), glm::vec3(0, 0, 0),
+			glm::vec3(0, 1, 0));
 	//FIXME create suitable setUniform function
 	//_application->_renderer->currentProgram->setUniform("camera", camera);
 }

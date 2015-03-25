@@ -17,4 +17,3 @@ int main() {
 	return result;
 }
 
-

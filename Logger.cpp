@@ -17,7 +17,7 @@ Logger::Logger() {
 
 // Logs a string, adding an indent if at the start of a new line
 Logger& Logger::log(std::string str) {
-	if(newLine)
+	if (newLine)
 		str = indent(str);
 	_log[_log.size() - 1] += str;
 	std::cout << str << std::flush;
@@ -25,9 +25,9 @@ Logger& Logger::log(std::string str) {
 }
 
 /*template<typename T>
-Logger& Logger::log(T t) {
-	return log(std::to_string(t));
-}*/
+ Logger& Logger::log(T t) {
+ return log(std::to_string(t));
+ }*/
 
 // Logs a character array
 Logger& Logger::log(const char* c) {
@@ -75,7 +75,7 @@ Logger& Logger::increaseIndent() {
 
 // Decreases the number of indents
 Logger& Logger::decreaseIndent() {
-	if(numIndents > 0)
+	if (numIndents > 0)
 		numIndents--;
 	return *this;
 }
@@ -88,7 +88,7 @@ Logger& Logger::setIndent(int i) {
 
 // Adds indents to the string
 std::string Logger::indent(std::string str) {
-	for(int i = 0; i < numIndents; i++)
+	for (int i = 0; i < numIndents; i++)
 		str = indentString + str;
 	newLine = false;
 	return str;

@@ -15,7 +15,8 @@ class OpenGLApplication;
 
 class Camera {
 public:
-	Camera(OpenGLApplication* application, float x, float y, float z, float rotationX, float rotationY, float rotationZ);
+	Camera(OpenGLApplication* application, float x, float y, float z,
+			float rotationX, float rotationY, float rotationZ);
 	virtual ~Camera() {
 	}
 	void initialize();
