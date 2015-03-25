@@ -41,6 +41,8 @@ public:
 	GLMatrix operator+(GLMatrix rhs);
 	GLMatrix operator*(T k);
 	GLMatrix operator*(GLMatrix rhs);
+	static GLMatrix zeros(int m, int n);
+	static GLMatrix ones(int m, int n);
 	static GLMatrix identity(int size);
 	static GLMatrix translationMatrix(T deltaX, T deltaY, T deltaZ);
 	static GLMatrix scalingMatrix(T scaleX, T scaleY, T scaleZ);

@@ -145,6 +145,17 @@ void OpenGLApplication::initialize() {
 	GLMatrix<float>::rotationMatrixXYZ(45, 45, 45).print();
 	GLMatrix<float>::rotationMatrixLine(10, 20, 30, 1, 1, 1, 45).print();
 
+	GLMatrix<float> pos = GLMatrix<float>(4, 1);
+	float arr[] = {0, 0, 10, 0};
+	std::vector<float> values(arr, arr + sizeof(arr)/sizeof(arr[0]));
+	pos.set(values);
+
+	GLMatrix<float> rotationMatrix = GLMatrix<float>::rotationMatrixXYZ(0, 45, 0);
+
+	pos.print();
+	rotationMatrix.print();
+
+	(rotationMatrix * pos).print();
 
 
 	finish = clock();

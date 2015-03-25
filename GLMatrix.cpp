@@ -344,6 +344,19 @@ GLMatrix<T> GLMatrix<T>::operator*(GLMatrix<T> rhs) {
 }
 
 template<typename T>
+GLMatrix<T> GLMatrix<T>::zeros(int m, int n) {
+	GLMatrix<T> result = GLMatrix<T>(m, n);
+	return result;
+}
+
+template<typename T>
+GLMatrix<T> GLMatrix<T>::ones(int m, int n) {
+	GLMatrix<T> result = GLMatrix<T>(m, n);
+	result.fill(1);
+	return result;
+}
+
+template<typename T>
 GLMatrix<T> GLMatrix<T>::identity(int size) {
 	GLMatrix<T> result = GLMatrix<T>(size, size);
 	for (int n = 0; n < size; n++)
@@ -481,20 +494,8 @@ GLMatrix<T> GLMatrix<T>::rotationMatrixLine(T x, T y, T z, T u, T v, T w,
 	return result;
 }
 
-/*
- template<typename T>
- template<typename S>
- GLMatrix<T> GLMatrix<T>::operator=(GLMatrix<S> rhs) {
- for(int i = 0; i < _rows; i++)
- for(int j = 0; j < _cols; j++) {
- set(i, j, rhs.get(i, j));
- }
- return this;
- }*/
-
 // Explicit template instantiation
-template class GLMatrix<double> ;
 template class GLMatrix<float> ;
-//GLMatrix<double> d(1, 1);
-//GLMatrix<float> f(1, 1);
+template class GLMatrix<double> ;
+template class GLMatrix<long double> ;
 
