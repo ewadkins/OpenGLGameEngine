@@ -291,11 +291,35 @@ GLMatrix<T> GLMatrix<T>::clone() {
 
 template<typename T>
 void GLMatrix<T>::print() {
+	std::string** arr = new std::string*[_rows];
+	for (int i = 0; i < _rows; i++) {
+		arr[i] = new std::string[_cols];
+		for (int j = 0; j < _cols; j++) {
+			std::string str = std::to_string(_matrix[i][j]);
+			int decimalIndex = str.find(std::string("."));
+			if (decimalIndex != std::string::npos) {
+				for (int c = str.length() - 1; c >= decimalIndex + 1; c--) {
+					if (str.at(c) == '0' && str.at(c - 1) != '.')
+						str = str.substr(0, c);
+				}
+			}
+			arr[i][j] = str;
+		}
+	}
+	for (int j = 0; j < _cols; j++) {
+		int maxLength = 0;
+		for (int i = 0; i < _rows; i++)
+			if (arr[i][j].length() > maxLength)
+				maxLength = arr[i][j].length();
+		for (int i = 0; i < _rows; i++)
+			while (arr[i][j].length() < maxLength)
+				arr[i][j] = " " + arr[i][j];
+	}
 	for (int i = 0; i < _rows; i++) {
 		for (int j = 0; j < _cols; j++) {
 			if (j == 0)
-				std::cout << "[ ";
-			std::cout << get(i, j) << " ";
+				std::cout << "[";
+			std::cout << " " << arr[i][j] << " ";
 			if (j == _cols - 1)
 				std::cout << "]";
 		}
@@ -405,7 +429,7 @@ GLMatrix<T> GLMatrix<T>::rotationMatrixXYZ(T thetaX, T thetaY, T thetaZ) {
 }
 
 template<typename T>
-GLMatrix<T> GLMatrix<T>::rotationMatrixLine(T a, T b, T c, T u, T v, T w,
+GLMatrix<T> GLMatrix<T>::rotationMatrixLine(T x, T y, T z, T u, T v, T w,
 		T theta) {
 	GLMatrix<T> result = identity(4);
 	T rads = theta * PI / 180;
@@ -421,8 +445,8 @@ GLMatrix<T> GLMatrix<T>::rotationMatrixLine(T a, T b, T c, T u, T v, T w,
 					+ v * std::sqrt(u * u + v * v + w * w) * std::sin(rads))
 					/ (u * u + v * v + w * w));
 	result.set(0, 3,
-			((a * (v * v + w * w) - u * (b * v + c * w)) * (1 - std::cos(rads))
-					+ (b * w - c * v) * std::sqrt(u * u + v * v + w * w)
+			((x * (v * v + w * w) - u * (y * v + z * w)) * (1 - std::cos(rads))
+					+ (y * w - z * v) * std::sqrt(u * u + v * v + w * w)
 							* std::sin(rads)) / (u * u + v * v + w * w));
 	result.set(1, 0,
 			(u * v * (1 - std::cos(rads))
@@ -436,8 +460,8 @@ GLMatrix<T> GLMatrix<T>::rotationMatrixLine(T a, T b, T c, T u, T v, T w,
 					- u * std::sqrt(u * u + v * v + w * w) * std::sin(rads))
 					/ (u * u + v * v + w * w));
 	result.set(1, 3,
-			((b * (u * u + w * w) - v * (a * u + c * w)) * (1 - std::cos(rads))
-					+ (c * u - a * w) * std::sqrt(u * u + v * v + w * w)
+			((y * (u * u + w * w) - v * (x * u + z * w)) * (1 - std::cos(rads))
+					+ (z * u - x * w) * std::sqrt(u * u + v * v + w * w)
 							* std::sin(rads)) / (u * u + v * v + w * w));
 	result.set(2, 0,
 			(u * w * (1 - std::cos(rads))
@@ -451,8 +475,8 @@ GLMatrix<T> GLMatrix<T>::rotationMatrixLine(T a, T b, T c, T u, T v, T w,
 			(w * w + (u * u + v * v) * std::cos(rads))
 					/ (u * u + v * v + w * w));
 	result.set(2, 3,
-			((c * (u * u + v * v) - w * (a * u + b * v)) * (1 - std::cos(rads))
-					+ (a * v - b * u) * std::sqrt(u * u + v * v + w * w)
+			((z * (u * u + v * v) - w * (x * u + y * v)) * (1 - std::cos(rads))
+					+ (x * v - y * u) * std::sqrt(u * u + v * v + w * w)
 							* std::sin(rads)) / (u * u + v * v + w * w));
 	return result;
 }

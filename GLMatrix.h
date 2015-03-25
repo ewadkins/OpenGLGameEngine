@@ -12,6 +12,7 @@
 #include <stdexcept>
 #include <vector>
 #include <cmath>
+#include <string>
 
 template<typename T>
 class GLMatrix {
