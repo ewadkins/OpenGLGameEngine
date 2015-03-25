@@ -5,6 +5,7 @@ in vec3 inColor;
 out vec3 passColor;
 
 uniform mat4 viewMatrix;
+uniform mat4 projectionMatrix;
 
 void main()
 {

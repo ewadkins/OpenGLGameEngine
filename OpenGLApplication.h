@@ -37,8 +37,8 @@ public:
 	Logger* _logger;
 	Renderer* _renderer;
 	Camera* _camera;
-	int _screenSizeX;
-	int _screenSizeY;
+	int _windowSizeX;
+	int _windowSizeY;
 	bool _fullScreen;
 private:
 	void setupWindow();

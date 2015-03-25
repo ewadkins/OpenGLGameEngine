@@ -56,6 +56,8 @@ public:
 	static GLMatrix rotationMatrixZ(T theta);
 	static GLMatrix rotationMatrixXYZ(T thetaX, T thetaY, T thetaZ);
 	static GLMatrix rotationMatrixLine(T a, T b, T c, T u, T v, T w, T theta);
+	static GLMatrix orthographicProjectionMatrix(T width, T height, T near, T far);
+	static GLMatrix perspectiveProjectionMatrix(T fovX, T fovY, T near, T far);
 private:
 	int _rows;
 	int _cols;

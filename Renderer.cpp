@@ -57,7 +57,7 @@ void Renderer::initTriangle() {
 
 	std::vector<GLfloat> data;
 
-	GLfloat vertexData[] = { 0.0, 0.8, 0.0, -0.8, -0.8, 0.0, 0.8, -0.8, 0.0, };
+	GLfloat vertexData[] = { 0.0, 0.8, -0.5, -0.8, -0.8, -0.5, 0.8, -0.8, -0.5, };
 	GLfloat colorData[] = { 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, };
 
 	// Number of vertices

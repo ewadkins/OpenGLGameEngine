@@ -533,6 +533,29 @@ GLMatrix<T> GLMatrix<T>::rotationMatrixLine(T x, T y, T z, T u, T v, T w,
 	return result;
 }
 
+template<typename T>
+GLMatrix<T> GLMatrix<T>::orthographicProjectionMatrix(T width, T height, T near, T far) {
+	GLMatrix<T> result = identity(4);
+	result.set(0, 0, 1 / width);
+	result.set(1, 1, 1 / height);
+	result.set(2, 2, -2 / (far - near));
+	result.set(2, 3, -(far + near) / (far - near));
+	return result;
+}
+
+template<typename T>
+GLMatrix<T> GLMatrix<T>::perspectiveProjectionMatrix(T fovX, T fovY, T near, T far) {
+	GLMatrix<T> result = zeros(4, 4);
+	T fovXRads = fovX * PI / 180;
+	T fovYRads = fovY * PI / 180;
+	result.set(0, 0, std::atan(fovXRads/2));
+	result.set(1, 1, std::atan(fovYRads/2));
+	result.set(2, 2, -(far + near) / (far - near));
+	result.set(2, 3, -2 * (near * far) / (far - near));
+	result.set(3, 2, -1);
+	return result;
+}
+
 // Explicit template instantiation
 template class GLMatrix<float> ;
 template class GLMatrix<double> ;

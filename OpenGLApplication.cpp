@@ -37,6 +37,16 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action,
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
 	// Handle window resizes
 	glViewport(0, 0, width, height);
+
+	// Get the OpenGLApplication context running in the window
+	OpenGLApplication* application = nullptr;
+	for (int i = 0; i < Main::applications.size(); i++)
+		if (Main::applications[i]->_window == window)
+			application = Main::applications[i];
+
+	application->_windowSizeX = width;
+	application->_windowSizeY = height;
+	application->_camera->updateProjectionMatrix();
 }
 
 OpenGLApplication::OpenGLApplication(int screenSizeX, int screenSizeY,
@@ -44,8 +54,8 @@ OpenGLApplication::OpenGLApplication(int screenSizeX, int screenSizeY,
 	_application = this;
 	_window = nullptr;
 	_logger = new Logger();
-	_screenSizeX = screenSizeX;
-	_screenSizeY = screenSizeY;
+	_windowSizeX = screenSizeX;
+	_windowSizeY = screenSizeY;
 	_fullScreen = fullScreen;
 	_renderer = nullptr;
 	_camera = nullptr;
@@ -63,10 +73,10 @@ void OpenGLApplication::setupWindow() {
 
 	// Create the window
 	if (!_fullScreen)
-		_window = glfwCreateWindow(_screenSizeX, _screenSizeY,
+		_window = glfwCreateWindow(_windowSizeX, _windowSizeY,
 				"OpenGL Application", NULL, NULL);
 	else
-		_window = glfwCreateWindow(_screenSizeX, _screenSizeY,
+		_window = glfwCreateWindow(_windowSizeX, _windowSizeY,
 				"OpenGL Application", glfwGetPrimaryMonitor(), NULL);
 
 	// If window creation fails, then exit
@@ -255,6 +265,7 @@ void OpenGLApplication::initialize() {
 }
 
 void OpenGLApplication::gameLoop() {
+
 
 	// Game loop, while window close is not requested
 	while (!glfwWindowShouldClose(_window)) {

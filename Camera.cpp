@@ -20,22 +20,35 @@ Camera::Camera(OpenGLApplication* application, float x, float y, float z,
 }
 
 void Camera::initialize() {
-
+	setFovX(70);
+	setFovY(70);
+	setNear(0.01);
+	setFar(1000);
+	updateProjectionMatrix();
+	useView();
 }
 
 void Camera::useView() {
 
-	GLMatrix<float> viewMatrix = GLMatrix<float>(4, 1);
+	GLMatrix<float> viewMatrix = GLMatrix<float>::identity(4);
 	viewMatrix = viewMatrix << rotate(getRotationX(), getRotationY(), getRotationZ())
 			<< translate(getX(), getY(), getZ());
+
+	viewMatrix.print();
+
 	_application->_renderer->currentProgram->setUniformMatrix4x4f("viewMatrix", viewMatrix.getValuesArray());
 
-	/*
-	 glm::mat4 camera = glm::lookAt(glm::vec3(3, 3, 3), glm::vec3(0, 0, 0),
-	 glm::vec3(0, 1, 0));
-	 //FIXME create suitable setUniform function
-	 //_application->_renderer->currentProgram->setUniform("camera", camera);
-	 */
+}
+
+void Camera::updateProjectionMatrix() {
+
+	GLMatrix<float> projectionMatrix = GLMatrix<float>::identity(4);
+	// FIXME orhtographic matrix not calculated correctly
+	//projectionMatrix = projectionMatrix << orthographic<float>(_application->_windowSizeX, _application->_windowSizeY, getNear(), getFar());
+	projectionMatrix = projectionMatrix << perspective<float>(getFovX(), getFovY(), getNear(), getFar());
+
+	projectionMatrix.print();
+
 }
 
 template<typename T>
@@ -51,6 +64,56 @@ GLMatrix<T> Camera::scale(T scaleX, T scaleY, T scaleZ) {
 template<typename T>
 GLMatrix<T> Camera::rotate(T thetaX, T thetaY, T thetaZ) {
 	return GLMatrix<T>::rotationMatrixXYZ(thetaX, thetaY, thetaZ);
+}
+
+template<typename T>
+GLMatrix<T> Camera::orthographic(int _width, int _height, float _near, float _far) {
+	T width = (T) _width;
+	T height = (T) _height;
+	T near = (T) _near;
+	T far = (T) _far;
+	return GLMatrix<T>::orthographicProjectionMatrix(width, height, near, far);
+}
+
+template<typename T>
+GLMatrix<T> Camera::perspective(int _fovX, int _fovY, float _near, float _far) {
+	T fovX = (T) _fovX;
+	T fovY = (T) _fovY;
+	T near = (T) _near;
+	T far = (T) _far;
+	return GLMatrix<T>::perspectiveProjectionMatrix(fovX, fovY, near, far);
+}
+
+int Camera::getFovX() {
+	return _fovX;
+}
+
+int Camera::getFovY() {
+	return _fovY;
+}
+
+float Camera::getNear() {
+	return _near;
+}
+
+float Camera::getFar() {
+	return _far;
+}
+
+void Camera::setFovX(int fovX) {
+	_fovX = fovX;
+}
+
+void Camera::setFovY(int fovY) {
+	_fovY = fovY;
+}
+
+void Camera::setNear(float near) {
+	_near = near;
+}
+
+void Camera::setFar(float far) {
+	_far = far;
 }
 
 float Camera::getX() {
@@ -77,27 +140,27 @@ float Camera::getRotationZ() {
 	return _rotationZ;
 }
 
-void Camera::setX() {
-
+void Camera::setX(float x) {
+	_x = x;
 }
 
-void Camera::setY() {
-
+void Camera::setY(float y) {
+	_y = y;
 }
 
-void Camera::setZ() {
-
+void Camera::setZ(float z) {
+	_z = z;
 }
 
-void Camera::setRotationX() {
-
+void Camera::setRotationX(float rotationX) {
+	_rotationX = rotationX;
 }
 
-void Camera::setRotationY() {
-
+void Camera::setRotationY(float rotationY) {
+	_rotationY = rotationY;
 }
 
-void Camera::setRotationZ() {
-
+void Camera::setRotationZ(float rotationZ) {
+	_rotationZ = rotationZ;
 }
 
