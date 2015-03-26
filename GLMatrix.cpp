@@ -95,11 +95,15 @@ GLMatrix<T> GLMatrix<T>::rref() {
 				y++;
 				continue;
 			}
+			//std::cout << "Row exchange" << std::endl;
+			//result.print();
 		}
 		if (result.get(x, y) != 1) {
 			T k = result.get(x, y);
 			for (int j = 0; j < _cols; j++)
 				result.set(x, j, result.get(x, j) / k);
+			//std::cout << "Row division" << std::endl;
+			//result.print();
 		}
 		for (int i = 0; i < _rows; i++) {
 			if (i != x && result.get(i, y) != 0) {
@@ -111,6 +115,8 @@ GLMatrix<T> GLMatrix<T>::rref() {
 		}
 		x++;
 		y++;
+		//std::cout << "Row elimination" << std::endl;
+		//result.print();
 	}
 	/*
 	 // Change negative zeros from floating point error to normal zeros

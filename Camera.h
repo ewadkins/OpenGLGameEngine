@@ -31,6 +31,9 @@ public:
 	void setFovY(int fovY);
 	void setNear(float near);
 	void setFar(float far);
+	void rotateX(float theta);
+	void rotateY(float theta);
+	void rotateZ(float theta);
 	float getX();
 	float getY();
 	float getZ();

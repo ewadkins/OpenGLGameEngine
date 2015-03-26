@@ -114,7 +114,8 @@ void OpenGLApplication::initialize() {
 	_logger->log("Testing matrices...").endLine().increaseIndent();
 	start = clock();
 
-	/*GLMatrix<float> m1 = GLMatrix<float>(3, 5);
+	/*
+	GLMatrix<float> m1 = GLMatrix<float>(3, 5);
 	float arr[] = { 1, 0, 0, 1, 2, 0, 1, 0, 2, 3, 0, 0, 1, 3, 4 };
 	std::vector<float> values(arr, arr + sizeof(arr) / sizeof(arr[0]));
 	m1.setValues(values);
@@ -132,19 +133,20 @@ void OpenGLApplication::initialize() {
 	//(m1.transpose() * m1).print();
 	//(m1 * m1.transpose()).print();
 	//(m2 * 2).print();
+	*/
 
-	GLMatrix<float> m3 = GLMatrix<float>(3, 3);
+	GLMatrix<float> m3 = GLMatrix<float>(4, 4);
 	//float arr3[] = {1, 3, 2, 0, 1, 1, 0, 1, 3, 1, 2, 3, 0, 1, 1};
-	//float arr3[] = {1, 3, 2, 1, 0, 1, 4, -4, 2, 5, -2, 9, 3, 7, 0, 1};
-	float arr3[] = { 0, 1, 2, 1, 0, 3, 4, -3, 8 };
+	float arr3[] = {1, 3, 2, 1, 0, 1, 4, -4, 2, 5, -2, 9, 3, 7, 0, 1};
+	//float arr3[] = { 0, 1, 2, 1, 0, 3, 4, -3, 8 };
 	std::vector<float> values3(arr3, arr3 + sizeof(arr3) / sizeof(arr3[0]));
 	m3.setValues(values3);
 
-	//m3.print();
-	//m3.rref().print();
+	m3.print();
+	m3.rref().print();
 	//m3.upperTriangular().print();
 	//std::cout << m3.determinant() << std::endl << std::endl;
-	m3.inverse().print();*/
+	//m3.inverse().print();
 
 	GLMatrix<float>::identity(4).print();
 	GLMatrix<float>::translationMatrix(10, 20, 30).print();
@@ -272,6 +274,11 @@ void OpenGLApplication::gameLoop() {
 
 		static int count = 0;
 		count++;
+
+		//_camera->rotateX(2);
+		_camera->rotateY(2);
+		//_camera->rotateZ(2);
+		_camera->useView();
 
 		_renderer->renderTriangle();
 		_renderer->display();

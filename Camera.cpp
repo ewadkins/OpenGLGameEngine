@@ -17,13 +17,13 @@ Camera::Camera(OpenGLApplication* application, float x, float y, float z,
 	_rotationX = rotationX;
 	_rotationY = rotationY;
 	_rotationZ = rotationZ;
+	_fovX = 70;
+	_fovY = 70;
+	_near = 0.01;
+	_far = 1000;
 }
 
 void Camera::initialize() {
-	setFovX(70);
-	setFovY(70);
-	setNear(0.01);
-	setFar(1000);
 	updateProjectionMatrix();
 	useView();
 }
@@ -31,12 +31,14 @@ void Camera::initialize() {
 void Camera::useView() {
 
 	GLMatrix<float> viewMatrix = GLMatrix<float>::identity(4);
-	viewMatrix = viewMatrix << rotate(getRotationX(), getRotationY(), getRotationZ())
-			<< translate(getX(), getY(), getZ());
+	viewMatrix = viewMatrix
+			<< rotate<float>(getRotationX(), getRotationY(), getRotationZ())
+			<< translate<float>(getX(), getY(), getZ());
 
-	viewMatrix.print();
+	//viewMatrix.print();
 
-	_application->_renderer->currentProgram->setUniformMatrix4x4f("viewMatrix", viewMatrix.getValuesArray());
+	_application->_renderer->currentProgram->setUniformMatrix4x4f("viewMatrix",
+			viewMatrix.getValuesArray());
 
 }
 
@@ -45,9 +47,13 @@ void Camera::updateProjectionMatrix() {
 	GLMatrix<float> projectionMatrix = GLMatrix<float>::identity(4);
 	// FIXME orhtographic matrix not calculated correctly
 	//projectionMatrix = projectionMatrix << orthographic<float>(_application->_windowSizeX, _application->_windowSizeY, getNear(), getFar());
-	projectionMatrix = projectionMatrix << perspective<float>(getFovX(), getFovY(), getNear(), getFar());
+	projectionMatrix = projectionMatrix
+			<< perspective<float>(getFovX(), getFovY(), getNear(), getFar());
 
 	projectionMatrix.print();
+
+	_application->_renderer->currentProgram->setUniformMatrix4x4f(
+			"projectionMatrix", projectionMatrix.getValuesArray());
 
 }
 
@@ -67,7 +73,8 @@ GLMatrix<T> Camera::rotate(T thetaX, T thetaY, T thetaZ) {
 }
 
 template<typename T>
-GLMatrix<T> Camera::orthographic(int _width, int _height, float _near, float _far) {
+GLMatrix<T> Camera::orthographic(int _width, int _height, float _near,
+		float _far) {
 	T width = (T) _width;
 	T height = (T) _height;
 	T near = (T) _near;
@@ -114,6 +121,18 @@ void Camera::setNear(float near) {
 
 void Camera::setFar(float far) {
 	_far = far;
+}
+
+void Camera::rotateX(float theta) {
+	setRotationX(getRotationX() + theta);
+}
+
+void Camera::rotateY(float theta) {
+	setRotationY(getRotationY() + theta);
+}
+
+void Camera::rotateZ(float theta) {
+	setRotationZ(getRotationZ() + theta);
 }
 
 float Camera::getX() {
