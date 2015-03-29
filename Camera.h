@@ -47,16 +47,11 @@ public:
 	void setRotationY(float rotationY);
 	void setRotationZ(float rotationZ);
 private:
-	template<typename T>
-	static GLMatrix<T> translate(T deltaX, T deltaY, T deltaZ);
-	template<typename T>
-	static GLMatrix<T> scale(T scaleX, T scaleY, T scaleZ);
-	template<typename T>
-	static GLMatrix<T> rotate(T thetaX, T thetaY, T thetaZ);
-	template<typename T>
-	GLMatrix<T> orthographic(int width, int height, float near, float far);
-	template<typename T>
-	GLMatrix<T> perspective(int fovX, int fovY, float near, float far);
+	static GLMatrix<float> translate(float deltaX, float deltaY, float deltaZ);
+	static GLMatrix<float> scale(float scaleX, float scaleY, float scaleZ);
+	static GLMatrix<float> rotate(float thetaX, float thetaY, float thetaZ);
+	static GLMatrix<float> orthographic(int width, int height, float near, float far);
+	static GLMatrix<float> perspective(int fovX, int fovY, float near, float far);
 	OpenGLApplication* _application;
 	int _fovX, _fovY;
 	float _near, _far, _x, _y, _z, _rotationX, _rotationY, _rotationZ;

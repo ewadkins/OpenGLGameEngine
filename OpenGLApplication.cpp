@@ -115,29 +115,29 @@ void OpenGLApplication::initialize() {
 	start = clock();
 
 	/*
-	GLMatrix<float> m1 = GLMatrix<float>(3, 5);
-	float arr[] = { 1, 0, 0, 1, 2, 0, 1, 0, 2, 3, 0, 0, 1, 3, 4 };
-	std::vector<float> values(arr, arr + sizeof(arr) / sizeof(arr[0]));
-	m1.setValues(values);
+	 GLMatrix<float> m1 = GLMatrix<float>(3, 5);
+	 float arr[] = { 1, 0, 0, 1, 2, 0, 1, 0, 2, 3, 0, 0, 1, 3, 4 };
+	 std::vector<float> values(arr, arr + sizeof(arr) / sizeof(arr[0]));
+	 m1.setValues(values);
 
-	//m1.print();
-	//m1.transpose().print();
+	 //m1.print();
+	 //m1.transpose().print();
 
-	GLMatrix<float> m2 = GLMatrix<float>(3, 5);
-	float arr2[] = { 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1 };
-	std::vector<float> values2(arr2, arr2 + sizeof(arr2) / sizeof(arr2[0]));
-	m2.setValues(values2);
+	 GLMatrix<float> m2 = GLMatrix<float>(3, 5);
+	 float arr2[] = { 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1 };
+	 std::vector<float> values2(arr2, arr2 + sizeof(arr2) / sizeof(arr2[0]));
+	 m2.setValues(values2);
 
-	//m2.print();
-	//(m1 + m2).print();
-	//(m1.transpose() * m1).print();
-	//(m1 * m1.transpose()).print();
-	//(m2 * 2).print();
-	*/
+	 //m2.print();
+	 //(m1 + m2).print();
+	 //(m1.transpose() * m1).print();
+	 //(m1 * m1.transpose()).print();
+	 //(m2 * 2).print();
+	 */
 
-	GLMatrix<float> m3 = GLMatrix<float>(4, 4);
+	/*GLMatrix<float> m3 = GLMatrix<float>(4, 4);
 	//float arr3[] = {1, 3, 2, 0, 1, 1, 0, 1, 3, 1, 2, 3, 0, 1, 1};
-	float arr3[] = {1, 3, 2, 1, 0, 1, 4, -4, 2, 5, -2, 9, 3, 7, 0, 1};
+	float arr3[] = { 1, 3, 2, 1, 0, 1, 4, -4, 2, 5, -2, 9, 3, 7, 0, 1 };
 	//float arr3[] = { 0, 1, 2, 1, 0, 3, 4, -3, 8 };
 	std::vector<float> values3(arr3, arr3 + sizeof(arr3) / sizeof(arr3[0]));
 	m3.setValues(values3);
@@ -158,16 +158,34 @@ void OpenGLApplication::initialize() {
 	GLMatrix<float>::rotationMatrixLine(10, 20, 30, 1, 1, 1, 45).print();
 
 	GLMatrix<float> pos = GLMatrix<float>(4, 1);
-	float arr[] = {0, 0, 10, 0};
-	std::vector<float> values(arr, arr + sizeof(arr)/sizeof(arr[0]));
+	float arr[] = { 0, 0, 10, 0 };
+	std::vector<float> values(arr, arr + sizeof(arr) / sizeof(arr[0]));
 	pos.setValues(values);
 
-	GLMatrix<float> rotationMatrix = GLMatrix<float>::rotationMatrixXYZ(0, 45, 0);
+	GLMatrix<float> rotationMatrix = GLMatrix<float>::rotationMatrixXYZ(0, 45,
+			0);
 
 	pos.print();
 	rotationMatrix.print();
 
-	(rotationMatrix * pos).print();
+	(rotationMatrix * pos).print();*/
+
+	GLMatrix<float> m1 = GLMatrix<float>(3, 3);
+	float arr[] = { 1, 2, 0, 0, 3, 0, 0, 7, 1 };
+	std::vector<float> values(arr, arr + sizeof(arr) / sizeof(arr[0]));
+	m1.setValues(values);
+
+	m1.print();
+	m1.inverse().print();
+
+	GLMatrix<float> m2 = GLMatrix<float>(3, 3);
+	float arr2[] = { 2, -1, 0, -1, 2, -1, 0, -1, 2 };
+	std::vector<float> values2(arr2, arr2 + sizeof(arr2) / sizeof(arr2[0]));
+	m2.setValues(values2);
+
+	m2.print();
+	m2.inverse().print();
+
 
 
 	finish = clock();
@@ -268,15 +286,24 @@ void OpenGLApplication::initialize() {
 
 void OpenGLApplication::gameLoop() {
 
+	clock_t lastTime;
 
 	// Game loop, while window close is not requested
 	while (!glfwWindowShouldClose(_window)) {
+
+		long currentTime = clock();
+		long delta = currentTime - lastTime;
+		float fps = CLOCKS_PER_SEC / ((float) delta);
+		updateAverageFPS(fps);
+		_logger->log("FPS: ").log((int)averageFPS).endLine();
+		lastTime = clock();
 
 		static int count = 0;
 		count++;
 
 		//_camera->rotateX(2);
-		_camera->rotateY(2);
+		if (averageFPS > 0)
+			_camera->rotateY(2);
 		//_camera->rotateZ(2);
 		_camera->useView();
 
@@ -411,3 +438,25 @@ void OpenGLApplication::stop(const char* reason) {
 void OpenGLApplication::stop() {
 	throw 0;
 }
+
+void OpenGLApplication::updateAverageFPS(float fps) {
+
+	static long count = 0;
+	int minData = std::max(1, std::min(10, (int) fps));
+	if (fpsList.size() < minData)
+		fpsList.push_back(fps);
+	else{
+		count++;
+		fpsList.erase(fpsList.begin());
+		fpsList.push_back(fps);
+
+		double average = 0;
+		for (int i = 0; i < fpsList.size(); i++)
+			average += fpsList[i];
+		average /= fpsList.size();
+		averageFPS = average;
+	}
+	if (count == 0)
+		averageFPS = fps;
+}
+

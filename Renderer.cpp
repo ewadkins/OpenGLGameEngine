@@ -114,5 +114,6 @@ void Renderer::display() {
 	// Swaps the display buffers (displays what was drawn)
 	glfwSwapBuffers(_application->_window);
 	glfwPollEvents();
+	//glfwWaitEvents();
 }
 

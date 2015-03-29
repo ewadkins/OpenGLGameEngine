@@ -81,7 +81,7 @@ GLMatrix<T> GLMatrix<T>::rref() {
 	int y = 0;
 	while (x < _rows) {
 		if (result.get(x, y) == 0) {
-			bool rowToExchange = 0;
+			int rowToExchange = 0;
 			for (int i = x; i < _rows; i++)
 				if (result.get(i, y) != 0)
 					rowToExchange = i;
@@ -95,15 +95,17 @@ GLMatrix<T> GLMatrix<T>::rref() {
 				y++;
 				continue;
 			}
-			//std::cout << "Row exchange" << std::endl;
-			//result.print();
+			/*std::cout << "Row exchange (Row " << x + 1 << " <-> Row "
+					<< rowToExchange + 1 << ")" << std::endl;
+			result.print();*/
 		}
-		if (result.get(x, y) != 1) {
+		if (result.get(x, y) != 1 && result.get(x, y) != 0) {
 			T k = result.get(x, y);
 			for (int j = 0; j < _cols; j++)
 				result.set(x, j, result.get(x, j) / k);
-			//std::cout << "Row division" << std::endl;
-			//result.print();
+			/*std::cout << "Row division (Row " << x + 1 << " / " << k << ")"
+					<< std::endl;
+			result.print();*/
 		}
 		for (int i = 0; i < _rows; i++) {
 			if (i != x && result.get(i, y) != 0) {
@@ -115,8 +117,8 @@ GLMatrix<T> GLMatrix<T>::rref() {
 		}
 		x++;
 		y++;
-		//std::cout << "Row elimination" << std::endl;
-		//result.print();
+		/*std::cout << "Row elimination" << std::endl;
+		result.print();*/
 	}
 	/*
 	 // Change negative zeros from floating point error to normal zeros
@@ -138,7 +140,7 @@ GLMatrix<T> GLMatrix<T>::upperTriangular() {
 	int y = 0;
 	while (x < _rows) {
 		if (result.get(x, y) == 0) {
-			bool rowToExchange = 0;
+			int rowToExchange = 0;
 			for (int i = x; i < _rows; i++)
 				if (result.get(i, y) != 0)
 					rowToExchange = i;
@@ -185,7 +187,7 @@ T GLMatrix<T>::determinant() {
 	int y = 0;
 	while (x < _rows) {
 		if (result.get(x, y) == 0) {
-			bool rowToExchange = 0;
+			int rowToExchange = 0;
 			for (int i = x; i < _rows; i++)
 				if (result.get(i, y) != 0)
 					rowToExchange = i;
@@ -374,6 +376,11 @@ GLMatrix<T> GLMatrix<T>::operator+(GLMatrix<T> rhs) {
 }
 
 template<typename T>
+GLMatrix<T> GLMatrix<T>::operator-(GLMatrix<T> rhs) {
+	return add(rhs.scale(-1));
+}
+
+template<typename T>
 GLMatrix<T> GLMatrix<T>::operator*(T rhs) {
 	return scale(rhs);
 }
@@ -381,6 +388,11 @@ GLMatrix<T> GLMatrix<T>::operator*(T rhs) {
 template<typename T>
 GLMatrix<T> GLMatrix<T>::operator*(GLMatrix<T> rhs) {
 	return mul(rhs);
+}
+
+template<typename T>
+GLMatrix<T> GLMatrix<T>::operator/(GLMatrix<T> rhs) {
+	return mul(rhs.inverse());
 }
 
 template<typename T>
@@ -540,7 +552,8 @@ GLMatrix<T> GLMatrix<T>::rotationMatrixLine(T x, T y, T z, T u, T v, T w,
 }
 
 template<typename T>
-GLMatrix<T> GLMatrix<T>::orthographicProjectionMatrix(T width, T height, T near, T far) {
+GLMatrix<T> GLMatrix<T>::orthographicProjectionMatrix(T width, T height, T near,
+		T far) {
 	GLMatrix<T> result = identity(4);
 	result.set(0, 0, 1 / width);
 	result.set(1, 1, 1 / height);
@@ -550,12 +563,13 @@ GLMatrix<T> GLMatrix<T>::orthographicProjectionMatrix(T width, T height, T near,
 }
 
 template<typename T>
-GLMatrix<T> GLMatrix<T>::perspectiveProjectionMatrix(T fovX, T fovY, T near, T far) {
+GLMatrix<T> GLMatrix<T>::perspectiveProjectionMatrix(T fovX, T fovY, T near,
+		T far) {
 	GLMatrix<T> result = zeros(4, 4);
 	T fovXRads = fovX * PI / 180;
 	T fovYRads = fovY * PI / 180;
-	result.set(0, 0, std::atan(fovXRads/2));
-	result.set(1, 1, std::atan(fovYRads/2));
+	result.set(0, 0, std::atan(fovXRads / 2));
+	result.set(1, 1, std::atan(fovYRads / 2));
 	result.set(2, 2, -(far + near) / (far - near));
 	result.set(2, 3, -2 * (near * far) / (far - near));
 	result.set(3, 2, -1);

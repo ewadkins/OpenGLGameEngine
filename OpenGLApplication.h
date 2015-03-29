@@ -46,6 +46,9 @@ private:
 	void setupShaders();
 	void initialize();
 	void gameLoop();
+	void updateAverageFPS(float fps);
+	std::vector<float> fpsList;
+	float averageFPS;
 };
 
 #endif /* OPENGLAPPLICATION_H_ */

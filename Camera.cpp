@@ -32,8 +32,8 @@ void Camera::useView() {
 
 	GLMatrix<float> viewMatrix = GLMatrix<float>::identity(4);
 	viewMatrix = viewMatrix
-			<< rotate<float>(getRotationX(), getRotationY(), getRotationZ())
-			<< translate<float>(getX(), getY(), getZ());
+			<< rotate(getRotationX(), getRotationY(), getRotationZ())
+			<< translate(getX(), getY(), getZ());
 
 	//viewMatrix.print();
 
@@ -46,9 +46,13 @@ void Camera::updateProjectionMatrix() {
 
 	GLMatrix<float> projectionMatrix = GLMatrix<float>::identity(4);
 	// FIXME orhtographic matrix not calculated correctly
-	//projectionMatrix = projectionMatrix << orthographic<float>(_application->_windowSizeX, _application->_windowSizeY, getNear(), getFar());
+	/*
+	 projectionMatrix = projectionMatrix
+	 << orthographic(_application->_windowSizeX,
+	 _application->_windowSizeY, getNear(), getFar());
+	 */
 	projectionMatrix = projectionMatrix
-			<< perspective<float>(getFovX(), getFovY(), getNear(), getFar());
+			<< perspective(getFovX(), getFovY(), getNear(), getFar());
 
 	projectionMatrix.print();
 
@@ -57,38 +61,26 @@ void Camera::updateProjectionMatrix() {
 
 }
 
-template<typename T>
-GLMatrix<T> Camera::translate(T deltaX, T deltaY, T deltaZ) {
-	return GLMatrix<T>::translationMatrix(deltaX, deltaY, deltaZ);
+GLMatrix<float> Camera::translate(float deltaX, float deltaY, float deltaZ) {
+	return GLMatrix<float>::translationMatrix(deltaX, deltaY, deltaZ);
 }
 
-template<typename T>
-GLMatrix<T> Camera::scale(T scaleX, T scaleY, T scaleZ) {
-	return GLMatrix<T>::scalingMatrix(scaleX, scaleY, scaleZ);
+GLMatrix<float> Camera::scale(float scaleX, float scaleY, float scaleZ) {
+	return GLMatrix<float>::scalingMatrix(scaleX, scaleY, scaleZ);
 }
 
-template<typename T>
-GLMatrix<T> Camera::rotate(T thetaX, T thetaY, T thetaZ) {
-	return GLMatrix<T>::rotationMatrixXYZ(thetaX, thetaY, thetaZ);
+GLMatrix<float> Camera::rotate(float thetaX, float thetaY, float thetaZ) {
+	return GLMatrix<float>::rotationMatrixXYZ(thetaX, thetaY, thetaZ);
 }
 
-template<typename T>
-GLMatrix<T> Camera::orthographic(int _width, int _height, float _near,
-		float _far) {
-	T width = (T) _width;
-	T height = (T) _height;
-	T near = (T) _near;
-	T far = (T) _far;
-	return GLMatrix<T>::orthographicProjectionMatrix(width, height, near, far);
+GLMatrix<float> Camera::orthographic(int width, int height, float near,
+		float far) {
+	return GLMatrix<float>::orthographicProjectionMatrix(width, height, near,
+			far);
 }
 
-template<typename T>
-GLMatrix<T> Camera::perspective(int _fovX, int _fovY, float _near, float _far) {
-	T fovX = (T) _fovX;
-	T fovY = (T) _fovY;
-	T near = (T) _near;
-	T far = (T) _far;
-	return GLMatrix<T>::perspectiveProjectionMatrix(fovX, fovY, near, far);
+GLMatrix<float> Camera::perspective(int fovX, int fovY, float near, float far) {
+	return GLMatrix<float>::perspectiveProjectionMatrix(fovX, fovY, near, far);
 }
 
 int Camera::getFovX() {
