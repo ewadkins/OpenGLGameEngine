@@ -9,6 +9,7 @@
 #define RENDERER_H_
 
 #include "ShaderProgram.h"
+#include "GLMatrix.h"
 #include <iostream>
 #include <fstream>
 #include <GL/glew.h>
@@ -26,12 +27,15 @@ public:
 	void renderTriangle();
 	void display();
 	void useProgram(ShaderProgram*);
+	void setProjectionMatrix(GLMatrix<float> projectionMatrix);
 	ShaderProgram* shaderProgram1;
 	ShaderProgram* currentProgram;
 private:
 	void setupShaders();
+	void updateUniforms();
 	OpenGLApplication* _application;
 	GLuint vao, vbo;
+	GLMatrix<float> _projectionMatrix;
 };
 
 #endif /* RENDERER_H_ */

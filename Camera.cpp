@@ -9,7 +9,9 @@
 #include "OpenGLApplication.h"
 
 Camera::Camera(OpenGLApplication* application, float x, float y, float z,
-		float rotationX, float rotationY, float rotationZ) {
+		float rotationX, float rotationY, float rotationZ) :
+		_orthographic(GLMatrix<float>::identity(4)), _perspective(
+				GLMatrix<float>::identity(4)) {
 	_application = application;
 	_x = x;
 	_y = y;
@@ -21,10 +23,11 @@ Camera::Camera(OpenGLApplication* application, float x, float y, float z,
 	_fovY = 70;
 	_near = 0.01;
 	_far = 1000;
+	_projectionType = PERSPECTIVE;
 }
 
 void Camera::initialize() {
-	updateProjectionMatrix();
+	updateProjectionMatrices();
 	useView();
 }
 
@@ -35,30 +38,43 @@ void Camera::useView() {
 			<< rotate(getRotationX(), getRotationY(), getRotationZ())
 			<< translate(getX(), getY(), getZ());
 
-	//viewMatrix.print();
+	//_application->_logger->log("View matrix:").endLine().log(viewMatrix);
 
 	_application->_renderer->currentProgram->setUniformMatrix4x4f("viewMatrix",
 			viewMatrix.getValuesArray());
 
 }
 
-void Camera::updateProjectionMatrix() {
+void Camera::updateProjectionMatrices() {
 
-	GLMatrix<float> projectionMatrix = GLMatrix<float>::identity(4);
-	// FIXME orhtographic matrix not calculated correctly
-	/*
-	 projectionMatrix = projectionMatrix
-	 << orthographic(_application->_windowSizeX,
-	 _application->_windowSizeY, getNear(), getFar());
-	 */
-	projectionMatrix = projectionMatrix
-			<< perspective(getFovX(), getFovY(), getNear(), getFar());
+	_orthographic = orthographic(_application->_windowSizeX,
+			_application->_windowSizeY, getNear(), getFar());
 
-	projectionMatrix.print();
+	_perspective = perspective(getFovX(), getFovY(), getNear(), getFar());
 
-	_application->_renderer->currentProgram->setUniformMatrix4x4f(
-			"projectionMatrix", projectionMatrix.getValuesArray());
+	_application->_logger->log("Orthographic matrix:").endLine().log(
+			_orthographic);
 
+	_application->_logger->log("Perspective matrix:").endLine().log(
+			_perspective);
+
+	useProjectionMatrix();
+
+}
+
+void Camera::useProjectionMatrix() {
+	if (_projectionType == ORTHOGRAPHIC) {
+		_application->_renderer->setProjectionMatrix(_orthographic);
+		_application->_logger->log("Using orthographic matrix..").endLine();
+	} else if (_projectionType == PERSPECTIVE) {
+		_application->_renderer->setProjectionMatrix(_perspective);
+		_application->_logger->log("Using perspective matrix..").endLine();
+	}
+}
+
+void Camera::setProjectionType(ProjectionType type) {
+	_projectionType = type;
+	useProjectionMatrix();
 }
 
 GLMatrix<float> Camera::translate(float deltaX, float deltaY, float deltaZ) {

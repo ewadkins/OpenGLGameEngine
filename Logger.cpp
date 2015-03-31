@@ -24,6 +24,12 @@ Logger& Logger::log(std::string str) {
 	return *this;
 }
 
+Logger& Logger::log(std::vector<std::string> strings) {
+	for (int i = 0; i < strings.size(); i++)
+		log(strings[i]).endLine();
+	return *this;
+}
+
 /*template<typename T>
  Logger& Logger::log(T t) {
  return log(std::to_string(t));
@@ -57,6 +63,12 @@ Logger& Logger::log(const double d) {
 // Logs a long
 Logger& Logger::log(const long l) {
 	return log(std::to_string(l));
+}
+
+// Logs a GLMatrix
+template<typename T>
+Logger& Logger::log(GLMatrix<T> m) {
+	return log(m.toStringVector());
 }
 
 // Creates a new line
@@ -104,4 +116,8 @@ Logger& Logger::clear() {
 std::vector<std::string> Logger::getLog() {
 	return _log;
 }
+
+template Logger& Logger::log(GLMatrix<float>);
+template Logger& Logger::log(GLMatrix<double>);
+template Logger& Logger::log(GLMatrix<long double>);
 

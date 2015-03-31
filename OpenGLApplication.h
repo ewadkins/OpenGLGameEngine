@@ -48,7 +48,7 @@ private:
 	void gameLoop();
 	void updateAverageFPS(float fps);
 	std::vector<float> fpsList;
-	float averageFPS;
+	float _averageFPS;
 };
 
 #endif /* OPENGLAPPLICATION_H_ */

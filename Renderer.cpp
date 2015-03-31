@@ -8,7 +8,8 @@
 #include "Renderer.h"
 #include "OpenGLApplication.h"
 
-Renderer::Renderer(OpenGLApplication* application) {
+Renderer::Renderer(OpenGLApplication* application) :
+		_projectionMatrix(GLMatrix<float>::identity(4)) {
 	_application = application;
 	shaderProgram1 = nullptr;
 	vao = 0;
@@ -25,6 +26,18 @@ void Renderer::useProgram(ShaderProgram* program) {
 	glUseProgram(program->getProgramId());
 	currentProgram = program;
 	_application->_logger->log("Using shader program: ").log(program->getName()).endLine().endLine();
+	updateUniforms();
+}
+
+void Renderer::setProjectionMatrix(GLMatrix<float> projectionMatrix) {
+	_projectionMatrix = projectionMatrix;
+	currentProgram->setUniformMatrix4x4f("projectionMatrix",
+			_projectionMatrix.getValuesArray());
+}
+
+void Renderer::updateUniforms() {
+	currentProgram->setUniformMatrix4x4f("projectionMatrix",
+			_projectionMatrix.getValuesArray());
 }
 
 void Renderer::initialize() {

@@ -46,7 +46,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
 
 	application->_windowSizeX = width;
 	application->_windowSizeY = height;
-	application->_camera->updateProjectionMatrix();
+	application->_camera->updateProjectionMatrices();
 }
 
 OpenGLApplication::OpenGLApplication(int screenSizeX, int screenSizeY,
@@ -59,6 +59,7 @@ OpenGLApplication::OpenGLApplication(int screenSizeX, int screenSizeY,
 	_fullScreen = fullScreen;
 	_renderer = nullptr;
 	_camera = nullptr;
+	_averageFPS = 0;
 }
 
 void OpenGLApplication::setupWindow() {
@@ -115,76 +116,22 @@ void OpenGLApplication::initialize() {
 	start = clock();
 
 	/*
-	 GLMatrix<float> m1 = GLMatrix<float>(3, 5);
-	 float arr[] = { 1, 0, 0, 1, 2, 0, 1, 0, 2, 3, 0, 0, 1, 3, 4 };
-	 std::vector<float> values(arr, arr + sizeof(arr) / sizeof(arr[0]));
-	 m1.setValues(values);
-
-	 //m1.print();
-	 //m1.transpose().print();
-
-	 GLMatrix<float> m2 = GLMatrix<float>(3, 5);
-	 float arr2[] = { 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1 };
-	 std::vector<float> values2(arr2, arr2 + sizeof(arr2) / sizeof(arr2[0]));
-	 m2.setValues(values2);
-
-	 //m2.print();
-	 //(m1 + m2).print();
-	 //(m1.transpose() * m1).print();
-	 //(m1 * m1.transpose()).print();
-	 //(m2 * 2).print();
-	 */
-
-	/*GLMatrix<float> m3 = GLMatrix<float>(4, 4);
-	//float arr3[] = {1, 3, 2, 0, 1, 1, 0, 1, 3, 1, 2, 3, 0, 1, 1};
-	float arr3[] = { 1, 3, 2, 1, 0, 1, 4, -4, 2, 5, -2, 9, 3, 7, 0, 1 };
-	//float arr3[] = { 0, 1, 2, 1, 0, 3, 4, -3, 8 };
-	std::vector<float> values3(arr3, arr3 + sizeof(arr3) / sizeof(arr3[0]));
-	m3.setValues(values3);
-
-	m3.print();
-	m3.rref().print();
-	//m3.upperTriangular().print();
-	//std::cout << m3.determinant() << std::endl << std::endl;
-	//m3.inverse().print();
-
-	GLMatrix<float>::identity(4).print();
-	GLMatrix<float>::translationMatrix(10, 20, 30).print();
-	GLMatrix<float>::scalingMatrix(10, 20, 30).print();
-	GLMatrix<float>::rotationMatrixX(45).print();
-	GLMatrix<float>::rotationMatrixY(45).print();
-	GLMatrix<float>::rotationMatrixZ(45).print();
-	GLMatrix<float>::rotationMatrixXYZ(45, 45, 45).print();
-	GLMatrix<float>::rotationMatrixLine(10, 20, 30, 1, 1, 1, 45).print();
-
-	GLMatrix<float> pos = GLMatrix<float>(4, 1);
-	float arr[] = { 0, 0, 10, 0 };
+	GLMatrix<float> m = GLMatrix<float>(4, 4);
+	float arr[] = { 1, 3, 2, 1, 0, 1, 4, -4, 2, 5, -2, 9, 3, 7, 0, 1 };
 	std::vector<float> values(arr, arr + sizeof(arr) / sizeof(arr[0]));
-	pos.setValues(values);
+	m.setValues(values);
+	*/
 
-	GLMatrix<float> rotationMatrix = GLMatrix<float>::rotationMatrixXYZ(0, 45,
-			0);
 
-	pos.print();
-	rotationMatrix.print();
-
-	(rotationMatrix * pos).print();*/
-
-	GLMatrix<float> m1 = GLMatrix<float>(3, 3);
-	float arr[] = { 1, 2, 0, 0, 3, 0, 0, 7, 1 };
+	GLMatrix<float> m1 = GLMatrix<float>(4, 1);
+	float arr[] = { 1, 0, 0, 0 };
 	std::vector<float> values(arr, arr + sizeof(arr) / sizeof(arr[0]));
 	m1.setValues(values);
+	m1.print();
+	(GLMatrix<float>::rotationMatrixZ(30) << GLMatrix<float>::scalingMatrix(4.0/3, 4, 1)).print();
+	m1 = m1 << GLMatrix<float>::rotationMatrixZ(30) << GLMatrix<float>::scalingMatrix(4.0/3, 4, 1);
 
 	m1.print();
-	m1.inverse().print();
-
-	GLMatrix<float> m2 = GLMatrix<float>(3, 3);
-	float arr2[] = { 2, -1, 0, -1, 2, -1, 0, -1, 2 };
-	std::vector<float> values2(arr2, arr2 + sizeof(arr2) / sizeof(arr2[0]));
-	m2.setValues(values2);
-
-	m2.print();
-	m2.inverse().print();
 
 
 
@@ -295,14 +242,14 @@ void OpenGLApplication::gameLoop() {
 		long delta = currentTime - lastTime;
 		float fps = CLOCKS_PER_SEC / ((float) delta);
 		updateAverageFPS(fps);
-		_logger->log("FPS: ").log((int)averageFPS).endLine();
+		_logger->log("FPS: ").log((int)_averageFPS).endLine();
 		lastTime = clock();
 
 		static int count = 0;
 		count++;
 
 		//_camera->rotateX(2);
-		if (averageFPS > 0)
+		if (_averageFPS > 0)
 			_camera->rotateY(2);
 		//_camera->rotateZ(2);
 		_camera->useView();
@@ -381,8 +328,8 @@ void OpenGLApplication::gameLoop() {
 }
 
 int OpenGLApplication::start() {
-	int result = 0;
 
+	int result = 0;
 	try {
 		try {
 			try {
@@ -392,6 +339,7 @@ int OpenGLApplication::start() {
 
 				// Start the game loop
 				_logger->log("** Starting game loop **").endLine().endLine();
+
 				gameLoop();
 
 				// Upon exiting the game loop, stop the application
@@ -454,9 +402,8 @@ void OpenGLApplication::updateAverageFPS(float fps) {
 		for (int i = 0; i < fpsList.size(); i++)
 			average += fpsList[i];
 		average /= fpsList.size();
-		averageFPS = average;
+		_averageFPS = average;
 	}
 	if (count == 0)
-		averageFPS = fps;
+		_averageFPS = fps;
 }
-

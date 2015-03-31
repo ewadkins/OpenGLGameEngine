@@ -47,6 +47,7 @@ public:
 	GLMatrix operator*(T rhs);
 	GLMatrix operator*(GLMatrix rhs);
 	GLMatrix operator/(GLMatrix rhs);
+													GLMatrix operator^(T rhs);
 	GLMatrix operator<<(GLMatrix rhs);
 	static GLMatrix zeros(int m, int n);
 	static GLMatrix ones(int m, int n);

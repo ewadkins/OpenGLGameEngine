@@ -8,6 +8,7 @@
 #ifndef LOGGER_H_
 #define LOGGER_H_
 
+#include "GLMatrix.h"
 #include <vector>
 #include <string>
 #include <iostream>
@@ -18,6 +19,7 @@ public:
 	virtual ~Logger() {
 	}
 	Logger& log(const std::string str);
+	Logger& log(const std::vector<std::string> strings);
 	//template<typename T>
 	//Logger& log(const T t);
 	Logger& log(const char* c);
@@ -26,6 +28,7 @@ public:
 	Logger& log(const float f);
 	Logger& log(const double d);
 	Logger& log(const long l);
+	template<typename T> Logger& log(GLMatrix<T> m);
 	Logger& endLine();
 	Logger& increaseIndent();
 	Logger& decreaseIndent();

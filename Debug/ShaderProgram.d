@@ -1,8 +1,8 @@
 ShaderProgram.d: ../ShaderProgram.cpp ../ShaderProgram.h \
   /usr/local/Cellar/glew/1.11.0/include/GL/glew.h \
   /usr/local/Cellar/glfw3/3.0.4/include/GLFW/glfw3.h \
-  ../OpenGLApplication.h ../Logger.h ../Renderer.h ../Camera.h \
-  ../GLMatrix.h
+  ../OpenGLApplication.h ../Logger.h ../GLMatrix.h ../Renderer.h \
+  ../Camera.h
 
 ../ShaderProgram.h:
 
@@ -14,8 +14,8 @@ ShaderProgram.d: ../ShaderProgram.cpp ../ShaderProgram.h \
 
 ../Logger.h:
 
+../GLMatrix.h:
+
 ../Renderer.h:
 
 ../Camera.h:
-
-../GLMatrix.h:
