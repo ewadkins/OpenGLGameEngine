@@ -11,48 +11,54 @@
 Renderer::Renderer(OpenGLApplication* application) :
 		_projectionMatrix(GLMatrix<float>::identity(4)) {
 	_application = application;
-	shaderProgram1 = nullptr;
+	_shaderProgram1 = nullptr;
 	vao = 0;
 	vbo = 0;
-	currentProgram = nullptr;
+	_currentProgram = nullptr;
 }
 
+// Sets up the shaders for use in rendering
 void Renderer::setupShaders() {
-	shaderProgram1 = new ShaderProgram(_application, "Shader 1",
+	_shaderProgram1 = new ShaderProgram(_application, "Shader 1",
 			"shaders/vertex.glsl", "shaders/fragment.glsl");
 }
 
+// Sets the shader program to be used in rendering
 void Renderer::useProgram(ShaderProgram* program) {
 	glUseProgram(program->getProgramId());
-	currentProgram = program;
-	_application->_logger->log("Using shader program: ").log(program->getName()).endLine().endLine();
+	_currentProgram = program;
+	_application->_logger->log("Using shader program: ").log(program->getName()).endLine();
 	updateUniforms();
 }
 
+// Sets the projection matrix to be used in rendering
 void Renderer::setProjectionMatrix(GLMatrix<float> projectionMatrix) {
 	_projectionMatrix = projectionMatrix;
-	currentProgram->setUniformMatrix4x4f("projectionMatrix",
+	_currentProgram->setUniformMatrix4x4f("projectionMatrix",
 			_projectionMatrix.getValuesArray());
 }
 
+// Updates certain uniforms upon the use of a different shader program
 void Renderer::updateUniforms() {
-	currentProgram->setUniformMatrix4x4f("projectionMatrix",
+	_currentProgram->setUniformMatrix4x4f("projectionMatrix",
 			_projectionMatrix.getValuesArray());
 }
 
+// Initialization method ran on startup
 void Renderer::initialize() {
 	// Create shader programs
 	setupShaders();
 
 	// Attempt to assign a shader program
-	if (shaderProgram1->getProgramId() != 0)
-		useProgram(shaderProgram1);
+	if (_shaderProgram1->getProgramId() != 0)
+		useProgram(_shaderProgram1);
 	else
 		throw "No shader assigned";
 
 	initTriangle();
 }
 
+// Helper method that fills a vector with the relevant vertex attributes
 std::vector<GLfloat> pushData(std::vector<GLfloat> data, int vertexCount,
 		GLfloat vertexData[], GLfloat colorData[]) {
 	for (int i = 0; i < vertexCount; i++) {
@@ -66,6 +72,7 @@ std::vector<GLfloat> pushData(std::vector<GLfloat> data, int vertexCount,
 	return data;
 }
 
+// Test: Initializes data that will draw a triangle
 void Renderer::initTriangle() {
 
 	std::vector<GLfloat> data;
@@ -77,7 +84,7 @@ void Renderer::initTriangle() {
 	// Number of vertices
 	int vertexCount = sizeof(vertexData) / sizeof(vertexData[0]);
 
-	// Add vertex data to the data vector
+	// Add vertex data and color data to the data vector
 	data = pushData(data, vertexCount, vertexData, colorData);
 
 	// Make and bind the VAO
@@ -107,6 +114,7 @@ void Renderer::initTriangle() {
 
 }
 
+// Test: Renders the triangle
 void Renderer::renderTriangle() {
 
 	// Clear everything
@@ -123,6 +131,7 @@ void Renderer::renderTriangle() {
 
 }
 
+// Displays the rendered scene
 void Renderer::display() {
 	// Swaps the display buffers (displays what was drawn)
 	glfwSwapBuffers(_application->_window);

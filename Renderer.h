@@ -28,8 +28,8 @@ public:
 	void display();
 	void useProgram(ShaderProgram*);
 	void setProjectionMatrix(GLMatrix<float> projectionMatrix);
-	ShaderProgram* shaderProgram1;
-	ShaderProgram* currentProgram;
+	ShaderProgram* _shaderProgram1;
+	ShaderProgram* _currentProgram;
 private:
 	void setupShaders();
 	void updateUniforms();

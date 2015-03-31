@@ -52,12 +52,12 @@ Logger& Logger::log(const int i) {
 
 // Logs a float
 Logger& Logger::log(const float f) {
-	return log(std::to_string(f));
+	return log(trimNumber(std::to_string(f)));
 }
 
 // Logs a double
 Logger& Logger::log(const double d) {
-	return log(std::to_string(d));
+	return log(trimNumber(std::to_string(d)));
 }
 
 // Logs a long
@@ -106,6 +106,18 @@ std::string Logger::indent(std::string str) {
 	return str;
 }
 
+// Trims the excess zeros off decimals
+std::string Logger::trimNumber(std::string str) {
+	if (str.find(std::string(".")) != std::string::npos) {
+		for (int c = str.length() - 1; c >= 0; c--) {
+			if (str.at(c) != '0' || str.at(c - 1) == '.')
+				break;
+			str = str.substr(0, c);
+		}
+	}
+	return str;
+}
+
 // Clears the log of all entries
 Logger& Logger::clear() {
 	_log.empty();
@@ -117,6 +129,7 @@ std::vector<std::string> Logger::getLog() {
 	return _log;
 }
 
+// Explicit instantiation of template functions
 template Logger& Logger::log(GLMatrix<float>);
 template Logger& Logger::log(GLMatrix<double>);
 template Logger& Logger::log(GLMatrix<long double>);

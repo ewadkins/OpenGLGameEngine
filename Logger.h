@@ -37,6 +37,7 @@ public:
 	std::vector<std::string> getLog();
 private:
 	std::string indent(std::string str);
+	std::string trimNumber(std::string str);
 	std::vector<std::string> _log;
 	bool newLine;
 	unsigned int numIndents;

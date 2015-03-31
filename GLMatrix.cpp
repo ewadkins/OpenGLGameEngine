@@ -10,6 +10,7 @@
 template<typename T>
 const T GLMatrix<T>::PI = 3.1415926535897;
 
+// Basic constructor
 template<typename T>
 GLMatrix<T>::GLMatrix(int rows, int cols) {
 	_rows = rows;
@@ -20,6 +21,7 @@ GLMatrix<T>::GLMatrix(int rows, int cols) {
 	fill(0);
 }
 
+// Constructor that allows matrix casting
 template<typename T>
 template<typename S>
 GLMatrix<T>::GLMatrix(GLMatrix<S> other) {
@@ -31,6 +33,7 @@ GLMatrix<T>::GLMatrix(GLMatrix<S> other) {
 		}
 }
 
+// Returns the sum of this matrix with another
 template<typename T>
 GLMatrix<T> GLMatrix<T>::add(GLMatrix other) {
 	if (_rows != other._rows || _cols != other._cols)
@@ -42,6 +45,7 @@ GLMatrix<T> GLMatrix<T>::add(GLMatrix other) {
 	return result;
 }
 
+// Returns this matrix multiplied by a scalar
 template<typename T>
 GLMatrix<T> GLMatrix<T>::scale(T k) {
 	GLMatrix<T> result = GLMatrix<T>(_rows, _cols);
@@ -51,6 +55,7 @@ GLMatrix<T> GLMatrix<T>::scale(T k) {
 	return result;
 }
 
+// Returns the transpose of this matrix
 template<typename T>
 GLMatrix<T> GLMatrix<T>::transpose() {
 	GLMatrix<T> result = GLMatrix<T>(_cols, _rows);
@@ -61,6 +66,7 @@ GLMatrix<T> GLMatrix<T>::transpose() {
 	return result;
 }
 
+// Returns the product of this matrix with another
 template<typename T>
 GLMatrix<T> GLMatrix<T>::mul(GLMatrix other) {
 	GLMatrix<T> result = GLMatrix<T>(_rows, other.cols());
@@ -74,6 +80,7 @@ GLMatrix<T> GLMatrix<T>::mul(GLMatrix other) {
 	return result;
 }
 
+// Returns the reduced row echelon form of this matrix
 template<typename T>
 GLMatrix<T> GLMatrix<T>::rref() {
 	GLMatrix<T> result = clone();
@@ -96,16 +103,16 @@ GLMatrix<T> GLMatrix<T>::rref() {
 				continue;
 			}
 			/*std::cout << "Row exchange (Row " << x + 1 << " <-> Row "
-					<< rowToExchange + 1 << ")" << std::endl;
-			result.print();*/
+			 << rowToExchange + 1 << ")" << std::endl;
+			 result.print();*/
 		}
 		if (result.get(x, y) != 1 && result.get(x, y) != 0) {
 			T k = result.get(x, y);
 			for (int j = 0; j < _cols; j++)
 				result.set(x, j, result.get(x, j) / k);
 			/*std::cout << "Row division (Row " << x + 1 << " / " << k << ")"
-					<< std::endl;
-			result.print();*/
+			 << std::endl;
+			 result.print();*/
 		}
 		for (int i = 0; i < _rows; i++) {
 			if (i != x && result.get(i, y) != 0) {
@@ -118,7 +125,7 @@ GLMatrix<T> GLMatrix<T>::rref() {
 		x++;
 		y++;
 		/*std::cout << "Row elimination" << std::endl;
-		result.print();*/
+		 result.print();*/
 	}
 	/*
 	 // Change negative zeros from floating point error to normal zeros
@@ -130,6 +137,7 @@ GLMatrix<T> GLMatrix<T>::rref() {
 	return result;
 }
 
+// Returns the upper triangular factorization of this matrix
 template<typename T>
 GLMatrix<T> GLMatrix<T>::upperTriangular() {
 	if (_rows != _cols)
@@ -176,6 +184,7 @@ GLMatrix<T> GLMatrix<T>::upperTriangular() {
 	return result;
 }
 
+// Returns the determinant of this matrix
 template<typename T>
 T GLMatrix<T>::determinant() {
 	if (_rows != _cols)
@@ -223,6 +232,7 @@ T GLMatrix<T>::determinant() {
 	return determinant;
 }
 
+// Returns the inverse of this matrix
 template<typename T>
 GLMatrix<T> GLMatrix<T>::inverse() {
 	if (_rows != _cols)
@@ -245,16 +255,19 @@ GLMatrix<T> GLMatrix<T>::inverse() {
 	return result;
 }
 
+// Returns the number of rows in this matrix
 template<typename T>
 int GLMatrix<T>::rows() {
 	return _rows;
 }
 
+// Returns the number of columns in this matrix
 template<typename T>
 int GLMatrix<T>::cols() {
 	return _cols;
 }
 
+// Fills this entire matrix with a given value
 template<typename T>
 void GLMatrix<T>::fill(T value) {
 	for (int i = 0; i < _rows; i++)
@@ -262,6 +275,7 @@ void GLMatrix<T>::fill(T value) {
 			set(i, j, value);
 }
 
+// Sets the values of the matrix given a two dimensional array of values
 template<typename T>
 void GLMatrix<T>::setMatrix(T** matrix) {
 	for (int i = 0; i < _rows; i++)
@@ -270,6 +284,7 @@ void GLMatrix<T>::setMatrix(T** matrix) {
 		}
 }
 
+// Sets the values of this matrix given a vector of values
 template<typename T>
 void GLMatrix<T>::setValues(std::vector<T> values) {
 	if (values.size() != _rows * _cols)
@@ -281,16 +296,19 @@ void GLMatrix<T>::setValues(std::vector<T> values) {
 	}
 }
 
+// Sets the specified element of this matrix to a given value
 template<typename T>
 void GLMatrix<T>::set(int i, int j, T value) {
 	_matrix[i][j] = value;
 }
 
+// Returns the values of this matrix in a two dimensional array
 template<typename T>
 T** GLMatrix<T>::getMatrix() {
 	return _matrix;
 }
 
+// Returns the values of this matrix in a vector
 template<typename T>
 std::vector<T> GLMatrix<T>::getValues() {
 	std::vector<T> values;
@@ -300,6 +318,7 @@ std::vector<T> GLMatrix<T>::getValues() {
 	return values;
 }
 
+// Returns the values of this matrix in a one dimensional array
 template<typename T>
 T* GLMatrix<T>::getValuesArray() {
 	T* values = new T[_rows * _cols];
@@ -309,11 +328,13 @@ T* GLMatrix<T>::getValuesArray() {
 	return values;
 }
 
+// Returns the value of the specified element of this matrix
 template<typename T>
 T GLMatrix<T>::get(int i, int j) {
 	return _matrix[i][j];
 }
 
+// Returns a copy of this object (another matrix with the same values)
 template<typename T>
 GLMatrix<T> GLMatrix<T>::clone() {
 	GLMatrix<T> result = GLMatrix<T>(_rows, _cols);
@@ -321,6 +342,7 @@ GLMatrix<T> GLMatrix<T>::clone() {
 	return result;
 }
 
+// Returns the vector of strings representing this matrix
 template<typename T>
 std::vector<std::string> GLMatrix<T>::toStringVector() {
 	std::vector<std::string> strings;
@@ -329,11 +351,11 @@ std::vector<std::string> GLMatrix<T>::toStringVector() {
 		arr[i] = new std::string[_cols];
 		for (int j = 0; j < _cols; j++) {
 			std::string str = std::to_string(_matrix[i][j]);
-			int decimalIndex = str.find(std::string("."));
-			if (decimalIndex != std::string::npos) {
-				for (int c = str.length() - 1; c >= decimalIndex + 1; c--) {
-					if (str.at(c) == '0' && str.at(c - 1) != '.')
-						str = str.substr(0, c);
+			if (str.find(std::string(".")) != std::string::npos) {
+				for (int c = str.length() - 1; c >= 0; c--) {
+					if (str.at(c) != '0' || str.at(c - 1) == '.')
+						break;
+					str = str.substr(0, c);
 				}
 			}
 			arr[i][j] = str;
@@ -362,6 +384,7 @@ std::vector<std::string> GLMatrix<T>::toStringVector() {
 	return strings;
 }
 
+// Prints the string representation of this matrix to the standard output stream
 template<typename T>
 void GLMatrix<T>::print() {
 	std::vector<std::string> strings = toStringVector();
@@ -370,42 +393,50 @@ void GLMatrix<T>::print() {
 	std::cout << std::endl;
 }
 
+// Allows for the addition of two matrices with the + operator
 template<typename T>
 GLMatrix<T> GLMatrix<T>::operator+(GLMatrix<T> rhs) {
 	return add(rhs);
 }
 
+// Allows for the subtraction of two matrices with the - operator
 template<typename T>
 GLMatrix<T> GLMatrix<T>::operator-(GLMatrix<T> rhs) {
 	return add(rhs.scale(-1));
 }
 
+// Allows for the scaling of a matrix with the * operator
 template<typename T>
 GLMatrix<T> GLMatrix<T>::operator*(T rhs) {
 	return scale(rhs);
 }
 
+// Allows for the multiplication of two matrices with the * operator
 template<typename T>
 GLMatrix<T> GLMatrix<T>::operator*(GLMatrix<T> rhs) {
 	return mul(rhs);
 }
 
+// Allows for the division of two matrices with the / operator
 template<typename T>
 GLMatrix<T> GLMatrix<T>::operator/(GLMatrix<T> rhs) {
 	return mul(rhs.inverse());
 }
 
+// Allows for the left multiplication of two matrices with the << operator
 template<typename T>
 GLMatrix<T> GLMatrix<T>::operator<<(GLMatrix<T> rhs) {
 	return rhs.mul(clone());
 }
 
+// Returns a matrix of the specified size filled with zeros
 template<typename T>
 GLMatrix<T> GLMatrix<T>::zeros(int m, int n) {
 	GLMatrix<T> result = GLMatrix<T>(m, n);
 	return result;
 }
 
+// Returns a matrix of the specified size filled with ones
 template<typename T>
 GLMatrix<T> GLMatrix<T>::ones(int m, int n) {
 	GLMatrix<T> result = GLMatrix<T>(m, n);
@@ -413,6 +444,7 @@ GLMatrix<T> GLMatrix<T>::ones(int m, int n) {
 	return result;
 }
 
+// Returns the identity matrix of the specified size
 template<typename T>
 GLMatrix<T> GLMatrix<T>::identity(int size) {
 	GLMatrix<T> result = GLMatrix<T>(size, size);
@@ -421,6 +453,7 @@ GLMatrix<T> GLMatrix<T>::identity(int size) {
 	return result;
 }
 
+// Returns the translation matrix given the desired change in x, y, and z coordinates
 template<typename T>
 GLMatrix<T> GLMatrix<T>::translationMatrix(T deltaX, T deltaY, T deltaZ) {
 	GLMatrix<T> result = identity(4);
@@ -430,8 +463,9 @@ GLMatrix<T> GLMatrix<T>::translationMatrix(T deltaX, T deltaY, T deltaZ) {
 	return result;
 }
 
+// Returns the scalar matrix given the desired scale in the x, y, and z directions
 template<typename T>
-GLMatrix<T> GLMatrix<T>::scalingMatrix(T scaleX, T scaleY, T scaleZ) {
+GLMatrix<T> GLMatrix<T>::scalarMatrix(T scaleX, T scaleY, T scaleZ) {
 	GLMatrix<T> result = identity(4);
 	result.set(0, 0, scaleX);
 	result.set(1, 1, scaleY);
@@ -439,6 +473,7 @@ GLMatrix<T> GLMatrix<T>::scalingMatrix(T scaleX, T scaleY, T scaleZ) {
 	return result;
 }
 
+// Returns the rotation matrix given the desired change in angle about the x axis
 template<typename T>
 GLMatrix<T> GLMatrix<T>::rotationMatrixX(T theta) {
 	GLMatrix<T> result = identity(4);
@@ -450,6 +485,7 @@ GLMatrix<T> GLMatrix<T>::rotationMatrixX(T theta) {
 	return result;
 }
 
+// Returns the rotation matrix given the desired change in angle about the y axis
 template<typename T>
 GLMatrix<T> GLMatrix<T>::rotationMatrixY(T theta) {
 	GLMatrix<T> result = identity(4);
@@ -461,6 +497,7 @@ GLMatrix<T> GLMatrix<T>::rotationMatrixY(T theta) {
 	return result;
 }
 
+// Returns the rotation matrix given the desired change in angle about the z axis
 template<typename T>
 GLMatrix<T> GLMatrix<T>::rotationMatrixZ(T theta) {
 	GLMatrix<T> result = identity(4);
@@ -472,6 +509,7 @@ GLMatrix<T> GLMatrix<T>::rotationMatrixZ(T theta) {
 	return result;
 }
 
+// Returns the rotation matrix given the desired change in angle about the x, y, and z axes
 template<typename T>
 GLMatrix<T> GLMatrix<T>::rotationMatrixXYZ(T thetaX, T thetaY, T thetaZ) {
 	GLMatrix<T> result = identity(4);
@@ -498,6 +536,7 @@ GLMatrix<T> GLMatrix<T>::rotationMatrixXYZ(T thetaX, T thetaY, T thetaZ) {
 	return result;
 }
 
+// Returns the rotation matrix given the desired change in angle about the line through (x, y, z) with the direction (u, v, w)
 template<typename T>
 GLMatrix<T> GLMatrix<T>::rotationMatrixLine(T x, T y, T z, T u, T v, T w,
 		T theta) {
@@ -551,6 +590,7 @@ GLMatrix<T> GLMatrix<T>::rotationMatrixLine(T x, T y, T z, T u, T v, T w,
 	return result;
 }
 
+// Returns the orthographic projection matrix given the dimensions of the window and the near and far clipping planes
 template<typename T>
 GLMatrix<T> GLMatrix<T>::orthographicProjectionMatrix(T width, T height, T near,
 		T far) {
@@ -558,10 +598,11 @@ GLMatrix<T> GLMatrix<T>::orthographicProjectionMatrix(T width, T height, T near,
 	result.set(0, 0, 1 / width);
 	result.set(1, 1, 1 / height);
 	result.set(2, 2, -2 / (far - near));
-	result.set(2, 3, -(far + near) / (far - near));
+	result.set(2, 3, (far + near) / (far - near));
 	return result;
 }
 
+// Returns the perspective projection matrix given the x and y field of view and the near and far clipping planes
 template<typename T>
 GLMatrix<T> GLMatrix<T>::perspectiveProjectionMatrix(T fovX, T fovY, T near,
 		T far) {
@@ -576,7 +617,7 @@ GLMatrix<T> GLMatrix<T>::perspectiveProjectionMatrix(T fovX, T fovY, T near,
 	return result;
 }
 
-// Explicit template instantiation
+// Explicit instantiation of template classes
 template class GLMatrix<float> ;
 template class GLMatrix<double> ;
 template class GLMatrix<long double> ;

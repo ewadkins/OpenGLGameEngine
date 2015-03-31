@@ -53,7 +53,7 @@ public:
 	static GLMatrix ones(int m, int n);
 	static GLMatrix identity(int size);
 	static GLMatrix translationMatrix(T deltaX, T deltaY, T deltaZ);
-	static GLMatrix scalingMatrix(T scaleX, T scaleY, T scaleZ);
+	static GLMatrix scalarMatrix(T scaleX, T scaleY, T scaleZ);
 	static GLMatrix rotationMatrixX(T theta);
 	static GLMatrix rotationMatrixY(T theta);
 	static GLMatrix rotationMatrixZ(T theta);
