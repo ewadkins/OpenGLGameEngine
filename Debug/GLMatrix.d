@@ -1,5 +1,3 @@
-GLMatrix.d: ../GLMatrix.cpp ../GLMatrix.h ../Polynomial.h
+GLMatrix.d: ../GLMatrix.cpp ../GLMatrix.h
 
 ../GLMatrix.h:
-
-../Polynomial.h:

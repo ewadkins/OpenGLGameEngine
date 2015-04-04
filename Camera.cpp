@@ -44,7 +44,7 @@ void Camera::useView() {
 	//_application->_logger->log("View matrix:").endLine().log(viewMatrix);
 
 	_application->_renderer->_currentProgram->setUniformMatrix4x4f("viewMatrix",
-			viewMatrix.getArrayConstants());
+			viewMatrix.getArray());
 
 }
 

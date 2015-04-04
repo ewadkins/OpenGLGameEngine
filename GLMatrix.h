@@ -8,7 +8,7 @@
 #ifndef GLMATRIX_H_
 #define GLMATRIX_H_
 
-#include "Polynomial.h"
+//#include "Polynomial.h"
 #include <iostream>
 #include <stdexcept>
 #include <vector>
@@ -29,7 +29,8 @@ public:
 	GLMatrix mul(GLMatrix other);
 	GLMatrix rref();
 	GLMatrix upperTriangular();
-	Polynomial<T> determinant();
+	T determinant();
+	//Polynomial<T> determinant();
 	GLMatrix inverse();
 	int rows();
 	int cols();
@@ -37,17 +38,21 @@ public:
 	void setMatrix(T** matrix);
 	void setVector(std::vector<T> values);
 	void set(int row, int col, T value);
-	void setMatrix(Polynomial<T>** matrix);
-	void setVector(std::vector<Polynomial<T> > values);
-	void set(int row, int col, Polynomial<T> value);
-	Polynomial<T>** getMatrix();
-	std::vector<Polynomial<T> > getVector();
-	Polynomial<T>* getArray();
-	Polynomial<T> get(int i, int j);
-	T** getMatrixConstants();
-	std::vector<T> getVectorConstants();
-	T* getArrayConstants();
-	T getConstant(int i, int j);
+	//void setMatrix(Polynomial<T>** matrix);
+	//void setVector(std::vector<Polynomial<T> > values);
+	//void set(int row, int col, Polynomial<T> value);
+	//Polynomial<T>** getMatrix();
+	//std::vector<Polynomial<T> > getVector();
+	//Polynomial<T>* getArray();
+	//Polynomial<T> get(int i, int j);
+	//T** getMatrixConstants();
+	//std::vector<T> getVectorConstants();
+	//T* getArrayConstants();
+	//T getConstant(int i, int j);
+	T** getMatrix();
+	std::vector<T> getVector();
+	T* getArray();
+	T get(int i, int j);
 	GLMatrix clone();
 	std::vector<std::string> toStringVector();
 	void print();
@@ -75,7 +80,8 @@ public:
 private:
 	int _rows;
 	int _cols;
-	Polynomial<T>** _matrix;
+	T** _matrix;
+	//Polynomial<T>** _matrix;
 	static const T PI;
 };
 
