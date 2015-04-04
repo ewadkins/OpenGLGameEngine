@@ -29,23 +29,31 @@ public:
 	GLMatrix mul(GLMatrix other);
 	GLMatrix rref();
 	GLMatrix upperTriangular();
-	T determinant();
+	Polynomial<T> determinant();
 	GLMatrix inverse();
 	int rows();
 	int cols();
-	template<typename S> void fill(S value);
+	void fill(T value);
 	void setMatrix(T** matrix);
-	void setValues(std::vector<T> values);
+	void setVector(std::vector<T> values);
 	void set(int row, int col, T value);
-	T** getMatrix();
-	std::vector<T> getValues();
-	T* getValuesArray();
-	T get(int i, int j);
+	void setMatrix(Polynomial<T>** matrix);
+	void setVector(std::vector<Polynomial<T> > values);
+	void set(int row, int col, Polynomial<T> value);
+	Polynomial<T>** getMatrix();
+	std::vector<Polynomial<T> > getVector();
+	Polynomial<T>* getArray();
+	Polynomial<T> get(int i, int j);
+	T** getMatrixConstants();
+	std::vector<T> getVectorConstants();
+	T* getArrayConstants();
+	T getConstant(int i, int j);
 	GLMatrix clone();
 	std::vector<std::string> toStringVector();
 	void print();
 	GLMatrix operator+(GLMatrix rhs);
 	GLMatrix operator-(GLMatrix rhs);
+	GLMatrix operator-();
 	GLMatrix operator*(T rhs);
 	GLMatrix operator*(GLMatrix rhs);
 	GLMatrix operator/(T rhs);
@@ -67,8 +75,8 @@ public:
 private:
 	int _rows;
 	int _cols;
-	T** _matrix;
-	static const double PI;
+	Polynomial<T>** _matrix;
+	static const T PI;
 };
 
 #endif /* GLMATRIX_H_ */

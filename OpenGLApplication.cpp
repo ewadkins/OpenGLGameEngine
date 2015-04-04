@@ -122,22 +122,39 @@ void OpenGLApplication::initialize() {
 	m.setValues(values);
 	*/
 
-	GLMatrix<float> m1 = GLMatrix<float>(4, 1);
-	float arr[] = { 1, 0, 0, 0 };
+	GLMatrix<float> m1 = GLMatrix<float>(4, 4);
+	float arr[] = { 5, 3, 2, 1, 0, 1, 4, -4, 2, 5, -2, 9, 3, 7, 0, 1 };
 	std::vector<float> values(arr, arr + sizeof(arr) / sizeof(arr[0]));
-	m1.setValues(values);
+	m1.setVector(values);
+
 	m1.print();
+	m1.determinant().print();
+	std::cout << m1.determinant().value(0) << std::endl;
+
+	float num[] = { 5, 1, 2 };
+	std::vector<float> numVector(num, num + sizeof(num) / sizeof(num[0]));
+	float den[] = { 1, 0, 0, 0 };
+	std::vector<float> denVector(den, den + sizeof(den) / sizeof(den[0]));
+	m1.set(0, 0, Polynomial<float>(numVector, denVector));
+
+	m1.print();
+	m1.determinant().print();
+	std::cout << m1.determinant().value(0) << std::endl;
+
+	/*
 	(GLMatrix<float>::rotationMatrixZ(30) << GLMatrix<float>::scalarMatrix(4.0/3, 4, 1)).print();
 	m1 = m1 << GLMatrix<float>::rotationMatrixZ(30) << GLMatrix<float>::scalarMatrix(4.0/3, 4, 1);
 
 	m1.print();
-
+	*/
 
 
 	finish = clock();
 	_logger->log("(Took ").log(
 			(double(finish) - double(start)) / CLOCKS_PER_SEC * 1000).log(
 			" ms)").endLine().decreaseIndent();
+
+	stop();
 
 	_logger->log("Initializing GLFW..").endLine().increaseIndent();
 	start = clock();

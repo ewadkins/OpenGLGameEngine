@@ -8,16 +8,16 @@
 #include "GLMatrix.h"
 
 template<typename T>
-const double GLMatrix<T>::PI = 3.1415926535897;
+const T GLMatrix<T>::PI = 3.1415926535897;
 
 // Basic constructor
 template<typename T>
 GLMatrix<T>::GLMatrix(int rows, int cols) {
 	_rows = rows;
 	_cols = cols;
-	_matrix = new T*[_rows];
+	_matrix = new Polynomial<T>*[_rows];
 	for (int i = 0; i < _rows; i++)
-		_matrix[i] = new T[_cols];
+		_matrix[i] = new Polynomial<T> [_cols];
 	fill(0);
 }
 
@@ -27,9 +27,12 @@ template<typename S>
 GLMatrix<T>::GLMatrix(GLMatrix<S> other) {
 	_rows = other.rows();
 	_cols = other.cols();
+	_matrix = new Polynomial<T>*[_rows];
+	for (int i = 0; i < _rows; i++)
+		_matrix[i] = new Polynomial<T> [_cols];
 	for (int i = 0; i < _rows; i++)
 		for (int j = 0; j < _cols; j++) {
-			set(i, j, other.matix()[i][j]);
+			set(i, j, other.getMatrix()[i][j]);
 		}
 }
 
@@ -51,7 +54,7 @@ GLMatrix<T> GLMatrix<T>::scale(T k) {
 	GLMatrix<T> result = GLMatrix<T>(_rows, _cols);
 	for (int i = 0; i < _rows; i++)
 		for (int j = 0; j < _cols; j++)
-			result.set(i, j, k * get(i, j));
+			result.set(i, j, get(i, j) * k);
 	return result;
 }
 
@@ -72,7 +75,7 @@ GLMatrix<T> GLMatrix<T>::mul(GLMatrix other) {
 	GLMatrix<T> result = GLMatrix<T>(_rows, other.cols());
 	for (int i = 0; i < _rows; i++)
 		for (int j = 0; j < other.cols(); j++) {
-			T sum = new T();
+			Polynomial<T> sum = Polynomial<T>(0, 1);
 			for (int k = 0; k < _cols; k++)
 				sum += get(i, k) * other.get(k, j);
 			result.set(i, j, sum);
@@ -90,11 +93,11 @@ GLMatrix<T> GLMatrix<T>::rref() {
 		if (result.get(x, y) == 0) {
 			int rowToExchange = 0;
 			for (int i = x; i < _rows; i++)
-				if (result.get(i, y) != 0)
+				if (result.get(i, y) == 0)
 					rowToExchange = i;
 			if (rowToExchange != 0) {
 				for (int j = 0; j < _cols; j++) {
-					T temp = result.get(x, j);
+					Polynomial<T> temp = result.get(x, j);
 					result.set(x, j, result.get(rowToExchange, j));
 					result.set(rowToExchange, j, temp);
 				}
@@ -107,7 +110,7 @@ GLMatrix<T> GLMatrix<T>::rref() {
 			 result.print();*/
 		}
 		if (result.get(x, y) != 1 && result.get(x, y) != 0) {
-			T k = result.get(x, y);
+			Polynomial<T> k = result.get(x, y);
 			for (int j = 0; j < _cols; j++)
 				result.set(x, j, result.get(x, j) / k);
 			/*std::cout << "Row division (Row " << x + 1 << " / " << k << ")"
@@ -116,7 +119,7 @@ GLMatrix<T> GLMatrix<T>::rref() {
 		}
 		for (int i = 0; i < _rows; i++) {
 			if (i != x && result.get(i, y) != 0) {
-				T n = -(result.get(i, y) / result.get(x, y));
+				Polynomial<T> n = -(result.get(i, y) / result.get(x, y));
 				for (int j = 0; j < _cols; j++) {
 					result.set(i, j, result.get(i, j) + result.get(x, j) * n);
 				}
@@ -131,8 +134,8 @@ GLMatrix<T> GLMatrix<T>::rref() {
 	 // Change negative zeros from floating point error to normal zeros
 	 for (int i = 0; i < _rows; i++)
 	 for (int j = 0; j < _cols; j++)
-	 if (result.get(i, j) == 0) {
-	 result.set(i, j, 0);
+	 if (result.gett(i, j) == 0) {
+	 result.sett(i, j, 0);
 	 }*/
 	return result;
 }
@@ -154,7 +157,7 @@ GLMatrix<T> GLMatrix<T>::upperTriangular() {
 					rowToExchange = i;
 			if (rowToExchange != 0) {
 				for (int j = 0; j < _cols; j++) {
-					T temp = result.get(x, j);
+					Polynomial<T> temp = result.get(x, j);
 					result.set(x, j, result.get(rowToExchange, j));
 					result.set(rowToExchange, j, temp);
 				}
@@ -165,7 +168,7 @@ GLMatrix<T> GLMatrix<T>::upperTriangular() {
 		}
 		for (int i = x; i < _rows; i++) {
 			if (i != x && result.get(i, y) != 0) {
-				T n = -(result.get(i, y) / result.get(x, y));
+				Polynomial<T> n = -(result.get(i, y) / result.get(x, y));
 				for (int j = 0; j < _cols; j++) {
 					result.set(i, j, result.get(i, j) + n * result.get(x, j));
 				}
@@ -178,15 +181,15 @@ GLMatrix<T> GLMatrix<T>::upperTriangular() {
 	 // Change negative zeros from floating point error to normal zeros
 	 for (int i = 0; i < _rows; i++)
 	 for (int j = 0; j < _cols; j++)
-	 if (result.get(i, j) == 0) {
-	 result.set(i, j, 0);
+	 if (result.gett(i, j) == 0) {
+	 result.sett(i, j, 0);
 	 }*/
 	return result;
 }
 
 // Returns the determinant of this matrix
 template<typename T>
-T GLMatrix<T>::determinant() {
+Polynomial<T> GLMatrix<T>::determinant() {
 	if (_rows != _cols)
 		throw std::invalid_argument("Matrix must be a square matrix");
 
@@ -202,7 +205,7 @@ T GLMatrix<T>::determinant() {
 					rowToExchange = i;
 			if (rowToExchange != 0) {
 				for (int j = 0; j < _cols; j++) {
-					T temp = result.get(x, j);
+					Polynomial<T> temp = result.get(x, j);
 					result.set(x, j, result.get(rowToExchange, j));
 					result.set(rowToExchange, j, temp);
 					rowChanges++;
@@ -214,7 +217,7 @@ T GLMatrix<T>::determinant() {
 		}
 		for (int i = x; i < _rows; i++) {
 			if (i != x && result.get(i, y) != 0) {
-				T n = -(result.get(i, y) / result.get(x, y));
+				Polynomial<T> n = -(result.get(i, y) / result.get(x, y));
 				for (int j = 0; j < _cols; j++) {
 					result.set(i, j, result.get(i, j) + n * result.get(x, j));
 				}
@@ -224,7 +227,7 @@ T GLMatrix<T>::determinant() {
 		y++;
 	}
 
-	T determinant = 1;
+	Polynomial<T> determinant = 1;
 	for (int n = 0; n < _rows; n++)
 		determinant *= result.get(n, n);
 	if (rowChanges % 2 == 1)
@@ -269,34 +272,51 @@ int GLMatrix<T>::cols() {
 
 // Fills this entire matrix with a given value
 template<typename T>
-template<typename S>
-void GLMatrix<T>::fill(S value) {
+void GLMatrix<T>::fill(T value) {
+	for (int i = 0; i < _rows; i++)
+		for (int j = 0; j < _cols; j++)
+			set(i, j, value);
+}
 
-	Polynomial<float>* v = dynamic_cast<Polynomial<float>*>(value);
-	if (v != NULL) {
-		//we know it is of type MyClassB
-		for (int i = 0; i < _rows; i++)
-			for (int j = 0; j < _cols; j++)
-				set(i, j, value);
-	} else {
-		for (int i = 0; i < _rows; i++)
-			for (int j = 0; j < _cols; j++)
-				set(i, j, value);
+// sets the values of the matrix given a two dimensional array of values
+template<typename T>
+void GLMatrix<T>::setMatrix(T** matrix) {
+	for (int i = 0; i < _rows; i++)
+		for (int j = 0; j < _cols; j++) {
+			set(i, j, Polynomial<T>(matrix[i][j]));
+		}
+}
+
+// sets the values of this matrix given a vector of values
+template<typename T>
+void GLMatrix<T>::setVector(std::vector<T> values) {
+	if (values.size() != _rows * _cols)
+		throw std::invalid_argument(
+				"Incorrect number of values to fill matrix");
+
+	for (int i = 0; i < _rows * _cols; i++) {
+		set(i / _cols, i % _cols, Polynomial<T>(values[i]));
 	}
 }
 
-// Sets the values of the matrix given a two dimensional array of values
+// sets the specified element of this matrix to a given value
 template<typename T>
-void GLMatrix<T>::setMatrix(T** matrix) {
+void GLMatrix<T>::set(int i, int j, T value) {
+	_matrix[i][j] = value;
+}
+
+// sets the values of the matrix given a two dimensional array of values
+template<typename T>
+void GLMatrix<T>::setMatrix(Polynomial<T>** matrix) {
 	for (int i = 0; i < _rows; i++)
 		for (int j = 0; j < _cols; j++) {
 			set(i, j, matrix[i][j]);
 		}
 }
 
-// Sets the values of this matrix given a vector of values
+// sets the values of this matrix given a vector of values
 template<typename T>
-void GLMatrix<T>::setValues(std::vector<T> values) {
+void GLMatrix<T>::setVector(std::vector<Polynomial<T> > values) {
 	if (values.size() != _rows * _cols)
 		throw std::invalid_argument(
 				"Incorrect number of values to fill matrix");
@@ -306,22 +326,22 @@ void GLMatrix<T>::setValues(std::vector<T> values) {
 	}
 }
 
-// Sets the specified element of this matrix to a given value
+// sets the specified element of this matrix to a given value
 template<typename T>
-void GLMatrix<T>::set(int i, int j, T value) {
+void GLMatrix<T>::set(int i, int j, Polynomial<T> value) {
 	_matrix[i][j] = value;
 }
 
 // Returns the values of this matrix in a two dimensional array
 template<typename T>
-T** GLMatrix<T>::getMatrix() {
+Polynomial<T>** GLMatrix<T>::getMatrix() {
 	return _matrix;
 }
 
 // Returns the values of this matrix in a vector
 template<typename T>
-std::vector<T> GLMatrix<T>::getValues() {
-	std::vector<T> values;
+std::vector<Polynomial<T> > GLMatrix<T>::getVector() {
+	std::vector<Polynomial<T> > values;
 	for (int i = 0; i < _rows; i++)
 		for (int j = 0; j < _cols; j++)
 			values.push_back(_matrix[i][j]);
@@ -330,8 +350,8 @@ std::vector<T> GLMatrix<T>::getValues() {
 
 // Returns the values of this matrix in a one dimensional array
 template<typename T>
-T* GLMatrix<T>::getValuesArray() {
-	T* values = new T[_rows * _cols];
+Polynomial<T>* GLMatrix<T>::getArray() {
+	Polynomial<T>* values = new Polynomial<T>[_rows * _cols];
 	for (int i = 0; i < _rows; i++)
 		for (int j = 0; j < _cols; j++)
 			values[i * _cols + j] = _matrix[i][j];
@@ -340,8 +360,46 @@ T* GLMatrix<T>::getValuesArray() {
 
 // Returns the value of the specified element of this matrix
 template<typename T>
-T GLMatrix<T>::get(int i, int j) {
+Polynomial<T> GLMatrix<T>::get(int i, int j) {
 	return _matrix[i][j];
+}
+
+// Returns the values of this matrix in a two dimensional array
+template<typename T>
+T** GLMatrix<T>::getMatrixConstants() {
+	T** matrix = new T*[_rows];
+	for (int i = 0; i < _rows; i++)
+		 matrix[i] = new T[_cols];
+	for (int i = 0; i < _rows; i++)
+		for (int j = 0; i < _cols; j++)
+			matrix[i][j] = _matrix[i][j].value();
+	return matrix;
+}
+
+// Returns the values of this matrix in a vector
+template<typename T>
+std::vector<T> GLMatrix<T>::getVectorConstants() {
+	std::vector<T> values;
+	for (int i = 0; i < _rows; i++)
+		for (int j = 0; j < _cols; j++)
+			values.push_back(_matrix[i][j].value());
+	return values;
+}
+
+// Returns the values of this matrix in a one dimensional array
+template<typename T>
+T* GLMatrix<T>::getArrayConstants() {
+	T* values = new T[_rows * _cols];
+	for (int i = 0; i < _rows; i++)
+		for (int j = 0; j < _cols; j++)
+			values[i * _cols + j] = _matrix[i][j].value();
+	return values;
+}
+
+// Returns the value of the specified element of this matrix
+template<typename T>
+T GLMatrix<T>::getConstant(int i, int j) {
+	return _matrix[i][j].value();
 }
 
 // Returns a copy of this object (another matrix with the same values)
@@ -360,7 +418,7 @@ std::vector<std::string> GLMatrix<T>::toStringVector() {
 	for (int i = 0; i < _rows; i++) {
 		arr[i] = new std::string[_cols];
 		for (int j = 0; j < _cols; j++) {
-			std::string str = std::to_string(_matrix[i][j]);
+			std::string str = _matrix[i][j].toString();
 			if (str.find(std::string(".")) != std::string::npos) {
 				for (int c = str.length() - 1; c >= 0; c--) {
 					if (str.at(c) != '0' || str.at(c - 1) == '.')
@@ -413,6 +471,12 @@ GLMatrix<T> GLMatrix<T>::operator+(GLMatrix<T> rhs) {
 template<typename T>
 GLMatrix<T> GLMatrix<T>::operator-(GLMatrix<T> rhs) {
 	return add(rhs.scale(-1));
+}
+
+// Allows for the negation of a matrix with the - operator
+template<typename T>
+GLMatrix<T> GLMatrix<T>::operator-() {
+	return scale(-1);
 }
 
 // Allows for the scaling of a matrix with the * operator
@@ -653,5 +717,5 @@ GLMatrix<T> GLMatrix<T>::perspectiveProjectionMatrix(T fovX, T fovY, T near,
 template class GLMatrix<float> ;
 template class GLMatrix<double> ;
 template class GLMatrix<long double> ;
-template class GLMatrix<Polynomial<float> > ;
+//template class GLMatrix<Polynomial<float> > ;
 

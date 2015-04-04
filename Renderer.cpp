@@ -35,13 +35,13 @@ void Renderer::useProgram(ShaderProgram* program) {
 void Renderer::setProjectionMatrix(GLMatrix<float> projectionMatrix) {
 	_projectionMatrix = projectionMatrix;
 	_currentProgram->setUniformMatrix4x4f("projectionMatrix",
-			_projectionMatrix.getValuesArray());
+			_projectionMatrix.getArrayConstants());
 }
 
 // Updates certain uniforms upon the use of a different shader program
 void Renderer::updateUniforms() {
 	_currentProgram->setUniformMatrix4x4f("projectionMatrix",
-			_projectionMatrix.getValuesArray());
+			_projectionMatrix.getArrayConstants());
 }
 
 // Initialization method ran on startup
