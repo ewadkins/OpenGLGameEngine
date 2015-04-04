@@ -8,7 +8,7 @@
 #include "GLMatrix.h"
 
 template<typename T>
-const T GLMatrix<T>::PI = 3.1415926535897;
+const double GLMatrix<T>::PI = 3.1415926535897;
 
 // Basic constructor
 template<typename T>
@@ -72,7 +72,7 @@ GLMatrix<T> GLMatrix<T>::mul(GLMatrix other) {
 	GLMatrix<T> result = GLMatrix<T>(_rows, other.cols());
 	for (int i = 0; i < _rows; i++)
 		for (int j = 0; j < other.cols(); j++) {
-			T sum = 0;
+			T sum = new T();
 			for (int k = 0; k < _cols; k++)
 				sum += get(i, k) * other.get(k, j);
 			result.set(i, j, sum);
@@ -118,7 +118,7 @@ GLMatrix<T> GLMatrix<T>::rref() {
 			if (i != x && result.get(i, y) != 0) {
 				T n = -(result.get(i, y) / result.get(x, y));
 				for (int j = 0; j < _cols; j++) {
-					result.set(i, j, result.get(i, j) + n * result.get(x, j));
+					result.set(i, j, result.get(i, j) + result.get(x, j) * n);
 				}
 			}
 		}
@@ -269,10 +269,20 @@ int GLMatrix<T>::cols() {
 
 // Fills this entire matrix with a given value
 template<typename T>
-void GLMatrix<T>::fill(T value) {
-	for (int i = 0; i < _rows; i++)
-		for (int j = 0; j < _cols; j++)
-			set(i, j, value);
+template<typename S>
+void GLMatrix<T>::fill(S value) {
+
+	Polynomial<float>* v = dynamic_cast<Polynomial<float>*>(value);
+	if (v != NULL) {
+		//we know it is of type MyClassB
+		for (int i = 0; i < _rows; i++)
+			for (int j = 0; j < _cols; j++)
+				set(i, j, value);
+	} else {
+		for (int i = 0; i < _rows; i++)
+			for (int j = 0; j < _cols; j++)
+				set(i, j, value);
+	}
 }
 
 // Sets the values of the matrix given a two dimensional array of values
@@ -289,7 +299,7 @@ template<typename T>
 void GLMatrix<T>::setValues(std::vector<T> values) {
 	if (values.size() != _rows * _cols)
 		throw std::invalid_argument(
-				"Incorrect number of input values to fill matrix");
+				"Incorrect number of values to fill matrix");
 
 	for (int i = 0; i < _rows * _cols; i++) {
 		set(i / _cols, i % _cols, values[i]);
@@ -342,7 +352,7 @@ GLMatrix<T> GLMatrix<T>::clone() {
 	return result;
 }
 
-// Returns the vector of strings representing this matrix
+// Returns a vector of strings representing this matrix
 template<typename T>
 std::vector<std::string> GLMatrix<T>::toStringVector() {
 	std::vector<std::string> strings;
@@ -421,6 +431,21 @@ GLMatrix<T> GLMatrix<T>::operator*(GLMatrix<T> rhs) {
 template<typename T>
 GLMatrix<T> GLMatrix<T>::operator/(GLMatrix<T> rhs) {
 	return mul(rhs.inverse());
+}
+
+// Allows for the scaling of a matrix with the / operator
+template<typename T>
+GLMatrix<T> GLMatrix<T>::operator/(T rhs) {
+	return scale(1 / rhs);
+}
+
+// Allows for the exponentiation of two matrices with the ^ operator
+template<typename T>
+GLMatrix<T> GLMatrix<T>::operator^(int rhs) {
+	GLMatrix<T> result = clone();
+	for (int i = 0; i < rhs; i++)
+		result = result.mul(result);
+	return result;
 }
 
 // Allows for the left multiplication of two matrices with the << operator
@@ -594,11 +619,18 @@ GLMatrix<T> GLMatrix<T>::rotationMatrixLine(T x, T y, T z, T u, T v, T w,
 template<typename T>
 GLMatrix<T> GLMatrix<T>::orthographicProjectionMatrix(T width, T height, T near,
 		T far) {
-	GLMatrix<T> result = identity(4);
-	result.set(0, 0, 1 / width);
-	result.set(1, 1, 1 / height);
+	GLMatrix<T> result = zeros(4, 4);
+	/*
+	 result.set(0, 0, 2 / width);
+	 result.set(1, 1, 2 / height);
+	 result.set(2, 2, -2 / (far - near));
+	 result.set(2, 3, (far + near) / (far - near));
+	 */
+	result.set(0, 0, 2 / width);
+	result.set(1, 1, 2 / height);
 	result.set(2, 2, -2 / (far - near));
-	result.set(2, 3, (far + near) / (far - near));
+	//result.set(2, 3, -near / (far - near));
+	result.set(3, 3, 1);
 	return result;
 }
 
@@ -621,4 +653,5 @@ GLMatrix<T> GLMatrix<T>::perspectiveProjectionMatrix(T fovX, T fovY, T near,
 template class GLMatrix<float> ;
 template class GLMatrix<double> ;
 template class GLMatrix<long double> ;
+template class GLMatrix<Polynomial<float> > ;
 

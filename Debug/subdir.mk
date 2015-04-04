@@ -9,6 +9,7 @@ CPP_SRCS += \
 ../Logger.cpp \
 ../Main.cpp \
 ../OpenGLApplication.cpp \
+../Polynomial.cpp \
 ../Renderer.cpp \
 ../ShaderProgram.cpp 
 
@@ -18,6 +19,7 @@ OBJS += \
 ./Logger.o \
 ./Main.o \
 ./OpenGLApplication.o \
+./Polynomial.o \
 ./Renderer.o \
 ./ShaderProgram.o 
 
@@ -27,6 +29,7 @@ CPP_DEPS += \
 ./Logger.d \
 ./Main.d \
 ./OpenGLApplication.d \
+./Polynomial.d \
 ./Renderer.d \
 ./ShaderProgram.d 
 

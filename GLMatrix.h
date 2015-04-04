@@ -8,11 +8,13 @@
 #ifndef GLMATRIX_H_
 #define GLMATRIX_H_
 
+#include "Polynomial.h"
 #include <iostream>
 #include <stdexcept>
 #include <vector>
 #include <cmath>
 #include <string>
+#include <typeinfo>
 
 template<typename T>
 class GLMatrix {
@@ -31,7 +33,7 @@ public:
 	GLMatrix inverse();
 	int rows();
 	int cols();
-	void fill(T value);
+	template<typename S> void fill(S value);
 	void setMatrix(T** matrix);
 	void setValues(std::vector<T> values);
 	void set(int row, int col, T value);
@@ -46,8 +48,9 @@ public:
 	GLMatrix operator-(GLMatrix rhs);
 	GLMatrix operator*(T rhs);
 	GLMatrix operator*(GLMatrix rhs);
+	GLMatrix operator/(T rhs);
 	GLMatrix operator/(GLMatrix rhs);
-													GLMatrix operator^(T rhs);
+	GLMatrix operator^(int rhs);
 	GLMatrix operator<<(GLMatrix rhs);
 	static GLMatrix zeros(int m, int n);
 	static GLMatrix ones(int m, int n);
@@ -65,7 +68,7 @@ private:
 	int _rows;
 	int _cols;
 	T** _matrix;
-	static const T PI;
+	static const double PI;
 };
 
 #endif /* GLMATRIX_H_ */

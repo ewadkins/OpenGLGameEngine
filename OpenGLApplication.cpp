@@ -122,14 +122,13 @@ void OpenGLApplication::initialize() {
 	m.setValues(values);
 	*/
 
-
 	GLMatrix<float> m1 = GLMatrix<float>(4, 1);
 	float arr[] = { 1, 0, 0, 0 };
 	std::vector<float> values(arr, arr + sizeof(arr) / sizeof(arr[0]));
 	m1.setValues(values);
 	m1.print();
-	(GLMatrix<float>::rotationMatrixZ(30) << GLMatrix<float>::scalingMatrix(4.0/3, 4, 1)).print();
-	m1 = m1 << GLMatrix<float>::rotationMatrixZ(30) << GLMatrix<float>::scalingMatrix(4.0/3, 4, 1);
+	(GLMatrix<float>::rotationMatrixZ(30) << GLMatrix<float>::scalarMatrix(4.0/3, 4, 1)).print();
+	m1 = m1 << GLMatrix<float>::rotationMatrixZ(30) << GLMatrix<float>::scalarMatrix(4.0/3, 4, 1);
 
 	m1.print();
 
@@ -249,8 +248,7 @@ void OpenGLApplication::gameLoop() {
 		count++;
 
 		//_camera->rotateX(2);
-		if (_averageFPS > 0)
-			_camera->rotateY(2);
+		_camera->rotateY(2);
 		//_camera->rotateZ(2);
 		_camera->useView();
 
@@ -329,7 +327,7 @@ void OpenGLApplication::gameLoop() {
 
 int OpenGLApplication::start() {
 
-	int result = 0;
+	int result = -1;
 	try {
 		try {
 			try {
@@ -350,13 +348,14 @@ int OpenGLApplication::start() {
 				_logger->endLine().setIndent(0).log(
 						"*** Stopping OpenGLApplication (").log(str).log(
 						") ***").endLine();
-				result = -1;
 			}
 		} catch (int e) {
 			// Error thrown to signify the end of the application
-			if (e == 0)
+			if (e == 0) {
 				_logger->endLine().setIndent(0).log(
 						"*** Stopping OpenGLApplication ***").endLine();
+				result = 0;
+			}
 			else
 				throw;
 		}
@@ -364,7 +363,6 @@ int OpenGLApplication::start() {
 		// Fatal error caused the application to crash
 		_logger->endLine().setIndent(0).log(
 				"*** Stopping OpenGLApplication (Unknown reason) ***").endLine();
-		result = -1;
 		throw;
 	}
 

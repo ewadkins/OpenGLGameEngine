@@ -9,6 +9,7 @@
 #define MAIN_H_
 
 #include "OpenGLApplication.h"
+#include "Polynomial.h"
 
 class Main {
 public:

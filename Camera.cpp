@@ -22,9 +22,9 @@ Camera::Camera(OpenGLApplication* application, float x, float y, float z,
 	_rotationZ = rotationZ;
 	_fovX = 70;
 	_fovY = 70;
-	_near = 0.01;
+	_near = -0.01;
 	_far = 1000;
-	_projectionType = PERSPECTIVE;
+	_projectionType = ORTHOGRAPHIC;
 }
 
 // Initialization method ran on startup
@@ -51,8 +51,8 @@ void Camera::useView() {
 // Updates the projection matrices as well as setting the desired projection matrix
 void Camera::updateProjectionMatrices() {
 
-	_orthographic = orthographic(_application->_windowSizeX,
-			_application->_windowSizeY, getNear(), getFar());
+	_orthographic = orthographic(_application->_windowSizeX/100,
+			_application->_windowSizeY/100, getNear(), getFar());
 
 	_perspective = perspective(getFovX(), getFovY(), getNear(), getFar());
 
