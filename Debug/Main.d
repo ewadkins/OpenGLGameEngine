@@ -1,8 +1,8 @@
 Main.d: ../Main.cpp ../Main.h ../OpenGLApplication.h ../Logger.h \
-  ../GLMatrix.h ../Renderer.h ../ShaderProgram.h \
+  ../Matrix.h ../Renderer.h ../ShaderProgram.h \
   /usr/local/Cellar/glew/1.11.0/include/GL/glew.h \
   /usr/local/Cellar/glfw3/3.0.4/include/GLFW/glfw3.h ../Camera.h \
-  ../Polynomial.h
+  ../GLMatrix.h ../PolynomialMatrix.h ../Polynomial.h
 
 ../Main.h:
 
@@ -10,7 +10,7 @@ Main.d: ../Main.cpp ../Main.h ../OpenGLApplication.h ../Logger.h \
 
 ../Logger.h:
 
-../GLMatrix.h:
+../Matrix.h:
 
 ../Renderer.h:
 
@@ -21,5 +21,9 @@ Main.d: ../Main.cpp ../Main.h ../OpenGLApplication.h ../Logger.h \
 /usr/local/Cellar/glfw3/3.0.4/include/GLFW/glfw3.h:
 
 ../Camera.h:
+
+../GLMatrix.h:
+
+../PolynomialMatrix.h:
 
 ../Polynomial.h:

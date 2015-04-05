@@ -11,7 +11,8 @@
 #include "Logger.h"
 #include "Renderer.h"
 #include "Camera.h"
-#include "GLMatrix.h"
+#include "Matrix.h"
+#include "PolynomialMatrix.h"
 #include <string>
 #include <ctime>
 #include <iostream>

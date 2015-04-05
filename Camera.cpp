@@ -11,8 +11,8 @@
 // Basic constructor
 Camera::Camera(OpenGLApplication* application, float x, float y, float z,
 		float rotationX, float rotationY, float rotationZ) :
-		_orthographic(GLMatrix<float>::identity(4)), _perspective(
-				GLMatrix<float>::identity(4)) {
+		_orthographic(Matrix<float>::identity(4)), _perspective(
+				Matrix<float>::identity(4)) {
 	_application = application;
 	_x = x;
 	_y = y;
@@ -36,7 +36,7 @@ void Camera::initialize() {
 // Creates and sets a view matrix representing the view of the camera
 void Camera::useView() {
 
-	GLMatrix<float> viewMatrix = GLMatrix<float>::identity(4);
+	Matrix<float> viewMatrix = Matrix<float>::identity(4);
 	viewMatrix = viewMatrix
 			<< rotate(getRotationX(), getRotationY(), getRotationZ())
 			<< translate(getX(), getY(), getZ());
@@ -91,30 +91,30 @@ void Camera::setProjectionType(ProjectionType type) {
 }
 
 // Returns the corresponding translation matrix
-GLMatrix<float> Camera::translate(float deltaX, float deltaY, float deltaZ) {
-	return GLMatrix<float>::translationMatrix(deltaX, deltaY, deltaZ);
+Matrix<float> Camera::translate(float deltaX, float deltaY, float deltaZ) {
+	return GLMatrix::translationMatrix(deltaX, deltaY, deltaZ);
 }
 
 // Returns the corresponding scalar matrix
-GLMatrix<float> Camera::scale(float scaleX, float scaleY, float scaleZ) {
-	return GLMatrix<float>::scalarMatrix(scaleX, scaleY, scaleZ);
+Matrix<float> Camera::scale(float scaleX, float scaleY, float scaleZ) {
+	return GLMatrix::scalarMatrix(scaleX, scaleY, scaleZ);
 }
 
 // Returns the corresponding rotation matrix
-GLMatrix<float> Camera::rotate(float thetaX, float thetaY, float thetaZ) {
-	return GLMatrix<float>::rotationMatrixXYZ(thetaX, thetaY, thetaZ);
+Matrix<float> Camera::rotate(float thetaX, float thetaY, float thetaZ) {
+	return GLMatrix::rotationMatrixXYZ(thetaX, thetaY, thetaZ);
 }
 
 // Returns the corresponding orthographic projection matrix
-GLMatrix<float> Camera::orthographic(int width, int height, float near,
+Matrix<float> Camera::orthographic(int width, int height, float near,
 		float far) {
-	return GLMatrix<float>::orthographicProjectionMatrix(width, height, near,
+	return GLMatrix::orthographicProjectionMatrix(width, height, near,
 			far);
 }
 
 // Returns the corresponding perspective projection matrix
-GLMatrix<float> Camera::perspective(int fovX, int fovY, float near, float far) {
-	return GLMatrix<float>::perspectiveProjectionMatrix(fovX, fovY, near, far);
+Matrix<float> Camera::perspective(int fovX, int fovY, float near, float far) {
+	return GLMatrix::perspectiveProjectionMatrix(fovX, fovY, near, far);
 }
 
 // Returns the x field of view

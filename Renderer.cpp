@@ -9,7 +9,7 @@
 #include "OpenGLApplication.h"
 
 Renderer::Renderer(OpenGLApplication* application) :
-		_projectionMatrix(GLMatrix<float>::identity(4)) {
+		_projectionMatrix(Matrix<float>::identity(4)) {
 	_application = application;
 	_shaderProgram1 = nullptr;
 	vao = 0;
@@ -32,7 +32,7 @@ void Renderer::useProgram(ShaderProgram* program) {
 }
 
 // Sets the projection matrix to be used in rendering
-void Renderer::setProjectionMatrix(GLMatrix<float> projectionMatrix) {
+void Renderer::setProjectionMatrix(Matrix<float> projectionMatrix) {
 	_projectionMatrix = projectionMatrix;
 	_currentProgram->setUniformMatrix4x4f("projectionMatrix",
 			_projectionMatrix.getArray());

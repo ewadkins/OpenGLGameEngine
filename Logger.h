@@ -8,10 +8,10 @@
 #ifndef LOGGER_H_
 #define LOGGER_H_
 
-#include "GLMatrix.h"
 #include <vector>
 #include <string>
 #include <iostream>
+#include "Matrix.h"
 
 class Logger {
 public:
@@ -28,7 +28,7 @@ public:
 	Logger& log(const float f);
 	Logger& log(const double d);
 	Logger& log(const long l);
-	template<typename T> Logger& log(GLMatrix<T> m);
+	template<typename T> Logger& log(Matrix<T> m);
 	Logger& endLine();
 	Logger& increaseIndent();
 	Logger& decreaseIndent();

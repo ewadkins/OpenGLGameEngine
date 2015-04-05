@@ -9,6 +9,7 @@
 #define CAMERA_H_
 
 #include "GLMatrix.h"
+#include "Matrix.h"
 //#include <glm/glm.hpp>
 //#include <glm/gtx/transform.hpp>
 
@@ -50,17 +51,17 @@ public:
 	void setRotationY(float rotationY);
 	void setRotationZ(float rotationZ);
 private:
-	static GLMatrix<float> translate(float deltaX, float deltaY, float deltaZ);
-	static GLMatrix<float> scale(float scaleX, float scaleY, float scaleZ);
-	static GLMatrix<float> rotate(float thetaX, float thetaY, float thetaZ);
-	static GLMatrix<float> orthographic(int width, int height, float near,
+	static Matrix<float> translate(float deltaX, float deltaY, float deltaZ);
+	static Matrix<float> scale(float scaleX, float scaleY, float scaleZ);
+	static Matrix<float> rotate(float thetaX, float thetaY, float thetaZ);
+	static Matrix<float> orthographic(int width, int height, float near,
 			float far);
-	static GLMatrix<float> perspective(int fovX, int fovY, float near,
+	static Matrix<float> perspective(int fovX, int fovY, float near,
 			float far);
 	OpenGLApplication* _application;
 	int _fovX, _fovY;
 	float _near, _far, _x, _y, _z, _rotationX, _rotationY, _rotationZ;
-	GLMatrix<float> _orthographic, _perspective;
+	Matrix<float> _orthographic, _perspective;
 	ProjectionType _projectionType;
 };
 

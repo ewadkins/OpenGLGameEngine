@@ -115,27 +115,32 @@ void OpenGLApplication::initialize() {
 	_logger->log("Testing matrices...").endLine().increaseIndent();
 	start = clock();
 
-	/*
-	GLMatrix<float> m = GLMatrix<float>(4, 4);
-	float arr[] = { 1, 3, 2, 1, 0, 1, 4, -4, 2, 5, -2, 9, 3, 7, 0, 1 };
-	std::vector<float> values(arr, arr + sizeof(arr) / sizeof(arr[0]));
-	m.setValues(values);
-	*/
 
-	GLMatrix<float> m1 = GLMatrix<float>(4, 4);
+	Matrix<float> m1 = Matrix<float>(4, 4);
 	float arr[] = { 5, 3, 2, 1, 0, 1, 4, -4, 2, 5, -2, 9, 3, 7, 0, 1 };
 	std::vector<float> values(arr, arr + sizeof(arr) / sizeof(arr[0]));
 	m1.setVector(values);
 
 	m1.print();
+	m1.rref().print();
 	std::cout << m1.determinant() << std::endl;
 
-	/*
-	(GLMatrix<float>::rotationMatrixZ(30) << GLMatrix<float>::scalarMatrix(4.0/3, 4, 1)).print();
-	m1 = m1 << GLMatrix<float>::rotationMatrixZ(30) << GLMatrix<float>::scalarMatrix(4.0/3, 4, 1);
+	std::cout << std::endl << "-------------------" << std::endl << std::endl;
 
-	m1.print();
-	*/
+	PolynomialMatrix<float> m2 = PolynomialMatrix<float>(4, 4);
+	float arr2[] = { 5, 3, 2, 1, 0, 1, 4, -4, 2, 5, -2, 9, 3, 7, 0, 1 };
+	std::vector<float> values2(arr2, arr2 + sizeof(arr2) / sizeof(arr2[0]));
+	m2.setVector(values2);
+
+	float arr3[] = { 5, 1 };
+	std::vector<float> numCoeffs(arr3, arr3 + sizeof(arr3) / sizeof(arr3[0]));
+	Polynomial<float> p = Polynomial<float>(numCoeffs, 1);
+	m2.set(0, 0, p);
+
+	m2.print();
+	m2.rref().print();
+	m2.determinant().print();
+
 
 
 	finish = clock();
@@ -143,7 +148,7 @@ void OpenGLApplication::initialize() {
 			(double(finish) - double(start)) / CLOCKS_PER_SEC * 1000).log(
 			" ms)").endLine().decreaseIndent();
 
-	stop();
+	stop("Testing matrices complete");
 
 	_logger->log("Initializing GLFW..").endLine().increaseIndent();
 	start = clock();

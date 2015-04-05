@@ -67,7 +67,7 @@ Logger& Logger::log(const long l) {
 
 // Logs a GLMatrix
 template<typename T>
-Logger& Logger::log(GLMatrix<T> m) {
+Logger& Logger::log(Matrix<T> m) {
 	return log(m.toStringVector());
 }
 
@@ -130,7 +130,7 @@ std::vector<std::string> Logger::getLog() {
 }
 
 // Explicit instantiation of template functions
-template Logger& Logger::log(GLMatrix<float>);
-template Logger& Logger::log(GLMatrix<double>);
-template Logger& Logger::log(GLMatrix<long double>);
+template Logger& Logger::log(Matrix<float>);
+template Logger& Logger::log(Matrix<double>);
+template Logger& Logger::log(Matrix<long double>);
 

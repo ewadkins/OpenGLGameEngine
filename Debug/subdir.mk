@@ -8,8 +8,10 @@ CPP_SRCS += \
 ../GLMatrix.cpp \
 ../Logger.cpp \
 ../Main.cpp \
+../Matrix.cpp \
 ../OpenGLApplication.cpp \
 ../Polynomial.cpp \
+../PolynomialMatrix.cpp \
 ../Renderer.cpp \
 ../ShaderProgram.cpp 
 
@@ -18,8 +20,10 @@ OBJS += \
 ./GLMatrix.o \
 ./Logger.o \
 ./Main.o \
+./Matrix.o \
 ./OpenGLApplication.o \
 ./Polynomial.o \
+./PolynomialMatrix.o \
 ./Renderer.o \
 ./ShaderProgram.o 
 
@@ -28,8 +32,10 @@ CPP_DEPS += \
 ./GLMatrix.d \
 ./Logger.d \
 ./Main.d \
+./Matrix.d \
 ./OpenGLApplication.d \
 ./Polynomial.d \
+./PolynomialMatrix.d \
 ./Renderer.d \
 ./ShaderProgram.d 
 

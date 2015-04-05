@@ -57,6 +57,10 @@ public:
 	bool operator!=(Polynomial rhs);
 	void operator=(T rhs);
 	void operator=(Polynomial rhs);
+	//operator int();
+	//operator float();
+	//operator double();
+	//operator long double();
 private:
 	void set(Polynomial other);
 	void simplify();
