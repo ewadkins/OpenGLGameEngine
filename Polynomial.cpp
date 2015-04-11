@@ -8,6 +8,9 @@
 #include "Polynomial.h"
 
 template<typename T>
+std::string Polynomial<T>::variable = "x";
+
+template<typename T>
 Polynomial<T>::Polynomial() {
 	std::vector<T> numCoeffs;
 	numCoeffs.push_back(0);
@@ -15,7 +18,6 @@ Polynomial<T>::Polynomial() {
 	std::vector<T> denCoeffs;
 	denCoeffs.push_back(1);
 	_denCoeffs = denCoeffs;
-	simplify();
 }
 
 template<typename T>
@@ -31,8 +33,15 @@ Polynomial<T>::Polynomial(std::vector<T> numCoeffs, T den) {
 	std::vector<T> denCoeffs;
 	denCoeffs.push_back(den);
 	_denCoeffs = denCoeffs;
-	//std::cout << " Num size: " << _numCoeffs.size() << std::endl;
-	//std::cout << " Den size: " << _denCoeffs.size() << std::endl;
+	simplify();
+}
+
+template<typename T>
+Polynomial<T>::Polynomial(std::vector<T> numCoeffs) {
+	_numCoeffs = numCoeffs;
+	std::vector<T> denCoeffs;
+	denCoeffs.push_back(1);
+	_denCoeffs = denCoeffs;
 	simplify();
 }
 
@@ -48,12 +57,11 @@ Polynomial<T>::Polynomial(T num, std::vector<T> denCoeffs) {
 template<typename T>
 Polynomial<T>::Polynomial(T num, T den) {
 	std::vector<T> numCoeffs;
-	numCoeffs.push_back(num);
+	numCoeffs.push_back(num / den);
 	_numCoeffs = numCoeffs;
 	std::vector<T> denCoeffs;
-	denCoeffs.push_back(den);
+	denCoeffs.push_back(1);
 	_denCoeffs = denCoeffs;
-	simplify();
 }
 
 template<typename T>
@@ -64,7 +72,6 @@ Polynomial<T>::Polynomial(T value) {
 	std::vector<T> denCoeffs;
 	denCoeffs.push_back(1);
 	_denCoeffs = denCoeffs;
-	simplify();
 }
 
 template<typename T>
@@ -93,36 +100,48 @@ T Polynomial<T>::value() {
 
 template<typename T>
 Polynomial<T> Polynomial<T>::add(Polynomial other) {
-	Polynomial<T> cd =
-			Polynomial<T>(
-					(Polynomial<T>(_denCoeffs, 1)
-							* Polynomial<T>(other._denCoeffs, 1))._numCoeffs,
-					1);
-	Polynomial<T> p1 =
-			Polynomial<T>(
-					(Polynomial<T>(_numCoeffs, 1)
-							* Polynomial<T>(other._denCoeffs, 1))._numCoeffs,
-					cd._numCoeffs);
-	Polynomial<T> p2 =
-			Polynomial<T>(
-					(Polynomial<T>(other._numCoeffs, 1)
-							* Polynomial<T>(_denCoeffs, 1))._numCoeffs,
-					cd._numCoeffs);
+	if (_denCoeffs != other._denCoeffs) {
+		/*std::cout << "addition..." << std::endl;
+		 std::cout << "this: " << toString() << std::endl;
+		 std::cout << "other: " << other.toString() << std::endl << std::endl;*/
 
-	std::vector<T> numCoeffs(
-			std::max(p1._numCoeffs.size(), p2._numCoeffs.size()));
-	for (int i = 0; i < p1._numCoeffs.size(); i++)
-		numCoeffs[i] += p1._numCoeffs[i];
-	for (int i = 0; i < p2._numCoeffs.size(); i++)
-		numCoeffs[i] += p2._numCoeffs[i];
+		Polynomial<T> cd = Polynomial<T>(
+				(Polynomial<T>(_denCoeffs, 1)
+						* Polynomial<T>(other._denCoeffs, 1))._numCoeffs, 1);
+		Polynomial<T> p1 = Polynomial<T>(
+				(Polynomial<T>(_numCoeffs, 1)
+						* Polynomial<T>(other._denCoeffs, 1))._numCoeffs, 1);
+		Polynomial<T> p2 = Polynomial<T>(
+				(Polynomial<T>(other._numCoeffs, 1)
+						* Polynomial<T>(_denCoeffs, 1))._numCoeffs, 1);
 
-	std::vector<T> denCoeffs(
-			std::max(p1._denCoeffs.size(), p2._denCoeffs.size()));
-	for (int i = 0; i < p1._denCoeffs.size(); i++)
-		denCoeffs[i] += p1._denCoeffs[i];
-	for (int i = 0; i < p2._denCoeffs.size(); i++)
-		denCoeffs[i] += p2._denCoeffs[i];
-	return Polynomial<T>(numCoeffs, denCoeffs);
+		/*std::cout << "common denom: " << cd.toString() << std::endl;
+		 std::cout << "p1: " << p1.toString() << std::endl;
+		 std::cout << "p2: " << p2.toString() << std::endl << std::endl;
+		 std::cout << "num of 2: " << Polynomial<T>(other._numCoeffs, 1).toString() << std::endl;
+		 std::cout << "denom of 1: " << Polynomial<T>(_denCoeffs, 1).toString() << std::endl;
+		 std::cout << "^^ product: " << (Polynomial<T>(other._numCoeffs, 1) * Polynomial<T>(_denCoeffs, 1)).toString() << std::endl;
+		 std::cout << "result: " << (Polynomial<T>((Polynomial<T>(other._numCoeffs, 1) * Polynomial<T>(_denCoeffs, 1))._numCoeffs, 1)).toString() << std::endl;
+		 */
+		std::vector<T> numCoeffs(
+				std::max(p1._numCoeffs.size(), p2._numCoeffs.size()));
+		for (int i = 0; i < p1._numCoeffs.size(); i++)
+			numCoeffs[i] += p1._numCoeffs[i];
+		for (int i = 0; i < p2._numCoeffs.size(); i++)
+			numCoeffs[i] += p2._numCoeffs[i];
+
+		//std::cout << "..." << std::endl;
+		return Polynomial<T>(numCoeffs, cd._numCoeffs);
+	} else {
+		std::vector<T> numCoeffs(
+				std::max(_numCoeffs.size(), other._numCoeffs.size()));
+		for (int i = 0; i < _numCoeffs.size(); i++)
+			numCoeffs[i] += _numCoeffs[i];
+		for (int i = 0; i < other._numCoeffs.size(); i++)
+			numCoeffs[i] += other._numCoeffs[i];
+
+		return Polynomial<T>(numCoeffs, _denCoeffs);
+	}
 }
 
 template<typename T>
@@ -130,10 +149,7 @@ Polynomial<T> Polynomial<T>::mul(T n) {
 	std::vector<T> numCoeffs(_numCoeffs.size());
 	for (int i = 0; i < _numCoeffs.size(); i++)
 		numCoeffs[i] = n * _numCoeffs[i];
-	std::vector<T> denCoeffs(_denCoeffs.size());
-	for (int i = 0; i < _denCoeffs.size(); i++)
-		denCoeffs[i] = n * _denCoeffs[i];
-	return Polynomial<T>(numCoeffs, denCoeffs);
+	return Polynomial<T>(numCoeffs, _denCoeffs);
 }
 
 template<typename T>
@@ -179,12 +195,14 @@ bool Polynomial<T>::isConstant() {
 
 template<typename T>
 bool Polynomial<T>::equals(T rhs) {
-	return isConstant() && value(0) == rhs ? true : false;
+	if (isConstant() && value() == rhs)
+		return true;
+	return false;
 }
 
 template<typename T>
 bool Polynomial<T>::equals(Polynomial rhs) {
-	if(isConstant() && rhs.isConstant())
+	if (isConstant() && rhs.isConstant())
 		return value() == rhs.value();
 	if (_numCoeffs.size() != rhs._numCoeffs.size()
 			|| _numCoeffs.size() != rhs._numCoeffs.size())
@@ -201,38 +219,69 @@ bool Polynomial<T>::equals(Polynomial rhs) {
 
 template<typename T>
 std::string Polynomial<T>::toString() {
+
+	// Whether to display terms in order of decreasing order or increasing order
+	const bool decreasingOrder = true;
+
+	std::vector<T> num = _numCoeffs;
+	std::vector<T> den = _denCoeffs;
+
 	std::string str = "";
 	std::string str1 = "";
 	int numCount = 0;
-	for (int i = 0; i < _numCoeffs.size(); i++) {
-		if (_numCoeffs[i] != 0 || _numCoeffs.size() == 1) {
-			if (numCount != 0)
-				str1 += " + ";
+	for (int i = 0; i < num.size(); i++) {
+		int order;
+		if (decreasingOrder)
+			order = num.size() - (i + 1);
+		else
+			order = i;
+		if (num[order] != 0 || num.size() == 1) {
+			if (numCount != 0) {
+				if (num[order] > 0)
+					str1 += " + ";
+				else
+					str1 += " - ";
+			}
+			if (numCount == 0 && num[order] < 0)
+				str1 += "-";
+			if ((num[order] != 1 && num[order] != -1) || order == 0)
+				str1 += trimNumber(std::to_string(std::abs(num[order])));
+			if (order == 1)
+				str1 += variable;
+			else if (order > 1)
+				str1 += variable + "^" + std::to_string(order);
 			numCount++;
-			str1 += trimNumber(std::to_string(_numCoeffs[i]));
-			if (i == 1)
-				str1 += "x";
-			else if (i > 1)
-				str1 += "x^" + std::to_string(i);
 		}
 	}
 	str = str1;
 
-	if (_denCoeffs.size() > 1 || _denCoeffs[0] != 1) {
+	if (den.size() > 1 || den[0] != 1) {
 		if (numCount > 1)
 			str1 = "(" + str1 + ")";
 		std::string str2 = "";
 		int denCount = 0;
-		for (int i = 0; i < _denCoeffs.size(); i++) {
-			if (_denCoeffs[i] != 0 || _denCoeffs.size() == 1) {
-				if (denCount != 0)
-					str2 += " + ";
+		for (int i = 0; i < den.size(); i++) {
+			int order;
+			if (decreasingOrder)
+				order = den.size() - (i + 1);
+			else
+				order = i;
+			if (den[order] != 0 || den.size() == 1) {
+				if (denCount != 0) {
+					if (den[order] > 0)
+						str2 += " + ";
+					else
+						str2 += " - ";
+				}
+				if (denCount == 0 && den[order] < 0)
+					str2 += "-";
+				if ((den[order] != 1 && den[order] != -1) || order == 0)
+					str2 += trimNumber(std::to_string(std::abs(den[order])));
+				if (order == 1)
+					str2 += variable;
+				else if (order > 1)
+					str2 += variable + "^" + std::to_string(order);
 				denCount++;
-				str2 += trimNumber(std::to_string(_denCoeffs[i]));
-				if (i == 1)
-					str2 += "x";
-				else if (i > 1)
-					str2 += "x^" + std::to_string(i);
 			}
 		}
 		if (denCount > 1)
@@ -250,6 +299,110 @@ void Polynomial<T>::print() {
 template<typename T>
 std::vector<T> Polynomial<T>::coeffs() {
 	return _numCoeffs;
+}
+
+template<typename T>
+void Polynomial<T>::set(Polynomial other) {
+	/*std::vector<T> numCoeffs;
+	 for (int i = 0; i < other._numCoeffs.size(); i++)
+	 _numCoeffs[i] = other._numCoeffs[i];
+	 std::vector<T> denCoeffs;
+	 for (int i = 0; i < other._denCoeffs.size(); i++)
+	 _denCoeffs[i] = other._denCoeffs[i];*/
+	_numCoeffs = other._numCoeffs;
+	_denCoeffs = other._denCoeffs;
+}
+
+template<typename T>
+void Polynomial<T>::simplify() { // FIXME Broken
+
+	// Check for 0 division
+	if (_denCoeffs.size() == 1 && _denCoeffs[0] == 0)
+		throw std::runtime_error("Polynomial division by zero");
+
+	// If any of the ending coefficients are 0, remove that term
+	while (_numCoeffs.size() > 1 && _numCoeffs[_numCoeffs.size() - 1] == 0)
+		_numCoeffs.pop_back();
+	while (_denCoeffs.size() > 1 && _denCoeffs[_denCoeffs.size() - 1] == 0)
+		_denCoeffs.pop_back();
+
+	// If a variable can be factored out of all terms, do this until there is a constant that prevents it
+	while (_numCoeffs.size() > 1 && _denCoeffs.size() > 1 && _numCoeffs[0] == 0
+			&& _denCoeffs[0] == 0) {
+		_numCoeffs.erase(_numCoeffs.begin());
+		_denCoeffs.erase(_denCoeffs.begin());
+	}
+
+	// If the numerator and denominator are both constants, set the polynomial to the value/1
+	if (isConstant() && _denCoeffs[0] != 1) {
+		_numCoeffs[0] = value();
+		_denCoeffs[0] = 1;
+		return;
+	}
+
+	// If the denominator is just a constant, divide the top by the constant and make the bottom 1
+	if (_denCoeffs.size() == 1) {
+		for (int i = 0; i < _numCoeffs.size(); i++)
+			_numCoeffs[i] *= (1.0 / _denCoeffs[0]);
+		_denCoeffs[0] = 1;
+	}
+
+	// Polynomial long division
+	if (_denCoeffs.size() > 1 && _numCoeffs.size() >= _denCoeffs.size()) {
+		Polynomial<T> dividend = Polynomial(_numCoeffs);
+		Polynomial<T> divisor = Polynomial(_denCoeffs);
+		Polynomial<T> result = Polynomial();
+		Polynomial<T> remainder = dividend;
+		while (remainder != 0
+				&& remainder._numCoeffs.size() >= divisor._numCoeffs.size()) {
+			std::vector<T> remainderLead;
+			for (int i = 0; i < remainder._numCoeffs.size() - 1; i++)
+				remainderLead.push_back(0);
+			remainderLead.push_back(
+					remainder._numCoeffs[remainder._numCoeffs.size() - 1]);
+
+			std::vector<T> divisorLead;
+			for (int i = 0; i < divisor._numCoeffs.size() - 1; i++)
+				divisorLead.push_back(0);
+			divisorLead.push_back(
+					divisor._numCoeffs[divisor._numCoeffs.size() - 1]);
+
+			Polynomial<T> temp = Polynomial(remainderLead, divisorLead);
+			result += temp;
+			remainder -= (temp * divisor);
+		}
+		if (remainder == 0) {
+			_numCoeffs = result._numCoeffs;
+			_denCoeffs = result._denCoeffs;
+		}
+	}
+
+	// If the numerator is 0, regardless of the denominator, set the polynomial to 0/1
+	if (_numCoeffs.size() == 1 && _numCoeffs[0] == 0) {
+		std::vector<T> denCoeffs;
+		denCoeffs.push_back(1);
+		_denCoeffs = denCoeffs;
+		return;
+	}
+
+	// UNNECESSARY with polynomial long division
+	// If the numerator is the same as the denominator, make the polynomial 1
+	/*if (_numCoeffs.size() == _denCoeffs.size()) {
+	 bool same = true;
+	 for (int i = 0; i < _numCoeffs.size(); i++)
+	 if (_numCoeffs[i] != _denCoeffs[i])
+	 same = false;
+	 if (same) {
+	 std::vector<T> numCoeffs;
+	 numCoeffs.push_back(1);
+	 _numCoeffs = numCoeffs;
+	 std::vector<T> denCoeffs;
+	 denCoeffs.push_back(1);
+	 _denCoeffs = denCoeffs;
+	 }
+	 return;
+	 }*/
+
 }
 
 template<typename T>
@@ -308,9 +461,9 @@ Polynomial<T> Polynomial<T>::operator/(Polynomial rhs) {
 }
 
 /*template<typename T>
-Polynomial<T> operator/(T lhs, Polynomial<T> rhs) {
-	return rhs.reciprocal().mul(lhs);
-}*/
+ Polynomial<T> operator/(T lhs, Polynomial<T> rhs) {
+ return rhs.reciprocal().mul(lhs);
+ }*/
 
 template<typename T>
 void Polynomial<T>::operator/=(T rhs) {
@@ -324,14 +477,16 @@ void Polynomial<T>::operator/=(Polynomial rhs) {
 
 template<typename T>
 Polynomial<T> Polynomial<T>::operator^(T rhs) {
+	Polynomial<T> result = Polynomial(1);
 	if (rhs == 0)
-		return Polynomial(1);
-	Polynomial<T> result = clone();
+		return result;
+	Polynomial<T> original = clone();
 	int n = std::abs(rhs);
-	for (int i = 0; i < n; i++)
-		result = result.mul(result);
+	for (int i = 0; i < n; i++) {
+		result.set(result.mul(original));
+	}
 	if (rhs < 0)
-		result = result.reciprocal();
+		result.set(result.reciprocal());
 	return result;
 }
 
@@ -371,61 +526,24 @@ void Polynomial<T>::operator=(Polynomial rhs) {
 }
 
 /*template<typename T>
-Polynomial<T>::operator int() {
-	return (int)value();
-}
+ Polynomial<T>::operator int() {
+ return (int)value();
+ }
 
-template<typename T>
-Polynomial<T>::operator float() {
-	return (float)value();
-}
+ template<typename T>
+ Polynomial<T>::operator float() {
+ return (float)value();
+ }
 
-template<typename T>
-Polynomial<T>::operator double() {
-	return (double)value();
-}
+ template<typename T>
+ Polynomial<T>::operator double() {
+ return (double)value();
+ }
 
-template<typename T>
-Polynomial<T>::operator long double() {
-	return (long double)value();
-}*/
-
-template<typename T>
-void Polynomial<T>::set(Polynomial other) {
-	std::vector<T> numCoeffs;
-	for (int i = 0; i < other._numCoeffs.size(); i++)
-		_numCoeffs[i] = other._numCoeffs[i];
-	std::vector<T> denCoeffs;
-	for (int i = 0; i < other._denCoeffs.size(); i++)
-		_denCoeffs[i] = other._denCoeffs[i];
-}
-
-template<typename T>
-void Polynomial<T>::simplify() { // FIXME Broken
-	/*if (isConstant() && _denCoeffs[0] != 1) {
-		_numCoeffs[0] = value();
-		_denCoeffs[0] = 1;
-	}*/
-
-	if (_numCoeffs.size() == 1 && _numCoeffs[0] == 0) {
-			std::vector<T> denCoeffs;
-			denCoeffs.push_back(1);
-			_denCoeffs = denCoeffs;
-	}
-
-	while (_numCoeffs.size() > 1 && _numCoeffs[_numCoeffs.size() - 1] == 0)
-		_numCoeffs.pop_back();
-	while (_denCoeffs.size() > 1 && _denCoeffs[_denCoeffs.size() - 1] == 0)
-		_denCoeffs.pop_back();
-
-
-	if (_denCoeffs.size() == 1) {
-		for (int i = 0; i < _numCoeffs.size(); i++)
-			_numCoeffs[i] *= (1.0 / _denCoeffs[0]);
-		_denCoeffs[0] = 1;
-	}
-
-}
+ template<typename T>
+ Polynomial<T>::operator long double() {
+ return (long double)value();
+ }*/
 
 template<typename T>
 std::string Polynomial<T>::trimNumber(std::string str) {

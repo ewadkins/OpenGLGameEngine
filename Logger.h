@@ -8,10 +8,11 @@
 #ifndef LOGGER_H_
 #define LOGGER_H_
 
+#include "Matrix.h"
+#include "Polynomial.h"
 #include <vector>
 #include <string>
 #include <iostream>
-#include "Matrix.h"
 
 class Logger {
 public:
@@ -29,6 +30,7 @@ public:
 	Logger& log(const double d);
 	Logger& log(const long l);
 	template<typename T> Logger& log(Matrix<T> m);
+	template<typename T> Logger& log(Polynomial<T> m);
 	Logger& endLine();
 	Logger& increaseIndent();
 	Logger& decreaseIndent();

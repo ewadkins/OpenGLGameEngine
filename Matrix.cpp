@@ -37,7 +37,7 @@ Matrix<T>::Matrix(Matrix<S> other) {
 template<typename T>
 Matrix<T> Matrix<T>::add(Matrix other) {
 	if (_rows != other._rows || _cols != other._cols)
-		throw std::invalid_argument("Matrix dimensions do not match");
+		throw std::runtime_error("Matrix dimensions do not match");
 	Matrix<T> result = Matrix<T>(_rows, _cols);
 	for (int i = 0; i < _rows; i++)
 		for (int j = 0; j < _cols; j++)
@@ -102,17 +102,17 @@ Matrix<T> Matrix<T>::rref() {
 				y++;
 				continue;
 			}
-			std::cout << "Row exchange (Row " << x + 1 << " <-> Row "
+			/*std::cout << "Row exchange (Row " << x + 1 << " <-> Row "
 			 << rowToExchange + 1 << ")" << std::endl;
-			result.print();
+			 result.print();*/
 		}
 		if (result.get(x, y) != 1 && result.get(x, y) != 0) {
 			T k = result.get(x, y);
 			for (int j = 0; j < _cols; j++)
 				result.set(x, j, result.get(x, j) / k);
-			std::cout << "Row division (Row " << x + 1 << " / " << k << ")"
+			/*std::cout << "Row division (Row " << x + 1 << " / " << k << ")"
 			 << std::endl;
-			result.print();
+			 result.print();*/
 		}
 		for (int i = 0; i < _rows; i++) {
 			if (i != x && result.get(i, y) != 0) {
@@ -124,8 +124,8 @@ Matrix<T> Matrix<T>::rref() {
 		}
 		x++;
 		y++;
-		std::cout << "Row elimination" << std::endl;
-		result.print();
+		/*std::cout << "Row elimination" << std::endl;
+		 result.print();*/
 	}
 	return result;
 }
@@ -134,7 +134,7 @@ Matrix<T> Matrix<T>::rref() {
 template<typename T>
 Matrix<T> Matrix<T>::upperTriangular() {
 	if (_rows != _cols)
-		throw std::invalid_argument("Matrix must be a square matrix");
+		throw std::runtime_error("Matrix must be a square matrix");
 	Matrix<T> result = clone();
 	int x = 0;
 	int y = 0;
@@ -173,7 +173,7 @@ Matrix<T> Matrix<T>::upperTriangular() {
 template<typename T>
 T Matrix<T>::determinant() {
 	if (_rows != _cols)
-		throw std::invalid_argument("Matrix must be a square matrix");
+		throw std::runtime_error("Matrix must be a square matrix");
 	Matrix<T> result = clone();
 	int rowChanges = 0;
 	int x = 0;
@@ -219,9 +219,9 @@ T Matrix<T>::determinant() {
 template<typename T>
 Matrix<T> Matrix<T>::inverse() {
 	if (_rows != _cols)
-		throw std::invalid_argument("Matrix must be a square matrix");
+		throw std::runtime_error("Matrix must be a square matrix");
 	if (determinant() == 0)
-		throw std::invalid_argument(
+		throw std::runtime_error(
 				"Matrix is std::singular, inverse doesn't exist");
 
 	Matrix<T> m = Matrix<T>(_rows, 2 * _cols);
@@ -271,8 +271,7 @@ void Matrix<T>::setMatrix(T** matrix) {
 template<typename T>
 void Matrix<T>::setVector(std::vector<T> values) {
 	if (values.size() != _rows * _cols)
-		throw std::invalid_argument(
-				"Incorrect number of values to fill matrix");
+		throw std::runtime_error("Incorrect number of values to fill matrix");
 	for (int i = 0; i < _rows * _cols; i++) {
 		set(i / _cols, i % _cols, values[i]);
 	}

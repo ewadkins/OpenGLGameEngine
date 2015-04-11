@@ -65,10 +65,16 @@ Logger& Logger::log(const long l) {
 	return log(std::to_string(l));
 }
 
-// Logs a GLMatrix
+// Logs a Matrix
 template<typename T>
 Logger& Logger::log(Matrix<T> m) {
 	return log(m.toStringVector());
+}
+
+// Logs a Polynomial
+template<typename T>
+Logger& Logger::log(Polynomial<T> p) {
+	return log(p.toString());
 }
 
 // Creates a new line
@@ -133,4 +139,8 @@ std::vector<std::string> Logger::getLog() {
 template Logger& Logger::log(Matrix<float>);
 template Logger& Logger::log(Matrix<double>);
 template Logger& Logger::log(Matrix<long double>);
+template Logger& Logger::log(Polynomial<int>);
+template Logger& Logger::log(Polynomial<float>);
+template Logger& Logger::log(Polynomial<double>);
+template Logger& Logger::log(Polynomial<long double>);
 

@@ -112,43 +112,102 @@ void OpenGLApplication::initialize() {
 
 	clock_t start, finish;
 
-	_logger->log("Testing matrices...").endLine().increaseIndent();
+	_logger->log("Testing polynomials...").endLine().increaseIndent();
 	start = clock();
+	{
 
+		/*float numArr[] = { 1, 3 };
+		 std::vector<float> numCoeffs(numArr,
+		 numArr + sizeof(numArr) / sizeof(numArr[0]));
+		 float denArr[] = { 2, 5, 6 };
+		 std::vector<float> denCoeffs(denArr,
+		 denArr + sizeof(denArr) / sizeof(denArr[0]));
+		 Polynomial<float> p = Polynomial<float>(numCoeffs, denCoeffs);
 
-	Matrix<float> m1 = Matrix<float>(4, 4);
-	float arr[] = { 5, 3, 2, 1, 0, 1, 4, -4, 2, 5, -2, 9, 3, 7, 0, 1 };
-	std::vector<float> values(arr, arr + sizeof(arr) / sizeof(arr[0]));
-	m1.setVector(values);
+		 float numArr2[] = { 3, 1, 2 };
+		 std::vector<float> numCoeffs2(numArr2,
+		 numArr2 + sizeof(numArr2) / sizeof(numArr2[0]));
+		 float denArr2[] = { 2, 5, 6 };
+		 std::vector<float> denCoeffs2(denArr2,
+		 denArr2 + sizeof(denArr2) / sizeof(denArr2[0]));
+		 Polynomial<float> p2 = Polynomial<float>(numCoeffs2, denCoeffs2);*/
 
-	m1.print();
-	m1.rref().print();
-	std::cout << m1.determinant() << std::endl;
+		float numArr[] = { -6 };
+		std::vector<float> numCoeffs(numArr,
+				numArr + sizeof(numArr) / sizeof(numArr[0]));
+		float denArr[] = { 0, 1 };
+		std::vector<float> denCoeffs(denArr,
+				denArr + sizeof(denArr) / sizeof(denArr[0]));
+		Polynomial<float> p = Polynomial<float>(numCoeffs, denCoeffs);
 
-	std::cout << std::endl << "-------------------" << std::endl << std::endl;
+		float numArr2[] = { 5 };
+		std::vector<float> numCoeffs2(numArr2,
+				numArr2 + sizeof(numArr2) / sizeof(numArr2[0]));
+		float denArr2[] = { 1 };
+		std::vector<float> denCoeffs2(denArr2,
+				denArr2 + sizeof(denArr2) / sizeof(denArr2[0]));
+		Polynomial<float> p2 = Polynomial<float>(numCoeffs2, denCoeffs2);
 
-	PolynomialMatrix<float> m2 = PolynomialMatrix<float>(4, 4);
-	float arr2[] = { 5, 3, 2, 1, 0, 1, 4, -4, 2, 5, -2, 9, 3, 7, 0, 1 };
-	std::vector<float> values2(arr2, arr2 + sizeof(arr2) / sizeof(arr2[0]));
-	m2.setVector(values2);
+		float numArr3[] = { -6, 5 };
+		std::vector<float> numCoeffs3(numArr3,
+				numArr3 + sizeof(numArr3) / sizeof(numArr3[0]));
+		float denArr3[] = { 0, 1 };
+		std::vector<float> denCoeffs3(denArr3,
+				denArr3 + sizeof(denArr3) / sizeof(denArr3[0]));
+		Polynomial<float> p3 = Polynomial<float>(numCoeffs3, denCoeffs3);
 
-	float arr3[] = { 5, 1 };
-	std::vector<float> numCoeffs(arr3, arr3 + sizeof(arr3) / sizeof(arr3[0]));
-	Polynomial<float> p = Polynomial<float>(numCoeffs, 1);
-	m2.set(0, 0, p);
+		_logger->log("p:").endLine().increaseIndent().log(p).endLine().decreaseIndent();
+		_logger->log("p2:").endLine().increaseIndent().log(p2).endLine().decreaseIndent();
+		_logger->log("p + p2:").endLine().increaseIndent().log(p + p2).endLine().decreaseIndent();
+		_logger->log("p * p2:").endLine().increaseIndent().log(p * p2).endLine().decreaseIndent();
+		_logger->log("p / p2:").endLine().increaseIndent().log(p / p2).endLine().decreaseIndent();
+		_logger->log("p3:").endLine().increaseIndent().log(p3).endLine().decreaseIndent();
 
-	m2.print();
-	m2.rref().print();
-	m2.determinant().print();
-
-
-
+	}
 	finish = clock();
 	_logger->log("(Took ").log(
 			(double(finish) - double(start)) / CLOCKS_PER_SEC * 1000).log(
 			" ms)").endLine().decreaseIndent();
 
-	stop("Testing matrices complete");
+	_logger->log("Testing matrices...").endLine().increaseIndent();
+	start = clock();
+	{
+
+		Matrix<float> m1 = Matrix<float>(4, 4);
+		float arr[] = { 5, 3, 2, 1, 0, 1, 4, -4, 2, 5, -2, 9, 3, 7, 0, 1 };
+		std::vector<float> values(arr, arr + sizeof(arr) / sizeof(arr[0]));
+		m1.setVector(values);
+
+		m1.print();
+		m1.upperTriangular().print();
+		std::cout << m1.determinant() << std::endl;
+
+		std::cout << std::endl << "-------------------" << std::endl
+				<< std::endl;
+
+		PolynomialMatrix<float> m2 = PolynomialMatrix<float>(4, 4);
+		float arr2[] = { 5, 3, 2, 1, 0, 1, 4, -4, 2, 5, -2, 9, 3, 7, 0, 1 };
+		std::vector<float> values2(arr2, arr2 + sizeof(arr2) / sizeof(arr2[0]));
+		m2.setVector(values2);
+
+		float arr3[] = { 5, 1 };
+		std::vector<float> numCoeffs(arr3,
+				arr3 + sizeof(arr3) / sizeof(arr3[0]));
+		Polynomial<float> p = Polynomial<float>(numCoeffs, 1);
+		m2.set(0, 0, p);
+
+		m2.print();
+		m2.upperTriangular().print();
+		m2.determinant().print();
+		std::cout << m2.determinant().value(0) << std::endl;
+
+	}
+	finish = clock();
+	_logger->log("(Took ").log(
+			(double(finish) - double(start)) / CLOCKS_PER_SEC * 1000).log(
+			" ms)").endLine().decreaseIndent();
+
+	stop("Testing complete");
 
 	_logger->log("Initializing GLFW..").endLine().increaseIndent();
 	start = clock();
@@ -252,7 +311,7 @@ void OpenGLApplication::gameLoop() {
 		long delta = currentTime - lastTime;
 		float fps = CLOCKS_PER_SEC / ((float) delta);
 		updateAverageFPS(fps);
-		_logger->log("FPS: ").log((int)_averageFPS).endLine();
+		_logger->log("FPS: ").log((int) _averageFPS).endLine();
 		lastTime = clock();
 
 		static int count = 0;
@@ -366,8 +425,7 @@ int OpenGLApplication::start() {
 				_logger->endLine().setIndent(0).log(
 						"*** Stopping OpenGLApplication ***").endLine();
 				result = 0;
-			}
-			else
+			} else
 				throw;
 		}
 	} catch (...) {
@@ -402,7 +460,7 @@ void OpenGLApplication::updateAverageFPS(float fps) {
 	int minData = std::max(1, std::min(10, (int) fps));
 	if (fpsList.size() < minData)
 		fpsList.push_back(fps);
-	else{
+	else {
 		count++;
 		fpsList.erase(fpsList.begin());
 		fpsList.push_back(fps);

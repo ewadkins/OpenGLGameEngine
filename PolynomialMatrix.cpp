@@ -37,7 +37,7 @@ PolynomialMatrix<T>::PolynomialMatrix(PolynomialMatrix<S> other) {
 template<typename T>
 PolynomialMatrix<T> PolynomialMatrix<T>::add(PolynomialMatrix other) {
 	if (_rows != other._rows || _cols != other._cols)
-		throw std::invalid_argument("Matrix dimensions do not match");
+		throw std::runtime_error("Matrix dimensions do not match");
 	PolynomialMatrix<T> result = PolynomialMatrix<T>(_rows, _cols);
 	for (int i = 0; i < _rows; i++)
 		for (int j = 0; j < _cols; j++)
@@ -102,22 +102,21 @@ PolynomialMatrix<T> PolynomialMatrix<T>::rref() {
 				y++;
 				continue;
 			}
-			std::cout << "Row exchange (Row " << x + 1 << " <-> Row "
+			/*std::cout << "Row exchange (Row " << x + 1 << " <-> Row "
 			 << rowToExchange + 1 << ")" << std::endl;
-			 result.print();
+			 result.print();*/
 		}
 		if (result.get(x, y) != 1 && result.get(x, y) != 0) {
 			Polynomial<T> k = result.get(x, y);
 			for (int j = 0; j < _cols; j++)
 				result.set(x, j, result.get(x, j) / k);
-			std::cout << "Row division (Row " << x + 1 << " / " << k.toString() << ")"
+			/*std::cout << "Row division (Row " << x + 1 << " / " << k.toString() << ")"
 			 << std::endl;
-			result.print();
+			 result.print();*/
 		}
 		for (int i = 0; i < _rows; i++) {
 			if (i != x && result.get(i, y) != 0) {
 				Polynomial<T> n = -(result.get(i, y) / result.get(x, y));
-				std::cout << n.toString() << std::endl;
 				for (int j = 0; j < _cols; j++) {
 					result.set(i, j, result.get(i, j) + result.get(x, j) * n);
 				}
@@ -125,8 +124,8 @@ PolynomialMatrix<T> PolynomialMatrix<T>::rref() {
 		}
 		x++;
 		y++;
-		std::cout << "Row elimination" << std::endl;
-		result.print();
+		/*std::cout << "Row elimination" << std::endl;
+		 result.print();*/
 	}
 	return result;
 }
@@ -135,7 +134,7 @@ PolynomialMatrix<T> PolynomialMatrix<T>::rref() {
 template<typename T>
 PolynomialMatrix<T> PolynomialMatrix<T>::upperTriangular() {
 	if (_rows != _cols)
-		throw std::invalid_argument("Matrix must be a square matrix");
+		throw std::runtime_error("Matrix must be a square matrix");
 	PolynomialMatrix<T> result = clone();
 	int x = 0;
 	int y = 0;
@@ -174,7 +173,7 @@ PolynomialMatrix<T> PolynomialMatrix<T>::upperTriangular() {
 template<typename T>
 Polynomial<T> PolynomialMatrix<T>::determinant() {
 	if (_rows != _cols)
-		throw std::invalid_argument("Matrix must be a square matrix");
+		throw std::runtime_error("Matrix must be a square matrix");
 	PolynomialMatrix<T> result = clone();
 	int rowChanges = 0;
 	int x = 0;
@@ -220,10 +219,9 @@ Polynomial<T> PolynomialMatrix<T>::determinant() {
 template<typename T>
 PolynomialMatrix<T> PolynomialMatrix<T>::inverse() {
 	if (_rows != _cols)
-		throw std::invalid_argument("Matrix must be a square matrix");
+		throw std::runtime_error("Matrix must be a square matrix");
 	if (determinant() == 0)
-		throw std::invalid_argument(
-				"Matrix is singular, inverse doesn't exist");
+		throw std::runtime_error("Matrix is singular, inverse doesn't exist");
 	PolynomialMatrix<T> m = PolynomialMatrix<T>(_rows, 2 * _cols);
 	for (int i = 0; i < _rows; i++)
 		for (int j = 0; j < _cols; j++)
@@ -271,8 +269,7 @@ void PolynomialMatrix<T>::setMatrix(T** matrix) {
 template<typename T>
 void PolynomialMatrix<T>::setVector(std::vector<T> values) {
 	if (values.size() != _rows * _cols)
-		throw std::invalid_argument(
-				"Incorrect number of values to fill matrix");
+		throw std::runtime_error("Incorrect number of values to fill matrix");
 	for (int i = 0; i < _rows * _cols; i++) {
 		set(i / _cols, i % _cols, Polynomial<T>(values[i]));
 	}
@@ -297,8 +294,7 @@ void PolynomialMatrix<T>::setMatrix(Polynomial<T>** matrix) {
 template<typename T>
 void PolynomialMatrix<T>::setVector(std::vector<Polynomial<T> > values) {
 	if (values.size() != _rows * _cols)
-		throw std::invalid_argument(
-				"Incorrect number of values to fill matrix");
+		throw std::runtime_error("Incorrect number of values to fill matrix");
 	for (int i = 0; i < _rows * _cols; i++) {
 		set(i / _cols, i % _cols, values[i]);
 	}
@@ -329,7 +325,7 @@ std::vector<Polynomial<T> > PolynomialMatrix<T>::getVector() {
 // Returns the values of this matrix in a one dimensional array
 template<typename T>
 Polynomial<T>* PolynomialMatrix<T>::getArray() {
-	Polynomial<T>* values = new Polynomial<T>[_rows * _cols];
+	Polynomial<T>* values = new Polynomial<T> [_rows * _cols];
 	for (int i = 0; i < _rows; i++)
 		for (int j = 0; j < _cols; j++)
 			values[i * _cols + j] = _matrix[i][j];
@@ -347,7 +343,7 @@ template<typename T>
 T** PolynomialMatrix<T>::getMatrixConstants() {
 	T** matrix = new T*[_rows];
 	for (int i = 0; i < _rows; i++)
-		 matrix[i] = new T[_cols];
+		matrix[i] = new T[_cols];
 	for (int i = 0; i < _rows; i++)
 		for (int j = 0; i < _cols; j++)
 			matrix[i][j] = _matrix[i][j].value();
@@ -397,9 +393,6 @@ std::vector<std::string> PolynomialMatrix<T>::toStringVector() {
 		arr[i] = new std::string[_cols];
 		for (int j = 0; j < _cols; j++) {
 			arr[i][j] = _matrix[i][j].toString();
-			// FIXME Not giving correct string, look in Polynomial class
-			// FIXME Polynomial toString() works fine, but variables are lost quickly somewhere else
-			//std::cout << arr[i][j] << std::endl;
 		}
 	}
 	for (int j = 0; j < _cols; j++) {
