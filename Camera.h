@@ -27,17 +27,20 @@ public:
 	void useProjectionMatrix();
 	enum ProjectionType {ORTHOGRAPHIC, PERSPECTIVE};
 	void setProjectionType(ProjectionType type);
-	int getFovX();
-	int getFovY();
+	float getFOV();
 	float getNear();
 	float getFar();
-	void setFovX(int fovX);
-	void setFovY(int fovY);
+	void setFOV(float fov);
 	void setNear(float near);
 	void setFar(float far);
+	void translateX(float x);
+	void translateY(float y);
+	void translateZ(float z);
+	void translateXYZ(float x, float y, float z);
 	void rotateX(float theta);
 	void rotateY(float theta);
 	void rotateZ(float theta);
+	void rotateXYZ(float thetaX, float thetaY, float thetaZ);
 	float getX();
 	float getY();
 	float getZ();
@@ -56,11 +59,10 @@ private:
 	static Matrix<float> rotate(float thetaX, float thetaY, float thetaZ);
 	static Matrix<float> orthographic(int width, int height, float near,
 			float far);
-	static Matrix<float> perspective(int fovX, int fovY, float near,
+	static Matrix<float> perspective(int fov, int aspect, float near,
 			float far);
 	OpenGLApplication* _application;
-	int _fovX, _fovY;
-	float _near, _far, _x, _y, _z, _rotationX, _rotationY, _rotationZ;
+	float _fov, _near, _far, _x, _y, _z, _rotationX, _rotationY, _rotationZ;
 	Matrix<float> _orthographic, _perspective;
 	ProjectionType _projectionType;
 };

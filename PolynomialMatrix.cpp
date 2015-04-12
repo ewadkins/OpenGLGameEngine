@@ -18,6 +18,17 @@ PolynomialMatrix<T>::PolynomialMatrix(int rows, int cols) {
 	fill(0);
 }
 
+// Square matrix constructor
+template<typename T>
+PolynomialMatrix<T>::PolynomialMatrix(int size) {
+	_rows = size;
+	_cols = size;
+	_matrix = new Polynomial<T>*[_rows];
+	for (int i = 0; i < _rows; i++)
+		_matrix[i] = new Polynomial<T> [_cols];
+	fill(0);
+}
+
 // Constructor that allows matrix casting
 template<typename T>
 template<typename S>
@@ -69,6 +80,8 @@ PolynomialMatrix<T> PolynomialMatrix<T>::transpose() {
 // Returns the product of this matrix with another
 template<typename T>
 PolynomialMatrix<T> PolynomialMatrix<T>::mul(PolynomialMatrix other) {
+	if (_cols != other._rows)
+		throw std::runtime_error("Matrix dimensions do not match");
 	PolynomialMatrix<T> result = PolynomialMatrix<T>(_rows, other.cols());
 	for (int i = 0; i < _rows; i++)
 		for (int j = 0; j < other.cols(); j++) {
@@ -229,7 +242,7 @@ PolynomialMatrix<T> PolynomialMatrix<T>::inverse() {
 	for (int n = 0; n < _rows; n++)
 		m.set(n, n + _cols, 1);
 	m = m.rref();
-	PolynomialMatrix<T> result = PolynomialMatrix<T>(_rows, _cols);
+	PolynomialMatrix<T> result = PolynomialMatrix<T>(_rows);
 	for (int i = 0; i < _rows; i++)
 		for (int j = 0; j < _cols; j++)
 			result.set(i, j, m.get(i, j + _cols));

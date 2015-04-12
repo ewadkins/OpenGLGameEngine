@@ -8,6 +8,8 @@
 #ifndef MATRIX_H_
 #define MATRIX_H_
 
+#include "PolynomialMatrix.h"
+#include "Polynomial.h"
 #include <iostream>
 #include <stdexcept>
 #include <vector>
@@ -19,6 +21,7 @@ template<typename T>
 class Matrix {
 public:
 	Matrix(int m, int n);
+	Matrix(int size);
 	template<typename S> Matrix(Matrix<S> other);
 	virtual ~Matrix() {
 	}
@@ -30,6 +33,7 @@ public:
 	Matrix upperTriangular();
 	T determinant();
 	Matrix inverse();
+	std::vector<T> eigenvalues();
 	int rows();
 	int cols();
 	void fill(T value);
@@ -41,6 +45,7 @@ public:
 	T* getArray();
 	T get(int i, int j);
 	Matrix clone();
+	PolynomialMatrix<T> toPolynomialMatrix();
 	std::vector<std::string> toStringVector();
 	void print();
 	Matrix operator+(Matrix rhs);

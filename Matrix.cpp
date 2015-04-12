@@ -18,6 +18,17 @@ Matrix<T>::Matrix(int rows, int cols) {
 	fill(0);
 }
 
+// Square matrix constructor
+template<typename T>
+Matrix<T>::Matrix(int size) {
+	_rows = size;
+	_cols = size;
+	_matrix = new T*[_rows];
+	for (int i = 0; i < _rows; i++)
+		_matrix[i] = new T[_cols];
+	fill(0);
+}
+
 // Constructor that allows matrix casting
 template<typename T>
 template<typename S>
@@ -69,6 +80,8 @@ Matrix<T> Matrix<T>::transpose() {
 // Returns the product of this matrix with another
 template<typename T>
 Matrix<T> Matrix<T>::mul(Matrix other) {
+	if (_cols != other._rows)
+		throw std::runtime_error("Matrix dimensions do not match");
 	Matrix<T> result = Matrix<T>(_rows, other.cols());
 	for (int i = 0; i < _rows; i++)
 		for (int j = 0; j < other.cols(); j++) {
@@ -231,11 +244,35 @@ Matrix<T> Matrix<T>::inverse() {
 	for (int n = 0; n < _rows; n++)
 		m.set(n, n + _cols, 1);
 	m = m.rref();
-	Matrix<T> result = Matrix<T>(_rows, _cols);
+	Matrix<T> result = Matrix<T>(_rows);
 	for (int i = 0; i < _rows; i++)
 		for (int j = 0; j < _cols; j++)
 			result.set(i, j, m.get(i, j + _cols));
 	return result;
+}
+
+// Returns a vector of the eigenvalues of this matrix
+template<typename T>
+std::vector<T> Matrix<T>::eigenvalues() {
+	if (_rows != _cols)
+		throw std::runtime_error("Matrix must be a square matrix");
+	PolynomialMatrix<T> m = toPolynomialMatrix();
+	PolynomialMatrix<T> lambdaI = PolynomialMatrix<T>(_rows);
+	T arr[] = { 0, -1 };
+	std::vector<T> coeffs(arr, arr + sizeof(arr) / sizeof(arr[0]));
+	for (int n = 0; n < _rows; n ++)
+		lambdaI.set(n, n, Polynomial<T>(coeffs, 1));
+
+	m = m + lambdaI;
+	m.print();
+	m.determinant().print();
+	std::cout << m.determinant().value() << std::endl;
+
+	//throw std::runtime_error("Matrix eigenvalues operation not available");
+
+	std::vector<T> eigenvalues;
+
+	return eigenvalues;
 }
 
 // Returns the number of rows in this matrix
@@ -327,6 +364,18 @@ Matrix<T> Matrix<T>::clone() {
 	Matrix<T> result = Matrix<T>(_rows, _cols);
 	result.setMatrix(_matrix);
 	return result;
+}
+
+// Returns a polynomial version of this matrix
+template<typename T>
+PolynomialMatrix<T> Matrix<T>::toPolynomialMatrix() {
+	PolynomialMatrix<T> m = PolynomialMatrix<T>(_rows);
+	std::vector<T> values = getVector();
+	std::vector<Polynomial<T> > polyValues;
+	for (int i = 0; i < values.size(); i++)
+		polyValues.push_back(Polynomial<T>(values[i]));
+	m.setVector(polyValues);
+	return m;
 }
 
 // Returns a vector of strings representing this matrix

@@ -134,29 +134,22 @@ Matrix<float> GLMatrix::rotationMatrixLine(float x, float y, float z, float u, f
 // Returns the orthographic projection matrix given the dimensions of the window and the near and far clipping planes
 Matrix<float> GLMatrix::orthographicProjectionMatrix(float width, float height, float near, float far) {
 	Matrix<float> result = Matrix<float>::zeros(4, 4);
-
-	//result.set(0, 0, 2 / width);
-	//result.set(1, 1, 2 / height);
-	//result.set(2, 2, -2 / (far - near));
-	//result.set(2, 3, (far + near) / (far - near));
-
-	result.set(0, 0, 2 / width);
-	result.set(1, 1, 2 / height);
+	result.set(0, 0, 2 / (width));
+	result.set(1, 1, 2 / (height));
 	result.set(2, 2, -2 / (far - near));
-	//result.set(2, 3, -near / (far - near));
+	result.set(2, 3, -(far + near) / (far - near));
 	result.set(3, 3, 1);
 	return result;
 }
 
 // Returns the perspective projection matrix given the x and y field of view and the near and far clipping planes
-Matrix<float> GLMatrix::perspectiveProjectionMatrix(float fovX, float fovY, float near, float far) {
+Matrix<float> GLMatrix::perspectiveProjectionMatrix(float fov, float aspect, float near, float far) {
 	Matrix<float> result = Matrix<float>::zeros(4, 4);
-	float fovXRads = fovX * PI / 180;
-	float fovYRads = fovY * PI / 180;
-	result.set(0, 0, std::atan(fovXRads / 2));
-	result.set(1, 1, std::atan(fovYRads / 2));
+	float f = 1 / std::tan(fov / 2 * PI / 180);
+	result.set(0, 0, f / aspect);
+	result.set(1, 1, f);
 	result.set(2, 2, -(far + near) / (far - near));
-	result.set(2, 3, -2 * (near * far) / (far - near));
+	result.set(2, 3, -2 * far * near / (far - near));
 	result.set(3, 2, -1);
 	return result;
 }

@@ -21,7 +21,7 @@ public:
 	static Matrix<float> rotationMatrixXYZ(float thetaX, float thetaY, float thetaZ);
 	static Matrix<float> rotationMatrixLine(float a, float b, float c, float u, float v, float w, float theta);
 	static Matrix<float> orthographicProjectionMatrix(float width, float height, float near, float far);
-	static Matrix<float> perspectiveProjectionMatrix(float fovX, float fovY, float near, float far);
+	static Matrix<float> perspectiveProjectionMatrix(float fov, float aspect, float near, float far);
 private:
 	static const float PI;
 };

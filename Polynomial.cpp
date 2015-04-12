@@ -101,10 +101,6 @@ T Polynomial<T>::value() {
 template<typename T>
 Polynomial<T> Polynomial<T>::add(Polynomial other) {
 	if (_denCoeffs != other._denCoeffs) {
-		/*std::cout << "addition..." << std::endl;
-		 std::cout << "this: " << toString() << std::endl;
-		 std::cout << "other: " << other.toString() << std::endl << std::endl;*/
-
 		Polynomial<T> cd = Polynomial<T>(
 				(Polynomial<T>(_denCoeffs, 1)
 						* Polynomial<T>(other._denCoeffs, 1))._numCoeffs, 1);
@@ -115,14 +111,6 @@ Polynomial<T> Polynomial<T>::add(Polynomial other) {
 				(Polynomial<T>(other._numCoeffs, 1)
 						* Polynomial<T>(_denCoeffs, 1))._numCoeffs, 1);
 
-		/*std::cout << "common denom: " << cd.toString() << std::endl;
-		 std::cout << "p1: " << p1.toString() << std::endl;
-		 std::cout << "p2: " << p2.toString() << std::endl << std::endl;
-		 std::cout << "num of 2: " << Polynomial<T>(other._numCoeffs, 1).toString() << std::endl;
-		 std::cout << "denom of 1: " << Polynomial<T>(_denCoeffs, 1).toString() << std::endl;
-		 std::cout << "^^ product: " << (Polynomial<T>(other._numCoeffs, 1) * Polynomial<T>(_denCoeffs, 1)).toString() << std::endl;
-		 std::cout << "result: " << (Polynomial<T>((Polynomial<T>(other._numCoeffs, 1) * Polynomial<T>(_denCoeffs, 1))._numCoeffs, 1)).toString() << std::endl;
-		 */
 		std::vector<T> numCoeffs(
 				std::max(p1._numCoeffs.size(), p2._numCoeffs.size()));
 		for (int i = 0; i < p1._numCoeffs.size(); i++)
@@ -130,7 +118,6 @@ Polynomial<T> Polynomial<T>::add(Polynomial other) {
 		for (int i = 0; i < p2._numCoeffs.size(); i++)
 			numCoeffs[i] += p2._numCoeffs[i];
 
-		//std::cout << "..." << std::endl;
 		return Polynomial<T>(numCoeffs, cd._numCoeffs);
 	} else {
 		std::vector<T> numCoeffs(

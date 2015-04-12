@@ -20,6 +20,7 @@ template<typename T>
 class PolynomialMatrix {
 public:
 	PolynomialMatrix(int m, int n);
+	PolynomialMatrix(int size);
 	template<typename S> PolynomialMatrix(PolynomialMatrix<S> other);
 	virtual ~PolynomialMatrix() {
 	}

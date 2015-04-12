@@ -20,9 +20,8 @@ Camera::Camera(OpenGLApplication* application, float x, float y, float z,
 	_rotationX = rotationX;
 	_rotationY = rotationY;
 	_rotationZ = rotationZ;
-	_fovX = 70;
-	_fovY = 70;
-	_near = -0.01;
+	_fov = 70;
+	_near = 0.01;
 	_far = 1000;
 	_projectionType = ORTHOGRAPHIC;
 }
@@ -51,10 +50,13 @@ void Camera::useView() {
 // Updates the projection matrices as well as setting the desired projection matrix
 void Camera::updateProjectionMatrices() {
 
-	_orthographic = orthographic(_application->_windowSizeX/100,
-			_application->_windowSizeY/100, getNear(), getFar());
+	//_orthographic = orthographic(_application->_windowSizeX,
+	//		_application->_windowSizeY, getNear(), getFar());
+	float aspect = (float) _application->_windowSizeX
+			/ (float) _application->_windowSizeY;
 
-	_perspective = perspective(getFovX(), getFovY(), getNear(), getFar());
+	_orthographic = orthographic(-aspect, aspect, getNear(), getFar());
+	_perspective = perspective(getFOV(), aspect, getNear(), getFar());
 
 	_application->_logger->log("Orthographic matrix:").endLine().increaseIndent();
 	_application->_logger->log("Window dimensions: ").log(
@@ -64,8 +66,8 @@ void Camera::updateProjectionMatrices() {
 	_application->_logger->log(_orthographic).decreaseIndent();
 
 	_application->_logger->log("Perspective matrix:").endLine().increaseIndent();
-	_application->_logger->log("FOV X: ").log(getFovX()).endLine().log(
-			"FOV Y: ").log(getFovY()).endLine().log("Z near: ").log(getNear()).endLine().log(
+	_application->_logger->log("FOV: ").log(getFOV()).endLine().log("Aspect: ").log(
+			aspect).endLine().log("Z near: ").log(getNear()).endLine().log(
 			"Z far: ").log(getFar()).endLine();
 	_application->_logger->log(_perspective).decreaseIndent();
 
@@ -108,8 +110,7 @@ Matrix<float> Camera::rotate(float thetaX, float thetaY, float thetaZ) {
 // Returns the corresponding orthographic projection matrix
 Matrix<float> Camera::orthographic(int width, int height, float near,
 		float far) {
-	return GLMatrix::orthographicProjectionMatrix(width, height, near,
-			far);
+	return GLMatrix::orthographicProjectionMatrix(width, height, near, far);
 }
 
 // Returns the corresponding perspective projection matrix
@@ -117,14 +118,9 @@ Matrix<float> Camera::perspective(int fovX, int fovY, float near, float far) {
 	return GLMatrix::perspectiveProjectionMatrix(fovX, fovY, near, far);
 }
 
-// Returns the x field of view
-int Camera::getFovX() {
-	return _fovX;
-}
-
-// Returns the y field of view
-int Camera::getFovY() {
-	return _fovY;
+// Returns the field of view
+float Camera::getFOV() {
+	return _fov;
 }
 
 // Returns the near clipping plane
@@ -137,14 +133,9 @@ float Camera::getFar() {
 	return _far;
 }
 
-// Sets the x field of view
-void Camera::setFovX(int fovX) {
-	_fovX = fovX;
-}
-
-// Sets the y field of view
-void Camera::setFovY(int fovY) {
-	_fovY = fovY;
+// Sets the field of view
+void Camera::setFOV(float fov) {
+	_fov = fov;
 }
 
 // Sets the near clipping plane
@@ -155,6 +146,28 @@ void Camera::setNear(float near) {
 // Sets the far clipping plane
 void Camera::setFar(float far) {
 	_far = far;
+}
+
+// Moves the camera in the x direction by the specified distance
+void Camera::translateX(float x) {
+	setX(getX() + x);
+}
+
+// Moves the camera in the y direction by the specified distance
+void Camera::translateY(float y) {
+	setY(getY() + y);
+}
+
+// Moves the camera in the z direction by the specified distance
+void Camera::translateZ(float z) {
+	setZ(getZ() + z);
+}
+
+// Moves the camera by the distance specified in each direction
+void Camera::translateXYZ(float x, float y, float z) {
+	setX(getX() + x);
+	setY(getY() + y);
+	setZ(getZ() + z);
 }
 
 // Rotates the camera around the x axis by the specified angle
@@ -170,6 +183,13 @@ void Camera::rotateY(float theta) {
 // Rotates the camera around the z axis by the specified angle
 void Camera::rotateZ(float theta) {
 	setRotationZ(getRotationZ() + theta);
+}
+
+// Rotates the camera by the angle specified around each axis
+void Camera::rotateXYZ(float thetaX, float thetaY, float thetaZ) {
+	setRotationX(getRotationX() + thetaX);
+	setRotationY(getRotationY() + thetaY);
+	setRotationZ(getRotationZ() + thetaZ);
 }
 
 // Returns the camera's x coordinate

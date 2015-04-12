@@ -18,3 +18,7 @@ int main() {
 	return result;
 }
 
+void createApplication() {
+
+}
+

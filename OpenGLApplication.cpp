@@ -32,6 +32,11 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action,
 		application->_logger->log("Key repeated ").log(char(key)).endLine();
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, GL_TRUE);
+
+	if (key == GLFW_KEY_O && action == GLFW_PRESS)
+		application->_camera->setProjectionType(application->_camera->ORTHOGRAPHIC);
+	if (key == GLFW_KEY_P && action == GLFW_PRESS)
+		application->_camera->setProjectionType(application->_camera->PERSPECTIVE);
 }
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
@@ -116,22 +121,6 @@ void OpenGLApplication::initialize() {
 	start = clock();
 	{
 
-		/*float numArr[] = { 1, 3 };
-		 std::vector<float> numCoeffs(numArr,
-		 numArr + sizeof(numArr) / sizeof(numArr[0]));
-		 float denArr[] = { 2, 5, 6 };
-		 std::vector<float> denCoeffs(denArr,
-		 denArr + sizeof(denArr) / sizeof(denArr[0]));
-		 Polynomial<float> p = Polynomial<float>(numCoeffs, denCoeffs);
-
-		 float numArr2[] = { 3, 1, 2 };
-		 std::vector<float> numCoeffs2(numArr2,
-		 numArr2 + sizeof(numArr2) / sizeof(numArr2[0]));
-		 float denArr2[] = { 2, 5, 6 };
-		 std::vector<float> denCoeffs2(denArr2,
-		 denArr2 + sizeof(denArr2) / sizeof(denArr2[0]));
-		 Polynomial<float> p2 = Polynomial<float>(numCoeffs2, denCoeffs2);*/
-
 		float numArr[] = { -6 };
 		std::vector<float> numCoeffs(numArr,
 				numArr + sizeof(numArr) / sizeof(numArr[0]));
@@ -173,8 +162,8 @@ void OpenGLApplication::initialize() {
 	start = clock();
 	{
 
-		Matrix<float> m1 = Matrix<float>(4, 4);
-		float arr[] = { 5, 3, 2, 1, 0, 1, 4, -4, 2, 5, -2, 9, 3, 7, 0, 1 };
+		Matrix<float> m1 = Matrix<float>(3, 3);
+		float arr[] = { 5, 3, 2, -2, 1, 4, 2, 5, -2 };
 		std::vector<float> values(arr, arr + sizeof(arr) / sizeof(arr[0]));
 		m1.setVector(values);
 
@@ -185,8 +174,8 @@ void OpenGLApplication::initialize() {
 		std::cout << std::endl << "-------------------" << std::endl
 				<< std::endl;
 
-		PolynomialMatrix<float> m2 = PolynomialMatrix<float>(4, 4);
-		float arr2[] = { 5, 3, 2, 1, 0, 1, 4, -4, 2, 5, -2, 9, 3, 7, 0, 1 };
+		PolynomialMatrix<float> m2 = PolynomialMatrix<float>(3, 3);
+		float arr2[] = { 5, 3, 2, -2, 1, 4, 2, 5, -2 };
 		std::vector<float> values2(arr2, arr2 + sizeof(arr2) / sizeof(arr2[0]));
 		m2.setVector(values2);
 
@@ -201,13 +190,19 @@ void OpenGLApplication::initialize() {
 		m2.determinant().print();
 		std::cout << m2.determinant().value(0) << std::endl;
 
+		std::cout << std::endl << "-------------------" << std::endl
+				<< std::endl;
+
+		m1.print();
+		m1.eigenvalues();
+
 	}
 	finish = clock();
 	_logger->log("(Took ").log(
 			(double(finish) - double(start)) / CLOCKS_PER_SEC * 1000).log(
 			" ms)").endLine().decreaseIndent();
 
-	stop("Testing complete");
+	//stop("Testing complete");
 
 	_logger->log("Initializing GLFW..").endLine().increaseIndent();
 	start = clock();
@@ -317,9 +312,8 @@ void OpenGLApplication::gameLoop() {
 		static int count = 0;
 		count++;
 
-		//_camera->rotateX(2);
-		_camera->rotateY(2);
-		//_camera->rotateZ(2);
+		//_camera->translateXYZ(0, 0, 0.005);
+		_camera->rotateXYZ(0, 1, 0);
 		_camera->useView();
 
 		_renderer->renderTriangle();
@@ -418,6 +412,7 @@ int OpenGLApplication::start() {
 				_logger->endLine().setIndent(0).log(
 						"*** Stopping OpenGLApplication (").log(str).log(
 						") ***").endLine();
+
 			}
 		} catch (int e) {
 			// Error thrown to signify the end of the application
