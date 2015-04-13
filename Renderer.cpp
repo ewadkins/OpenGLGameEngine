@@ -59,8 +59,9 @@ void Renderer::initialize() {
 }
 
 // Helper method that fills a vector with the relevant vertex attributes
-std::vector<GLfloat> pushData(std::vector<GLfloat> data, int vertexCount,
-		GLfloat vertexData[], GLfloat colorData[]) {
+std::vector<GLfloat> pushData(std::vector<GLfloat> data,
+		std::vector<GLfloat> vertexData, std::vector<GLfloat> colorData) {
+	int vertexCount = vertexData.size();
 	for (int i = 0; i < vertexCount; i++) {
 		data.push_back(vertexData[3 * i]);
 		data.push_back(vertexData[3 * i + 1]);
@@ -76,16 +77,59 @@ std::vector<GLfloat> pushData(std::vector<GLfloat> data, int vertexCount,
 void Renderer::initTriangle() {
 
 	std::vector<GLfloat> data;
+	std::vector<GLfloat> vertexData;
+	std::vector<GLfloat> colorData;
 
-	GLfloat vertexData[] =
-			{ 0.0, 0.8, -3.5, -0.8, -0.8, -3.5, 0.8, -0.8, -3.5 };
-	GLfloat colorData[] = { 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, };
+	/*float vertexArr[] = {
+				 0.0, 2.0, -3.5,   -0.8, 0.4, -3.5,    0.8, 0.4, -3.5,
+				-1.0, 0.0, -3.5,   -1.8, -1.6, -3.5,  -0.2, -1.6, -3.5,
+				 1.0, 0.0, -3.5,    0.2, -1.6, -3.5,   1.8, -1.6, -3.5,
+				 0.0, 1.0, -5.0,   -0.9, -0.8, -5.0,   0.9, -0.8, -5.0 };*/
+	float vertexArr[] = {
+			 -0.5, -0.5, 0.5,   -0.5, -0.5, -0.5,   -0.5, 0.5, 0.5,
+			 -0.5, 0.5, -0.5,   -0.5, -0.5, -0.5,   -0.5, 0.5, 0.5,
+			 0.5, 0.5, -0.5,   0.5, 0.5, 0.5,   0.5, -0.5, -0.5,
+			 0.5, -0.5, 0.5,   0.5, 0.5, 0.5,   0.5, -0.5, -0.5,
+			 0.5, 0.5, 0.5,   0.5, 0.5, 0.5,   0.5, 0.5, 0.5,
+			 0.5, 0.5, 0.5,   0.5, 0.5, 0.5,   0.5, 0.5, 0.5,
+			 0.5, 0.5, 0.5,   0.5, 0.5, 0.5,   0.5, 0.5, 0.5,
+			 0.5, 0.5, 0.5,   0.5, 0.5, 0.5,   0.5, 0.5, 0.5,
+			 0.5, 0.5, 0.5,   0.5, 0.5, 0.5,   0.5, 0.5, 0.5,
+			 0.5, 0.5, 0.5,   0.5, 0.5, 0.5,   0.5, 0.5, 0.5,
+			 0.5, 0.5, 0.5,   0.5, 0.5, 0.5,   0.5, 0.5, 0.5,
+			 0.5, 0.5, 0.5,   0.5, 0.5, 0.5,   0.5, 0.5, 0.5, };
 
-	// Number of vertices
-	int vertexCount = sizeof(vertexData) / sizeof(vertexData[0]);
+	std::vector<float> vertices(vertexArr,
+			vertexArr + sizeof(vertexArr) / sizeof(vertexArr[0]));
+	for (int i = 0; i < vertices.size(); i++)
+		vertexData.push_back(vertices[i]);
+
+	/*GLfloat colorArr[] = {
+				1.0, 0.0, 0.0,   0.5, 0.5, 0.0,   0.0, 0.5, 0.5,
+				0.5, 0.5, 0.0,   0.0, 1.0, 0.0,   0.5, 0.0, 0.5,
+				0.0, 0.5, 0.5,   0.5, 0.0, 0.5,   0.0, 0.0, 1.0,
+				1.0, 0.0, 0.0,   0.0, 1.0, 0.0,   0.0, 0.0, 1.0, };*/
+	GLfloat colorArr[] = {
+			1.0, 0.0, 0.0,   0.0, 1.0, 0.0,   0.0, 0.0, 1.0,
+			1.0, 0.0, 0.0,   0.0, 1.0, 0.0,   0.0, 0.0, 1.0,
+			1.0, 0.0, 0.0,   0.0, 1.0, 0.0,   0.0, 0.0, 1.0,
+			1.0, 0.0, 0.0,   0.0, 1.0, 0.0,   0.0, 0.0, 1.0,
+			1.0, 0.0, 0.0,   0.0, 1.0, 0.0,   0.0, 0.0, 1.0,
+			1.0, 0.0, 0.0,   0.0, 1.0, 0.0,   0.0, 0.0, 1.0,
+			1.0, 0.0, 0.0,   0.0, 1.0, 0.0,   0.0, 0.0, 1.0,
+			1.0, 0.0, 0.0,   0.0, 1.0, 0.0,   0.0, 0.0, 1.0,
+			1.0, 0.0, 0.0,   0.0, 1.0, 0.0,   0.0, 0.0, 1.0,
+			1.0, 0.0, 0.0,   0.0, 1.0, 0.0,   0.0, 0.0, 1.0,
+			1.0, 0.0, 0.0,   0.0, 1.0, 0.0,   0.0, 0.0, 1.0,
+			1.0, 0.0, 0.0,   0.0, 1.0, 0.0,   0.0, 0.0, 1.0, };
+
+	std::vector<float> colors(colorArr,
+			colorArr + sizeof(colorArr) / sizeof(colorArr[0]));
+	for (int i = 0; i < colors.size(); i++)
+		colorData.push_back(colors[i]);
 
 	// Add vertex data and color data to the data vector
-	data = pushData(data, vertexCount, vertexData, colorData);
+	data = pushData(data, vertexData, colorData);
 
 	// Make and bind the VAO
 	glGenVertexArrays(1, &vao);
@@ -124,7 +168,7 @@ void Renderer::renderTriangle() {
 	glBindVertexArray(vao);
 
 	// Draw the VAO
-	glDrawArrays(GL_TRIANGLES, 0, 3);
+	glDrawArrays(GL_TRIANGLES, 0, 12); // last parameter is number of vertices
 
 	// Unbind the VAO
 	glBindVertexArray(0);

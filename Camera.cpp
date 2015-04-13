@@ -35,12 +35,28 @@ void Camera::initialize() {
 // Creates and sets a view matrix representing the view of the camera
 void Camera::useView() {
 
-	Matrix<float> viewMatrix = Matrix<float>::identity(4);
-	viewMatrix = viewMatrix
-			<< rotate(getRotationX(), getRotationY(), getRotationZ())
+	Matrix<float> viewMatrix = rotate(getRotationX(), getRotationY(), getRotationZ())
 			<< translate(getX(), getY(), getZ());
 
-	//_application->_logger->log("View matrix:").endLine().log(viewMatrix);
+	/*_application->_logger->log("View matrix:").endLine().log(viewMatrix);
+
+	Matrix<float> projectionMatrix = Matrix<float>::identity(4);
+	if (_projectionType == ORTHOGRAPHIC)
+		projectionMatrix = _orthographic;
+	else if (_projectionType == PERSPECTIVE)
+		projectionMatrix = _perspective;
+	//_application->_logger->log("Projection matrix:").endLine().log(projectionMatrix);
+
+	Matrix<float> pos = Matrix<float>(4, 1);
+	float arr[] = { 0, 0, 0, 1 };
+	std::vector<float> values(arr, arr + sizeof(arr) / sizeof(arr[0]));
+	pos.setVector(values);
+
+	_application->_logger->log("Model Position: ").endLine().log(pos);
+
+	_application->_logger->log("ModelView Position: ").endLine().log(viewMatrix * pos);
+	_application->_logger->log("ModelViewProjection Position: ").endLine().log(projectionMatrix * viewMatrix * pos);
+	*/
 
 	_application->_renderer->_currentProgram->setUniformMatrix4x4f("viewMatrix",
 			viewMatrix.getArray());
@@ -50,19 +66,15 @@ void Camera::useView() {
 // Updates the projection matrices as well as setting the desired projection matrix
 void Camera::updateProjectionMatrices() {
 
-	//_orthographic = orthographic(_application->_windowSizeX,
-	//		_application->_windowSizeY, getNear(), getFar());
 	float aspect = (float) _application->_windowSizeX
 			/ (float) _application->_windowSizeY;
 
-	_orthographic = orthographic(-aspect, aspect, getNear(), getFar());
+	_orthographic = orthographic(aspect, 1, getNear(), getFar());
 	_perspective = perspective(getFOV(), aspect, getNear(), getFar());
 
 	_application->_logger->log("Orthographic matrix:").endLine().increaseIndent();
-	_application->_logger->log("Window dimensions: ").log(
-			_application->_windowSizeX).log(" x ").log(
-			_application->_windowSizeY).endLine().log("Z near: ").log(getNear()).endLine().log(
-			"Z far: ").log(getFar()).endLine();
+	_application->_logger->log("Aspect: ").log(aspect).endLine().log("Z near: ").log(
+			getNear()).endLine().log("Z far: ").log(getFar()).endLine();
 	_application->_logger->log(_orthographic).decreaseIndent();
 
 	_application->_logger->log("Perspective matrix:").endLine().increaseIndent();

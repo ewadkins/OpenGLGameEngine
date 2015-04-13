@@ -23,20 +23,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action,
 		if (Main::applications[i]->_window == window)
 			application = Main::applications[i];
 
-	// Handle key events
-	if (action == GLFW_PRESS)
-		application->_logger->log("Key pressed ").log(char(key)).endLine();
-	if (action == GLFW_RELEASE)
-		application->_logger->log("Key released ").log(char(key)).endLine();
-	if (action == GLFW_REPEAT)
-		application->_logger->log("Key repeated ").log(char(key)).endLine();
-	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
-		glfwSetWindowShouldClose(window, GL_TRUE);
-
-	if (key == GLFW_KEY_O && action == GLFW_PRESS)
-		application->_camera->setProjectionType(application->_camera->ORTHOGRAPHIC);
-	if (key == GLFW_KEY_P && action == GLFW_PRESS)
-		application->_camera->setProjectionType(application->_camera->PERSPECTIVE);
+	application->_keyboard->dispatchEvent(key, scancode, action, mods);
 }
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
@@ -64,6 +51,7 @@ OpenGLApplication::OpenGLApplication(int screenSizeX, int screenSizeY,
 	_fullScreen = fullScreen;
 	_renderer = nullptr;
 	_camera = nullptr;
+	_keyboard = nullptr;
 	_averageFPS = 0;
 }
 
@@ -87,10 +75,12 @@ void OpenGLApplication::setupWindow() {
 
 	// If window creation fails, then exit
 	if (!_window) {
-		std::string s(
+		std::string s =
 				"Window creation failed. Can your hardware handle OpenGL version "
 						+ std::to_string(VERSION_MAJOR) + "."
-						+ std::to_string(VERSION_MINOR) + "?");
+						+ std::to_string(VERSION_MINOR) + "?";
+		std::cout << s.c_str() << std::endl;
+		// FIXME Error message
 		stop(s.c_str());
 	}
 
@@ -277,9 +267,20 @@ void OpenGLApplication::initialize() {
 	_logger->log("Setting up camera..").endLine().increaseIndent();
 	start = clock();
 	{
-		// Create and initialize the renderer
+		// Create and initialize the camera
 		_camera = new Camera(this, 0, 0, 0, 0, 0, 0);
 		_camera->initialize();
+	}
+	finish = clock();
+	_logger->log("(Took ").log(
+			(double(finish) - double(start)) / CLOCKS_PER_SEC * 1000).log(
+			" ms)").endLine().decreaseIndent();
+
+	_logger->log("Setting up keyboard..").endLine().increaseIndent();
+	start = clock();
+	{
+		// Create and initialize the keyboard manager
+		_keyboard = new Keyboard(this);
 	}
 	finish = clock();
 	_logger->log("(Took ").log(
@@ -306,85 +307,20 @@ void OpenGLApplication::gameLoop() {
 		long delta = currentTime - lastTime;
 		float fps = CLOCKS_PER_SEC / ((float) delta);
 		updateAverageFPS(fps);
-		_logger->log("FPS: ").log((int) _averageFPS).endLine();
+		//_logger->log("FPS: ").log((int) _averageFPS).endLine();
 		lastTime = clock();
 
 		static int count = 0;
 		count++;
 
-		//_camera->translateXYZ(0, 0, 0.005);
-		_camera->rotateXYZ(0, 1, 0);
+		_keyboard->update();
+
+		//_camera->translateXYZ(0, 0, -0.01);
+		//_camera->rotateXYZ(0, -1, 0);
 		_camera->useView();
 
 		_renderer->renderTriangle();
 		_renderer->display();
-
-		/*
-		 //Old drawing
-		 float ratio;
-		 int width, height;
-
-		 glfwGetFramebufferSize(_window, &width, &height);
-		 ratio = width / (float) height;
-
-		 glClear(GL_COLOR_BUFFER_BIT);
-
-		 glMatrixMode(GL_PROJECTION);
-		 glLoadIdentity();
-		 glOrtho(-ratio, ratio, -1.f, 1.f, 1.f, -1.f);
-		 glMatrixMode(GL_MODELVIEW);
-
-		 glLoadIdentity();
-
-		 //// Render
-
-		 //Triangle test
-
-		 //FIXME Not drawing the triangle
-
-		 // An array of 3 vectors which represents 3 vertices
-		 static const GLfloat vertices[] = { -1.0f, -1.0f, 0.0f, 1.0f, -1.0f,
-		 0.0f, 0.0f, 1.0f, 0.0f, };
-
-		 // This will identify our vertex buffer
-		 GLuint vbo;
-
-		 // Generate 1 buffer, put the resulting identifier in vbo
-		 glGenBuffers(1, &vbo);
-
-		 // The following commands will talk about our 'vbo' buffer
-		 glBindBuffer(GL_ARRAY_BUFFER, vbo);
-
-		 // Give our vertices to OpenGL.
-		 glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices,
-		 GL_STATIC_DRAW);
-
-		 // 1rst attribute buffer : vertices
-		 glEnableVertexAttribArray(0);
-		 glBindBuffer(GL_ARRAY_BUFFER, vbo);
-		 glVertexAttribPointer(0, // attribute 0. No particular reason for 0, but must match the layout in the shader.
-		 3,                  // size
-		 GL_FLOAT,           // type
-		 GL_FALSE,           // normalized?
-		 0,                  // stride
-		 (void*) 0            // array buffer offset
-		 );
-
-		 // Draw the triangle !
-		 glDrawArrays(GL_TRIANGLES, 0, 3); // Starting from vertex 0; 3 vertices total -> 1 triangle
-
-		 glDisableVertexAttribArray(0);
-
-		 ////
-
-		 //Swap buffers
-		 glfwSwapBuffers(_window);
-
-		 //Processes the events that have been received, then returns
-		 glfwPollEvents();
-		 //Puts the thread to sleep until another event is received, used when no need to update continuously
-		 //glfwWaitEvents();
-		 */
 
 	}
 }

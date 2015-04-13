@@ -6,6 +6,7 @@
 CPP_SRCS += \
 ../Camera.cpp \
 ../GLMatrix.cpp \
+../Keyboard.cpp \
 ../Logger.cpp \
 ../Main.cpp \
 ../Matrix.cpp \
@@ -18,6 +19,7 @@ CPP_SRCS += \
 OBJS += \
 ./Camera.o \
 ./GLMatrix.o \
+./Keyboard.o \
 ./Logger.o \
 ./Main.o \
 ./Matrix.o \
@@ -30,6 +32,7 @@ OBJS += \
 CPP_DEPS += \
 ./Camera.d \
 ./GLMatrix.d \
+./Keyboard.d \
 ./Logger.d \
 ./Main.d \
 ./Matrix.d \

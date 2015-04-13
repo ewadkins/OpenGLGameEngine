@@ -12,9 +12,9 @@ const float GLMatrix::PI = 3.1415926535897;
 // Returns the translation matrix given the desired change in x, y, and z coordinates
 Matrix<float> GLMatrix::translationMatrix(float deltaX, float deltaY, float deltaZ) {
 	Matrix<float> result = Matrix<float>::identity(4);
-	result.set(0, 3, deltaX);
-	result.set(1, 3, deltaY);
-	result.set(2, 3, deltaZ);
+	result.set(3, 0, deltaX);
+	result.set(3, 1, deltaY);
+	result.set(3, 2, deltaZ);
 	return result;
 }
 
@@ -149,8 +149,8 @@ Matrix<float> GLMatrix::perspectiveProjectionMatrix(float fov, float aspect, flo
 	result.set(0, 0, f / aspect);
 	result.set(1, 1, f);
 	result.set(2, 2, -(far + near) / (far - near));
-	result.set(2, 3, -2 * far * near / (far - near));
-	result.set(3, 2, -1);
+	result.set(2, 3, -1);
+	result.set(3, 2, -2 * far * near / (far - near));
 	return result;
 }
 

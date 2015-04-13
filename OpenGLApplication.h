@@ -12,7 +12,6 @@
 #include "Renderer.h"
 #include "Camera.h"
 #include "Matrix.h"
-#include "PolynomialMatrix.h"
 #include <string>
 #include <ctime>
 #include <iostream>
@@ -20,6 +19,7 @@
 #include <stdlib.h>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+#include "Keyboard.h"
 
 class OpenGLApplication {
 public:
@@ -38,6 +38,7 @@ public:
 	Logger* _logger;
 	Renderer* _renderer;
 	Camera* _camera;
+	Keyboard* _keyboard;
 	int _windowSizeX;
 	int _windowSizeY;
 	bool _fullScreen;
