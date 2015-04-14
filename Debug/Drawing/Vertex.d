@@ -1,3 +1,3 @@
-Drawing/Vertex.d: ../Drawing/Vertex.cpp ../Drawing/Vertex.h
+Drawing/Vertex.d: ../Drawing/Vertex.cpp ../Drawing/../Drawing/Vertex.h
 
-../Drawing/Vertex.h:
+../Drawing/../Drawing/Vertex.h:

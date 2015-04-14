@@ -5,11 +5,11 @@
  *      Author: ericwadkins
  */
 
-#ifndef MATRIX_H_
-#define MATRIX_H_
+#ifndef MATH_MATRIX_H_
+#define MATH_MATRIX_H_
 
-#include "PolynomialMatrix.h"
-#include "Polynomial.h"
+#include "../Math/Polynomial.h"
+#include "../Math/PolynomialMatrix.h"
 #include <iostream>
 #include <stdexcept>
 #include <vector>
@@ -66,4 +66,4 @@ private:
 	T** _matrix;
 };
 
-#endif /* MATRIX_H_ */
+#endif /* MATH_MATRIX_H_ */

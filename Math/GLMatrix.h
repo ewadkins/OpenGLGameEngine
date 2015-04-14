@@ -5,11 +5,11 @@
  *      Author: ericwadkins
  */
 
-#ifndef GLMATRIX_H_
-#define GLMATRIX_H_
+#ifndef MATH_GLMATRIX_H_
+#define MATH_GLMATRIX_H_
 
-#include "Matrix.h"
-#include "PolynomialMatrix.h"
+#include "../Math/Matrix.h"
+#include "../Math/PolynomialMatrix.h"
 
 class GLMatrix {
 public:
@@ -26,4 +26,4 @@ private:
 	static const float PI;
 };
 
-#endif /* GLMATRIX_H_ */
+#endif /* MATH_GLMATRIX_H_ */

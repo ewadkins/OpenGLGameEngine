@@ -5,7 +5,7 @@
  *      Author: ericwadkins
  */
 
-#include "Polynomial.h"
+#include "../Math/Polynomial.h"
 
 template<typename T>
 std::string Polynomial<T>::variable = "x";

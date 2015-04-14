@@ -5,10 +5,10 @@
  *      Author: ericwadkins
  */
 
-#ifndef POLYNOMIALMATRIX_H_
-#define POLYNOMIALMATRIX_H_
+#ifndef MATH_POLYNOMIALMATRIX_H_
+#define MATH_POLYNOMIALMATRIX_H_
 
-#include "Polynomial.h"
+#include "../Math/Polynomial.h"
 #include <iostream>
 #include <stdexcept>
 #include <vector>
@@ -70,4 +70,4 @@ private:
 	Polynomial<T>** _matrix;
 };
 
-#endif /* POLYNOMIALMATRIX_H_ */
+#endif /* MATH_POLYNOMIALMATRIX_H_ */

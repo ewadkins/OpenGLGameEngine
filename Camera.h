@@ -10,14 +10,15 @@
 
 #include "Math/GLMatrix.h"
 #include "Math/Matrix.h"
+
 //#include <glm/glm.hpp>
 //#include <glm/gtx/transform.hpp>
 
-class OpenGLApplication;
+class Application;
 
 class Camera {
 public:
-	Camera(OpenGLApplication* application, float x, float y, float z,
+	Camera(Application* application, float x, float y, float z,
 			float rotationX, float rotationY, float rotationZ);
 	virtual ~Camera() {
 	}
@@ -61,7 +62,7 @@ private:
 			float far);
 	static Matrix<float> perspective(int fov, int aspect, float near,
 			float far);
-	OpenGLApplication* _application;
+	Application* _application;
 	float _fov, _near, _far, _x, _y, _z, _rotationX, _rotationY, _rotationZ;
 	Matrix<float> _orthographic, _perspective;
 	ProjectionType _projectionType;

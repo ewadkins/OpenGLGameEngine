@@ -5,7 +5,7 @@
  *      Author: ericwadkins
  */
 
-#include "GLMatrix.h"
+#include "../Math/GLMatrix.h"
 
 const float GLMatrix::PI = 3.1415926535897;
 

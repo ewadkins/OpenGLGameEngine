@@ -1,16 +1,17 @@
 /*
- * OpenGLApplication.h
+ * Application.h
  *
  *  Created on: Feb 3, 2015
  *      Author: ericwadkins
  */
 
-#ifndef OPENGLAPPLICATION_H_
-#define OPENGLAPPLICATION_H_
+#ifndef APPLICATION_H_
+#define APPLICATION_H_
 
 #include "Logger.h"
 #include "Renderer.h"
 #include "Camera.h"
+#include "Input/Keyboard.h"
 #include "Math/Matrix.h"
 #include <string>
 #include <ctime>
@@ -19,12 +20,11 @@
 #include <stdlib.h>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
-#include "Input/Keyboard.h"
 
-class OpenGLApplication {
+class Application {
 public:
-	OpenGLApplication(int screenSizeX, int screenSizeY, bool fullScreen);
-	virtual ~OpenGLApplication() {
+	Application(int screenSizeX, int screenSizeY, bool fullScreen);
+	virtual ~Application() {
 	}
 	int start();
 	void log(const char*);
@@ -33,7 +33,7 @@ public:
 	void stop();
 	const static int VERSION_MAJOR = 4;
 	const static int VERSION_MINOR = 1;
-	OpenGLApplication* _application;
+	Application* _application;
 	GLFWwindow* _window;
 	Logger* _logger;
 	Renderer* _renderer;
@@ -53,4 +53,4 @@ private:
 	float _averageFPS;
 };
 
-#endif /* OPENGLAPPLICATION_H_ */
+#endif /* APPLICATION_H_ */

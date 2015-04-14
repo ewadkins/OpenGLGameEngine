@@ -4,23 +4,20 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 CPP_SRCS += \
-../Drawing/GLTriangle.cpp \
-../Drawing/VBO.cpp \
-../Drawing/Vertex.cpp 
+../Drawing/Drawables/Drawable.cpp \
+../Drawing/Drawables/Triangle.cpp 
 
 OBJS += \
-./Drawing/GLTriangle.o \
-./Drawing/VBO.o \
-./Drawing/Vertex.o 
+./Drawing/Drawables/Drawable.o \
+./Drawing/Drawables/Triangle.o 
 
 CPP_DEPS += \
-./Drawing/GLTriangle.d \
-./Drawing/VBO.d \
-./Drawing/Vertex.d 
+./Drawing/Drawables/Drawable.d \
+./Drawing/Drawables/Triangle.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes
-Drawing/%.o: ../Drawing/%.cpp
+Drawing/Drawables/%.o: ../Drawing/Drawables/%.cpp
 	@echo 'Building file: $<'
 	@echo 'Invoking: GCC C++ Compiler'
 	g++ -I/usr/local/Cellar/glm/0.9.6.1/include -I/usr/local/Cellar/glew/1.11.0/include -I/usr/local/Cellar/glfw3/3.0.4/include -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o "$@" "$<"

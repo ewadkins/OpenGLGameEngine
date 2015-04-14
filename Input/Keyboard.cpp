@@ -5,12 +5,13 @@
  *      Author: ericwadkins
  */
 
-#include "Keyboard.h"
-#include "../OpenGLApplication.h"
+#include "../Input/Keyboard.h"
+
+#include "../Application.h"
 
 const float Keyboard::PI = 3.1415926535897;
 
-Keyboard::Keyboard(OpenGLApplication* application) {
+Keyboard::Keyboard(Application* application) {
 	_application = application;
 }
 

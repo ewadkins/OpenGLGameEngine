@@ -5,17 +5,17 @@
  *      Author: ericwadkins
  */
 
-#ifndef KEYBOARD_H_
-#define KEYBOARD_H_
+#ifndef INPUT_KEYBOARD_H_
+#define INPUT_KEYBOARD_H_
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
-class OpenGLApplication;
+class Application;
 
 class Keyboard {
 public:
-	Keyboard(OpenGLApplication* application);
+	Keyboard(Application* application);
 	virtual ~Keyboard() {
 	}
 	void update();
@@ -24,8 +24,8 @@ public:
 	bool isKeyDown(int key);
 	int getKeyState(int key);
 private:
-	OpenGLApplication* _application;
+	Application* _application;
 	static const float PI;
 };
 
-#endif /* KEYBOARD_H_ */
+#endif /* INPUT_KEYBOARD_H_ */
