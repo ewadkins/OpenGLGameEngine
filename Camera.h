@@ -8,8 +8,8 @@
 #ifndef CAMERA_H_
 #define CAMERA_H_
 
-#include "GLMatrix.h"
-#include "Matrix.h"
+#include "Math/GLMatrix.h"
+#include "Math/Matrix.h"
 //#include <glm/glm.hpp>
 //#include <glm/gtx/transform.hpp>
 

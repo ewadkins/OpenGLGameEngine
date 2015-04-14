@@ -23,7 +23,7 @@ Camera::Camera(OpenGLApplication* application, float x, float y, float z,
 	_fov = 70;
 	_near = 0.01;
 	_far = 1000;
-	_projectionType = ORTHOGRAPHIC;
+	_projectionType = PERSPECTIVE;
 }
 
 // Initialization method ran on startup
@@ -36,7 +36,7 @@ void Camera::initialize() {
 void Camera::useView() {
 
 	Matrix<float> viewMatrix = rotate(getRotationX(), getRotationY(), getRotationZ())
-			<< translate(getX(), getY(), getZ());
+			<< translate(-getX(), -getY(), -getZ());
 
 	/*_application->_logger->log("View matrix:").endLine().log(viewMatrix);
 

@@ -8,8 +8,8 @@
 #ifndef LOGGER_H_
 #define LOGGER_H_
 
-#include "Matrix.h"
-#include "Polynomial.h"
+#include "Math/Matrix.h"
+#include "Math/Polynomial.h"
 #include <vector>
 #include <string>
 #include <iostream>

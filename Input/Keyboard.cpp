@@ -6,7 +6,7 @@
  */
 
 #include "Keyboard.h"
-#include "OpenGLApplication.h"
+#include "../OpenGLApplication.h"
 
 const float Keyboard::PI = 3.1415926535897;
 
@@ -23,29 +23,29 @@ void Keyboard::update() {
 
 	if (isKeyDown(GLFW_KEY_A))
 		camera->translateXYZ(
-				translationSpeed * std::sin((camera->getRotationY() + 90) * PI / 180),
-				0,
-				translationSpeed * std::cos((camera->getRotationY() + 90) * PI / 180));
-	if (isKeyDown(GLFW_KEY_D))
-		camera->translateXYZ(
 				translationSpeed * std::sin((camera->getRotationY() - 90) * PI / 180),
 				0,
 				translationSpeed * std::cos((camera->getRotationY() - 90) * PI / 180));
-	if (isKeyDown(GLFW_KEY_W))
+	if (isKeyDown(GLFW_KEY_D))
 		camera->translateXYZ(
-				translationSpeed * std::sin(camera->getRotationY() * PI / 180),
+				translationSpeed * std::sin((camera->getRotationY() + 90) * PI / 180),
 				0,
-				translationSpeed * std::cos(camera->getRotationY() * PI / 180));
-	if (isKeyDown(GLFW_KEY_S))
+				translationSpeed * std::cos((camera->getRotationY() + 90) * PI / 180));
+	if (isKeyDown(GLFW_KEY_W))
 		camera->translateXYZ(
 				-translationSpeed * std::sin(camera->getRotationY() * PI / 180),
 				0,
-				-translationSpeed
+				-translationSpeed * std::cos(camera->getRotationY() * PI / 180));
+	if (isKeyDown(GLFW_KEY_S))
+		camera->translateXYZ(
+				translationSpeed * std::sin(camera->getRotationY() * PI / 180),
+				0,
+				translationSpeed
 						* std::cos(camera->getRotationY() * PI / 180));
 	if (isKeyDown(GLFW_KEY_SPACE))
-		camera->translateY(-translationSpeed);
-	if (isKeyDown(GLFW_KEY_LEFT_SHIFT))
 		camera->translateY(translationSpeed);
+	if (isKeyDown(GLFW_KEY_LEFT_SHIFT))
+		camera->translateY(-translationSpeed);
 
 	if (isKeyDown(GLFW_KEY_LEFT))
 		camera->rotateY(rotationSpeed);

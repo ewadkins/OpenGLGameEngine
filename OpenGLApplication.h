@@ -11,7 +11,7 @@
 #include "Logger.h"
 #include "Renderer.h"
 #include "Camera.h"
-#include "Matrix.h"
+#include "Math/Matrix.h"
 #include <string>
 #include <ctime>
 #include <iostream>
@@ -19,7 +19,7 @@
 #include <stdlib.h>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
-#include "Keyboard.h"
+#include "Input/Keyboard.h"
 
 class OpenGLApplication {
 public:

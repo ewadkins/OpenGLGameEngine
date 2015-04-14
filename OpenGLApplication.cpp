@@ -100,7 +100,7 @@ void OpenGLApplication::setupDisplay() {
 	glDepthFunc(GL_LEQUAL);
 
 	// Sets background color
-	glClearColor(0, 0, 0, 1);
+	glClearColor(1, 1, 1, 1);
 }
 
 void OpenGLApplication::initialize() {
@@ -268,7 +268,7 @@ void OpenGLApplication::initialize() {
 	start = clock();
 	{
 		// Create and initialize the camera
-		_camera = new Camera(this, 0, 0, 0, 0, 0, 0);
+		_camera = new Camera(this, 0, 1.5, 4, -20, 0, 0);
 		_camera->initialize();
 	}
 	finish = clock();
@@ -307,7 +307,7 @@ void OpenGLApplication::gameLoop() {
 		long delta = currentTime - lastTime;
 		float fps = CLOCKS_PER_SEC / ((float) delta);
 		updateAverageFPS(fps);
-		//_logger->log("FPS: ").log((int) _averageFPS).endLine();
+		_logger->log("FPS: ").log((int) _averageFPS).endLine();
 		lastTime = clock();
 
 		static int count = 0;
@@ -319,7 +319,7 @@ void OpenGLApplication::gameLoop() {
 		//_camera->rotateXYZ(0, -1, 0);
 		_camera->useView();
 
-		_renderer->renderTriangle();
+		_renderer->render();
 		_renderer->display();
 
 	}

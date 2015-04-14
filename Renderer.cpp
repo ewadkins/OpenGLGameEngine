@@ -12,8 +12,6 @@ Renderer::Renderer(OpenGLApplication* application) :
 		_projectionMatrix(Matrix<float>::identity(4)) {
 	_application = application;
 	_shaderProgram1 = nullptr;
-	vao = 0;
-	vbo = 0;
 	_currentProgram = nullptr;
 }
 
@@ -55,124 +53,84 @@ void Renderer::initialize() {
 	else
 		throw "No shader assigned";
 
-	initTriangle();
-}
-
-// Helper method that fills a vector with the relevant vertex attributes
-std::vector<GLfloat> pushData(std::vector<GLfloat> data,
-		std::vector<GLfloat> vertexData, std::vector<GLfloat> colorData) {
-	int vertexCount = vertexData.size();
-	for (int i = 0; i < vertexCount; i++) {
-		data.push_back(vertexData[3 * i]);
-		data.push_back(vertexData[3 * i + 1]);
-		data.push_back(vertexData[3 * i + 2]);
-		data.push_back(colorData[3 * i]);
-		data.push_back(colorData[3 * i + 1]);
-		data.push_back(colorData[3 * i + 2]);
-	}
-	return data;
+	initializeVBOs();
 }
 
 // Test: Initializes data that will draw a triangle
-void Renderer::initTriangle() {
+void Renderer::initializeVBOs() {
 
-	std::vector<GLfloat> data;
-	std::vector<GLfloat> vertexData;
-	std::vector<GLfloat> colorData;
+	VBO<Triangle>* triangles = new VBO<Triangle>(VBOBase::STATIC);
+	// Left
+	triangles->add(
+			Triangle(Vertex(-0.5, -0.5, -0.5, 0.0, 0.0, 1.0),
+					Vertex(-0.5, -0.5, 0.5, 1.0, 0.0, 0.0),
+					Vertex(-0.5, 0.5, 0.5, 0.0, 1.0, 0.0)));
+	triangles->add(
+			Triangle(Vertex(-0.5, -0.5, -0.5, 0.0, 0.0, 1.0),
+					Vertex(-0.5, 0.5, -0.5, 1.0, 0.0, 0.0),
+					Vertex(-0.5, 0.5, 0.5, 0.0, 1.0, 0.0)));
+	// Right
+	triangles->add(
+			Triangle(Vertex(0.5, -0.5, -0.5, 1.0, 0.0, 0.0),
+					Vertex(0.5, -0.5, 0.5, 0.0, 1.0, 0.0),
+					Vertex(0.5, 0.5, 0.5, 0.0, 0.0, 1.0)));
+	triangles->add(
+			Triangle(Vertex(0.5, -0.5, -0.5, 1.0, 0.0, 0.0),
+					Vertex(0.5, 0.5, -0.5, 0.0, 1.0, 0.0),
+					Vertex(0.5, 0.5, 0.5, 0.0, 0.0, 1.0)));
+	// Back
+	triangles->add(
+			Triangle(Vertex(-0.5, -0.5, -0.5, 0.0, 0.0, 1.0),
+					Vertex(0.5, -0.5, -0.5, 1.0, 0.0, 0.0),
+					Vertex(0.5, 0.5, -0.5, 0.0, 1.0, 0.0)));
+	triangles->add(
+			Triangle(Vertex(-0.5, -0.5, -0.5, 0.0, 0.0, 1.0),
+					Vertex(-0.5, 0.5, -0.5, 1.0, 0.0, 0.0),
+					Vertex(0.5, 0.5, -0.5, 0.0, 1.0, 0.0)));
+	// Front
+	triangles->add(
+			Triangle(Vertex(-0.5, -0.5, 0.5, 1.0, 0.0, 0.0),
+					Vertex(0.5, -0.5, 0.5, 0.0, 1.0, 0.0),
+					Vertex(0.5, 0.5, 0.5, 0.0, 0.0, 1.0)));
+	triangles->add(
+			Triangle(Vertex(-0.5, -0.5, 0.5, 1.0, 0.0, 0.0),
+					Vertex(-0.5, 0.5, 0.5, 0.0, 1.0, 0.0),
+					Vertex(0.5, 0.5, 0.5, 0.0, 0.0, 1.0)));
+	// Bottom
+	triangles->add(
+			Triangle(Vertex(-0.5, -0.5, -0.5, 0.0, 0.0, 1.0),
+					Vertex(-0.5, -0.5, 0.5, 1.0, 0.0, 0.0),
+					Vertex(0.5, -0.5, 0.5, 0.0, 1.0, 0.0)));
+	triangles->add(
+			Triangle(Vertex(-0.5, -0.5, -0.5, 0.0, 0.0, 1.0),
+					Vertex(0.5, -0.5, -0.5, 1.0, 0.0, 0.0),
+					Vertex(0.5, -0.5, 0.5, 0.0, 1.0, 0.0)));
+	// Top
+	triangles->add(
+			Triangle(Vertex(-0.5, 0.5, -0.5, 1.0, 0.0, 0.0),
+					Vertex(-0.5, 0.5, 0.5, 0.0, 1.0, 0.0),
+					Vertex(0.5, 0.5, 0.5, 0.0, 0.0, 1.0)));
+	triangles->add(
+			Triangle(Vertex(-0.5, 0.5, -0.5, 1.0, 0.0, 0.0),
+					Vertex(0.5, 0.5, -0.5, 0.0, 1.0, 0.0),
+					Vertex(0.5, 0.5, 0.5, 0.0, 0.0, 1.0)));
 
-	/*float vertexArr[] = {
-				 0.0, 2.0, -3.5,   -0.8, 0.4, -3.5,    0.8, 0.4, -3.5,
-				-1.0, 0.0, -3.5,   -1.8, -1.6, -3.5,  -0.2, -1.6, -3.5,
-				 1.0, 0.0, -3.5,    0.2, -1.6, -3.5,   1.8, -1.6, -3.5,
-				 0.0, 1.0, -5.0,   -0.9, -0.8, -5.0,   0.9, -0.8, -5.0 };*/
-	float vertexArr[] = {
-			 -0.5, -0.5, 0.5,   -0.5, -0.5, -0.5,   -0.5, 0.5, 0.5,
-			 -0.5, 0.5, -0.5,   -0.5, -0.5, -0.5,   -0.5, 0.5, 0.5,
-			 0.5, 0.5, -0.5,   0.5, 0.5, 0.5,   0.5, -0.5, -0.5,
-			 0.5, -0.5, 0.5,   0.5, 0.5, 0.5,   0.5, -0.5, -0.5,
-			 0.5, 0.5, 0.5,   0.5, 0.5, 0.5,   0.5, 0.5, 0.5,
-			 0.5, 0.5, 0.5,   0.5, 0.5, 0.5,   0.5, 0.5, 0.5,
-			 0.5, 0.5, 0.5,   0.5, 0.5, 0.5,   0.5, 0.5, 0.5,
-			 0.5, 0.5, 0.5,   0.5, 0.5, 0.5,   0.5, 0.5, 0.5,
-			 0.5, 0.5, 0.5,   0.5, 0.5, 0.5,   0.5, 0.5, 0.5,
-			 0.5, 0.5, 0.5,   0.5, 0.5, 0.5,   0.5, 0.5, 0.5,
-			 0.5, 0.5, 0.5,   0.5, 0.5, 0.5,   0.5, 0.5, 0.5,
-			 0.5, 0.5, 0.5,   0.5, 0.5, 0.5,   0.5, 0.5, 0.5, };
+	triangles->updateData();
+	_vbos.push_back(triangles);
 
-	std::vector<float> vertices(vertexArr,
-			vertexArr + sizeof(vertexArr) / sizeof(vertexArr[0]));
-	for (int i = 0; i < vertices.size(); i++)
-		vertexData.push_back(vertices[i]);
-
-	/*GLfloat colorArr[] = {
-				1.0, 0.0, 0.0,   0.5, 0.5, 0.0,   0.0, 0.5, 0.5,
-				0.5, 0.5, 0.0,   0.0, 1.0, 0.0,   0.5, 0.0, 0.5,
-				0.0, 0.5, 0.5,   0.5, 0.0, 0.5,   0.0, 0.0, 1.0,
-				1.0, 0.0, 0.0,   0.0, 1.0, 0.0,   0.0, 0.0, 1.0, };*/
-	GLfloat colorArr[] = {
-			1.0, 0.0, 0.0,   0.0, 1.0, 0.0,   0.0, 0.0, 1.0,
-			1.0, 0.0, 0.0,   0.0, 1.0, 0.0,   0.0, 0.0, 1.0,
-			1.0, 0.0, 0.0,   0.0, 1.0, 0.0,   0.0, 0.0, 1.0,
-			1.0, 0.0, 0.0,   0.0, 1.0, 0.0,   0.0, 0.0, 1.0,
-			1.0, 0.0, 0.0,   0.0, 1.0, 0.0,   0.0, 0.0, 1.0,
-			1.0, 0.0, 0.0,   0.0, 1.0, 0.0,   0.0, 0.0, 1.0,
-			1.0, 0.0, 0.0,   0.0, 1.0, 0.0,   0.0, 0.0, 1.0,
-			1.0, 0.0, 0.0,   0.0, 1.0, 0.0,   0.0, 0.0, 1.0,
-			1.0, 0.0, 0.0,   0.0, 1.0, 0.0,   0.0, 0.0, 1.0,
-			1.0, 0.0, 0.0,   0.0, 1.0, 0.0,   0.0, 0.0, 1.0,
-			1.0, 0.0, 0.0,   0.0, 1.0, 0.0,   0.0, 0.0, 1.0,
-			1.0, 0.0, 0.0,   0.0, 1.0, 0.0,   0.0, 0.0, 1.0, };
-
-	std::vector<float> colors(colorArr,
-			colorArr + sizeof(colorArr) / sizeof(colorArr[0]));
-	for (int i = 0; i < colors.size(); i++)
-		colorData.push_back(colors[i]);
-
-	// Add vertex data and color data to the data vector
-	data = pushData(data, vertexData, colorData);
-
-	// Make and bind the VAO
-	glGenVertexArrays(1, &vao);
-	glBindVertexArray(vao);
-
-	// Make and bind the VBO
-	glGenBuffers(1, &vbo);
-
-	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glBufferData(GL_ARRAY_BUFFER, data.size() * sizeof(GLfloat), &data[0],
-	GL_STATIC_DRAW);
-
-	// Add position attribute
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), 0);
-	// Add color attribute
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat),
-			reinterpret_cast<GLvoid*>(3 * sizeof(GLfloat)));
-
-	// Enable the attributes
-	glEnableVertexAttribArray(0);
-	glEnableVertexAttribArray(1);
-
-	// Unbind the VBO and VAO
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindVertexArray(0);
+	for (int i = 0; i < _vbos.size(); i++)
+		_vbos[i]->create();
 
 }
 
-// Test: Renders the triangle
-void Renderer::renderTriangle() {
+void Renderer::render() {
 
 	// Clear everything
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	// Bind the VAO (the triangle)
-	glBindVertexArray(vao);
-
-	// Draw the VAO
-	glDrawArrays(GL_TRIANGLES, 0, 12); // last parameter is number of vertices
-
-	// Unbind the VAO
-	glBindVertexArray(0);
-
+	// Draw each vbo
+	for (int i = 0; i < _vbos.size(); i++)
+		_vbos[i]->draw();
 }
 
 // Displays the rendered scene

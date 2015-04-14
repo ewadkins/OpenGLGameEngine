@@ -9,11 +9,14 @@
 #define RENDERER_H_
 
 #include "ShaderProgram.h"
+#include "Math/Matrix.h"
+#include "Drawing/VBO.h"
+#include "Drawing/Triangle.h"
+#include "Drawing/Vertex.h"
 #include <iostream>
 #include <fstream>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
-#include "Matrix.h"
 
 class OpenGLApplication;
 
@@ -23,8 +26,8 @@ public:
 	virtual ~Renderer() {
 	}
 	void initialize();
-	void initTriangle();
-	void renderTriangle();
+	void initializeVBOs();
+	void render();
 	void display();
 	void useProgram(ShaderProgram*);
 	void setProjectionMatrix(Matrix<float> projectionMatrix);
@@ -34,7 +37,7 @@ private:
 	void setupShaders();
 	void updateUniforms();
 	OpenGLApplication* _application;
-	GLuint vao, vbo;
+	std::vector<VBOBase*> _vbos;
 	Matrix<float> _projectionMatrix;
 };
 

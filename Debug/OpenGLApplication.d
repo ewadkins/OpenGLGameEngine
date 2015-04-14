@@ -1,19 +1,20 @@
 OpenGLApplication.d: ../OpenGLApplication.cpp ../OpenGLApplication.h \
-  ../Logger.h ../Matrix.h ../PolynomialMatrix.h ../Polynomial.h \
-  ../Renderer.h ../ShaderProgram.h \
+  ../Logger.h ../Math/Matrix.h ../Math/PolynomialMatrix.h \
+  ../Math/Polynomial.h ../Renderer.h ../ShaderProgram.h \
   /usr/local/Cellar/glew/1.11.0/include/GL/glew.h \
-  /usr/local/Cellar/glfw3/3.0.4/include/GLFW/glfw3.h ../Camera.h \
-  ../GLMatrix.h ../Keyboard.h ../Main.h
+  /usr/local/Cellar/glfw3/3.0.4/include/GLFW/glfw3.h ../Drawing/VBO.h \
+  ../Drawing/Vertex.h ../Drawing/Triangle.h ../Camera.h \
+  ../Math/GLMatrix.h ../Input/Keyboard.h ../Main.h
 
 ../OpenGLApplication.h:
 
 ../Logger.h:
 
-../Matrix.h:
+../Math/Matrix.h:
 
-../PolynomialMatrix.h:
+../Math/PolynomialMatrix.h:
 
-../Polynomial.h:
+../Math/Polynomial.h:
 
 ../Renderer.h:
 
@@ -23,10 +24,16 @@ OpenGLApplication.d: ../OpenGLApplication.cpp ../OpenGLApplication.h \
 
 /usr/local/Cellar/glfw3/3.0.4/include/GLFW/glfw3.h:
 
+../Drawing/VBO.h:
+
+../Drawing/Vertex.h:
+
+../Drawing/Triangle.h:
+
 ../Camera.h:
 
-../GLMatrix.h:
+../Math/GLMatrix.h:
 
-../Keyboard.h:
+../Input/Keyboard.h:
 
 ../Main.h:
