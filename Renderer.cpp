@@ -6,10 +6,9 @@
  */
 
 #include "Renderer.h"
+#include "OpenGLApplication.h"
 
-#include "Application.h"
-
-Renderer::Renderer(Application* application) :
+Renderer::Renderer(OpenGLApplication* application) :
 		_projectionMatrix(Matrix<float>::identity(4)) {
 	_application = application;
 	_shaderProgram1 = nullptr;
@@ -60,64 +59,64 @@ void Renderer::initialize() {
 // Test: Initializes data that will draw a triangle
 void Renderer::initializeVBOs() {
 
-	VBO<GLTriangle>* vbo = new VBO<GLTriangle>(VBOBase::STATIC);
-	// Left face
-	vbo->add(
-			new GLTriangle(new Vertex(-0.5, -0.5, -0.5, 0.0, 0.0, 1.0),
-					new Vertex(-0.5, -0.5, 0.5, 1.0, 0.0, 0.0),
-					new Vertex(-0.5, 0.5, 0.5, 0.0, 1.0, 0.0)));
-	vbo->add(
-			new GLTriangle(new Vertex(-0.5, -0.5, -0.5, 0.0, 0.0, 1.0),
-					new Vertex(-0.5, 0.5, -0.5, 1.0, 0.0, 0.0),
-					new Vertex(-0.5, 0.5, 0.5, 0.0, 1.0, 0.0)));
-	// Right face
-	vbo->add(
-			new GLTriangle(new Vertex(0.5, -0.5, -0.5, 1.0, 0.0, 0.0),
-					new Vertex(0.5, -0.5, 0.5, 0.0, 1.0, 0.0),
-					new Vertex(0.5, 0.5, 0.5, 0.0, 0.0, 1.0)));
-	vbo->add(
-			new GLTriangle(new Vertex(0.5, -0.5, -0.5, 1.0, 0.0, 0.0),
-					new Vertex(0.5, 0.5, -0.5, 0.0, 1.0, 0.0),
-					new Vertex(0.5, 0.5, 0.5, 0.0, 0.0, 1.0)));
-	// Back face
-	vbo->add(
-			new GLTriangle(new Vertex(-0.5, -0.5, -0.5, 0.0, 0.0, 1.0),
-					new Vertex(0.5, -0.5, -0.5, 1.0, 0.0, 0.0),
-					new Vertex(0.5, 0.5, -0.5, 0.0, 1.0, 0.0)));
-	vbo->add(
-			new GLTriangle(new Vertex(-0.5, -0.5, -0.5, 0.0, 0.0, 1.0),
-					new Vertex(-0.5, 0.5, -0.5, 1.0, 0.0, 0.0),
-					new Vertex(0.5, 0.5, -0.5, 0.0, 1.0, 0.0)));
-	// Front face
-	vbo->add(
-			new GLTriangle(new Vertex(-0.5, -0.5, 0.5, 1.0, 0.0, 0.0),
-					new Vertex(0.5, -0.5, 0.5, 0.0, 1.0, 0.0),
-					new Vertex(0.5, 0.5, 0.5, 0.0, 0.0, 1.0)));
-	vbo->add(
-			new GLTriangle(new Vertex(-0.5, -0.5, 0.5, 1.0, 0.0, 0.0),
-					new Vertex(-0.5, 0.5, 0.5, 0.0, 1.0, 0.0),
-					new Vertex(0.5, 0.5, 0.5, 0.0, 0.0, 1.0)));
-	// Bottom face
-	vbo->add(
-			new GLTriangle(new Vertex(-0.5, -0.5, -0.5, 0.0, 0.0, 1.0),
-					new Vertex(-0.5, -0.5, 0.5, 1.0, 0.0, 0.0),
-					new Vertex(0.5, -0.5, 0.5, 0.0, 1.0, 0.0)));
-	vbo->add(
-			new GLTriangle(new Vertex(-0.5, -0.5, -0.5, 0.0, 0.0, 1.0),
-					new Vertex(0.5, -0.5, -0.5, 1.0, 0.0, 0.0),
-					new Vertex(0.5, -0.5, 0.5, 0.0, 1.0, 0.0)));
-	// Top face
-	vbo->add(
-			new GLTriangle(new Vertex(-0.5, 0.5, -0.5, 1.0, 0.0, 0.0),
-					new Vertex(-0.5, 0.5, 0.5, 0.0, 1.0, 0.0),
-					new Vertex(0.5, 0.5, 0.5, 0.0, 0.0, 1.0)));
-	vbo->add(
-			new GLTriangle(new Vertex(-0.5, 0.5, -0.5, 1.0, 0.0, 0.0),
-					new Vertex(0.5, 0.5, -0.5, 0.0, 1.0, 0.0),
-					new Vertex(0.5, 0.5, 0.5, 0.0, 0.0, 1.0)));
+	VBO<Triangle>* triangles = new VBO<Triangle>(VBOBase::STATIC);
+	// Left
+	triangles->add(
+			Triangle(Vertex(-0.5, -0.5, -0.5, 0.0, 0.0, 1.0),
+					Vertex(-0.5, -0.5, 0.5, 1.0, 0.0, 0.0),
+					Vertex(-0.5, 0.5, 0.5, 0.0, 1.0, 0.0)));
+	triangles->add(
+			Triangle(Vertex(-0.5, -0.5, -0.5, 0.0, 0.0, 1.0),
+					Vertex(-0.5, 0.5, -0.5, 1.0, 0.0, 0.0),
+					Vertex(-0.5, 0.5, 0.5, 0.0, 1.0, 0.0)));
+	// Right
+	triangles->add(
+			Triangle(Vertex(0.5, -0.5, -0.5, 1.0, 0.0, 0.0),
+					Vertex(0.5, -0.5, 0.5, 0.0, 1.0, 0.0),
+					Vertex(0.5, 0.5, 0.5, 0.0, 0.0, 1.0)));
+	triangles->add(
+			Triangle(Vertex(0.5, -0.5, -0.5, 1.0, 0.0, 0.0),
+					Vertex(0.5, 0.5, -0.5, 0.0, 1.0, 0.0),
+					Vertex(0.5, 0.5, 0.5, 0.0, 0.0, 1.0)));
+	// Back
+	triangles->add(
+			Triangle(Vertex(-0.5, -0.5, -0.5, 0.0, 0.0, 1.0),
+					Vertex(0.5, -0.5, -0.5, 1.0, 0.0, 0.0),
+					Vertex(0.5, 0.5, -0.5, 0.0, 1.0, 0.0)));
+	triangles->add(
+			Triangle(Vertex(-0.5, -0.5, -0.5, 0.0, 0.0, 1.0),
+					Vertex(-0.5, 0.5, -0.5, 1.0, 0.0, 0.0),
+					Vertex(0.5, 0.5, -0.5, 0.0, 1.0, 0.0)));
+	// Front
+	triangles->add(
+			Triangle(Vertex(-0.5, -0.5, 0.5, 1.0, 0.0, 0.0),
+					Vertex(0.5, -0.5, 0.5, 0.0, 1.0, 0.0),
+					Vertex(0.5, 0.5, 0.5, 0.0, 0.0, 1.0)));
+	triangles->add(
+			Triangle(Vertex(-0.5, -0.5, 0.5, 1.0, 0.0, 0.0),
+					Vertex(-0.5, 0.5, 0.5, 0.0, 1.0, 0.0),
+					Vertex(0.5, 0.5, 0.5, 0.0, 0.0, 1.0)));
+	// Bottom
+	triangles->add(
+			Triangle(Vertex(-0.5, -0.5, -0.5, 0.0, 0.0, 1.0),
+					Vertex(-0.5, -0.5, 0.5, 1.0, 0.0, 0.0),
+					Vertex(0.5, -0.5, 0.5, 0.0, 1.0, 0.0)));
+	triangles->add(
+			Triangle(Vertex(-0.5, -0.5, -0.5, 0.0, 0.0, 1.0),
+					Vertex(0.5, -0.5, -0.5, 1.0, 0.0, 0.0),
+					Vertex(0.5, -0.5, 0.5, 0.0, 1.0, 0.0)));
+	// Top
+	triangles->add(
+			Triangle(Vertex(-0.5, 0.5, -0.5, 1.0, 0.0, 0.0),
+					Vertex(-0.5, 0.5, 0.5, 0.0, 1.0, 0.0),
+					Vertex(0.5, 0.5, 0.5, 0.0, 0.0, 1.0)));
+	triangles->add(
+			Triangle(Vertex(-0.5, 0.5, -0.5, 1.0, 0.0, 0.0),
+					Vertex(0.5, 0.5, -0.5, 0.0, 1.0, 0.0),
+					Vertex(0.5, 0.5, 0.5, 0.0, 0.0, 1.0)));
 
-	vbo->updateData();
-	_vbos.push_back(vbo);
+	triangles->updateData();
+	_vbos.push_back(triangles);
 
 	for (int i = 0; i < _vbos.size(); i++)
 		_vbos[i]->create();

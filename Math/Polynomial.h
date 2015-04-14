@@ -5,8 +5,8 @@
  *      Author: ericwadkins
  */
 
-#ifndef MATH_POLYNOMIAL_H_
-#define MATH_POLYNOMIAL_H_
+#ifndef POLYNOMIAL_H_
+#define POLYNOMIAL_H_
 
 #include <iostream>
 #include <vector>
@@ -73,4 +73,4 @@ private:
 	static std::string variable;
 };
 
-#endif /* MATH_POLYNOMIAL_H_ */
+#endif /* POLYNOMIAL_H_ */

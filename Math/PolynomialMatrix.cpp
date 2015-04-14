@@ -5,7 +5,7 @@
  *      Author: ericwadkins
  */
 
-#include "../Math/PolynomialMatrix.h"
+#include "PolynomialMatrix.h"
 
 // Basic constructor
 template<typename T>

@@ -8,21 +8,21 @@
 #ifndef RENDERER_H_
 #define RENDERER_H_
 
-#include "Drawing/GLTriangle.h"
-#include "Drawing/VBO.h"
-#include "Drawing/Vertex.h"
 #include "ShaderProgram.h"
 #include "Math/Matrix.h"
+#include "Drawing/VBO.h"
+#include "Drawing/Triangle.h"
+#include "Drawing/Vertex.h"
 #include <iostream>
 #include <fstream>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
-class Application;
+class OpenGLApplication;
 
 class Renderer {
 public:
-	Renderer(Application* application);
+	Renderer(OpenGLApplication* application);
 	virtual ~Renderer() {
 	}
 	void initialize();
@@ -36,7 +36,7 @@ public:
 private:
 	void setupShaders();
 	void updateUniforms();
-	Application* _application;
+	OpenGLApplication* _application;
 	std::vector<VBOBase*> _vbos;
 	Matrix<float> _projectionMatrix;
 };

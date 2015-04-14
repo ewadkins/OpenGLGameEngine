@@ -27,5 +27,4 @@ SUBDIRS := \
 Math \
 Input \
 Drawing \
-Drawables \
 

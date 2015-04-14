@@ -5,7 +5,7 @@
  *      Author: ericwadkins
  */
 
-#include "../Drawing/VBO.h"
+#include "VBO.h"
 
 template<typename T>
 VBO<T>::VBO(Type type) {
@@ -15,31 +15,27 @@ VBO<T>::VBO(Type type) {
 }
 
 template<typename T>
-void VBO<T>::add(T* drawable) {
+void VBO<T>::add(T drawable) {
 	_drawables.push_back(drawable);
 }
 
 template<typename T>
 void VBO<T>::updateData() {
 	for (int i = 0; i < _drawables.size(); i++) {
-		std::vector<Vertex*> vertices = _drawables[i]->getVertices();
+		std::vector<Vertex> vertices = _drawables[i].getVertices();
 		for (int j = 0; j < vertices.size(); j++) {
-			Vertex* v = vertices[j];
-			std::vector<float> pos = v->getPosition();
-			std::vector<float> color = v->getColor();
-			std::vector<float> norm = v->getNormal();
-			std::vector<float> tex = v->getTexCoords();
-			_data.push_back(pos[0]);
-			_data.push_back(pos[1]);
-			_data.push_back(pos[2]);
-			_data.push_back(color[0]);
-			_data.push_back(color[1]);
-			_data.push_back(color[2]);
-			_data.push_back(norm[0]);
-			_data.push_back(norm[1]);
-			_data.push_back(norm[2]);
-			_data.push_back(tex[0]);
-			_data.push_back(tex[1]);
+			Vertex v = vertices[j];
+			_data.push_back(v.getPosition()[0]);
+			_data.push_back(v.getPosition()[1]);
+			_data.push_back(v.getPosition()[2]);
+			_data.push_back(v.getColor()[0]);
+			_data.push_back(v.getColor()[1]);
+			_data.push_back(v.getColor()[2]);
+			_data.push_back(v.getNormal()[0]);
+			_data.push_back(v.getNormal()[1]);
+			_data.push_back(v.getNormal()[2]);
+			_data.push_back(v.getTexCoords()[0]);
+			_data.push_back(v.getTexCoords()[1]);
 		}
 	}
 }
@@ -92,7 +88,7 @@ void VBO<T>::draw() {
 
 	int vertexCount = 0;
 	for (int i = 0; i < _drawables.size(); i++)
-		vertexCount += _drawables[i]->getVertices().size();
+		vertexCount += _drawables[i].getVertices().size();
 
 	// Bind the VAO
 	glBindVertexArray(_vao);
@@ -106,4 +102,4 @@ void VBO<T>::draw() {
 }
 
 // Explicit instantiation of template classes
-template class VBO<GLTriangle> ;
+template class VBO<Triangle> ;

@@ -4,17 +4,17 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 CPP_SRCS += \
-../Drawing/GLTriangle.cpp \
+../Drawing/Triangle.cpp \
 ../Drawing/VBO.cpp \
 ../Drawing/Vertex.cpp 
 
 OBJS += \
-./Drawing/GLTriangle.o \
+./Drawing/Triangle.o \
 ./Drawing/VBO.o \
 ./Drawing/Vertex.o 
 
 CPP_DEPS += \
-./Drawing/GLTriangle.d \
+./Drawing/Triangle.d \
 ./Drawing/VBO.d \
 ./Drawing/Vertex.d 
 

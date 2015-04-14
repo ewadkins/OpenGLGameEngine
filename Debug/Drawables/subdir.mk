@@ -4,16 +4,13 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 CPP_SRCS += \
-../Drawables/Drawable.cpp \
-../Drawables/Triangle.cpp 
+../Drawables/Drawable.cpp 
 
 OBJS += \
-./Drawables/Drawable.o \
-./Drawables/Triangle.o 
+./Drawables/Drawable.o 
 
 CPP_DEPS += \
-./Drawables/Drawable.d \
-./Drawables/Triangle.d 
+./Drawables/Drawable.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes

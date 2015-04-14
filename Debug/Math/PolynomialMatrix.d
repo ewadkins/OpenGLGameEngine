@@ -1,6 +1,6 @@
 Math/PolynomialMatrix.d: ../Math/PolynomialMatrix.cpp \
-  ../Math/../Math/PolynomialMatrix.h ../Math/../Math/Polynomial.h
+  ../Math/PolynomialMatrix.h ../Math/Polynomial.h
 
-../Math/../Math/PolynomialMatrix.h:
+../Math/PolynomialMatrix.h:
 
-../Math/../Math/Polynomial.h:
+../Math/Polynomial.h:

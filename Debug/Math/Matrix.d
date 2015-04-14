@@ -1,8 +1,8 @@
-Math/Matrix.d: ../Math/Matrix.cpp ../Math/../Math/Matrix.h \
-  ../Math/../Math/Polynomial.h ../Math/../Math/PolynomialMatrix.h
+Math/Matrix.d: ../Math/Matrix.cpp ../Math/Matrix.h \
+  ../Math/PolynomialMatrix.h ../Math/Polynomial.h
 
-../Math/../Math/Matrix.h:
+../Math/Matrix.h:
 
-../Math/../Math/Polynomial.h:
+../Math/PolynomialMatrix.h:
 
-../Math/../Math/PolynomialMatrix.h:
+../Math/Polynomial.h:

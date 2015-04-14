@@ -5,7 +5,7 @@
  *      Author: ericwadkins
  */
 
-#include "../Drawing/Vertex.h"
+#include "Vertex.h"
 
 Vertex::Vertex() {
 	_x = 0;

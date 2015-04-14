@@ -11,7 +11,6 @@ RM := rm -rf
 -include Math/subdir.mk
 -include Input/subdir.mk
 -include Drawing/subdir.mk
--include Drawables/subdir.mk
 -include subdir.mk
 -include objects.mk
 
@@ -47,7 +46,7 @@ all: OpenGLProject
 OpenGLProject: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: MacOS X C++ Linker'
-	g++ -framework OpenGL -framework Cocoa -framework CoreVideo -framework IOKit -o "OpenGLProject" $(OBJS) $(USER_OBJS) $(LIBS)
+	g++ -L/usr/local/Cellar/glew/1.11.0/lib -L/usr/local/Cellar/glfw3/3.0.4/lib -framework OpenGL -framework Cocoa -framework CoreVideo -framework IOKit -o "OpenGLProject" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 

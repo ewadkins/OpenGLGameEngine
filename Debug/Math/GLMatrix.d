@@ -1,11 +1,10 @@
-Math/GLMatrix.d: ../Math/GLMatrix.cpp ../Math/../Math/GLMatrix.h \
-  ../Math/../Math/Matrix.h ../Math/../Math/Polynomial.h \
-  ../Math/../Math/PolynomialMatrix.h
+Math/GLMatrix.d: ../Math/GLMatrix.cpp ../Math/GLMatrix.h ../Math/Matrix.h \
+  ../Math/PolynomialMatrix.h ../Math/Polynomial.h
 
-../Math/../Math/GLMatrix.h:
+../Math/GLMatrix.h:
 
-../Math/../Math/Matrix.h:
+../Math/Matrix.h:
 
-../Math/../Math/Polynomial.h:
+../Math/PolynomialMatrix.h:
 
-../Math/../Math/PolynomialMatrix.h:
+../Math/Polynomial.h:

@@ -5,7 +5,7 @@
  *      Author: ericwadkins
  */
 
-#include "../Math/Matrix.h"
+#include "Matrix.h"
 
 // Basic constructor
 template<typename T>

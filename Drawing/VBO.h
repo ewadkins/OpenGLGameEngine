@@ -5,11 +5,11 @@
  *      Author: ericwadkins
  */
 
-#ifndef DRAWING_VBO_H_
-#define DRAWING_VBO_H_
+#ifndef VBO_H_
+#define VBO_H_
 
-#include "../Drawing/GLTriangle.h"
-#include "../Drawing/Vertex.h"
+#include "Vertex.h"
+#include "Triangle.h"
 #include <vector>
 #include <iostream>
 #include <GL/glew.h>
@@ -21,8 +21,8 @@ public:
 	virtual ~VBOBase() {
 	}
 	virtual void updateData() {};
-	virtual void create() {};
-	virtual void draw() {};
+	virtual void create() {std::cout << "Creating base" << std::endl;};
+	virtual void draw() {std::cout << "Drawing base" << std::endl;};
 };
 
 template<typename T>
@@ -31,15 +31,15 @@ public:
 	VBO(Type type);
 	virtual ~VBO() {
 	}
-	void add(T* d);
+	void add(T d);
 	virtual void updateData();
 	virtual void create();
 	virtual void draw();
 private:
 	Type _type;
-	std::vector<T*> _drawables;
+	std::vector<T> _drawables;
 	std::vector<GLfloat> _data;
 	GLuint _vao, _vbo;
 };
 
-#endif /* DRAWING_VBO_H_ */
+#endif /* VBO_H_ */
