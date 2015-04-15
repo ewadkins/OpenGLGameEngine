@@ -15,6 +15,8 @@ public:
 	Vertex();
 	Vertex(float x, float y, float z);
 	Vertex(float x, float y, float z, float r, float g, float b);
+	Vertex(std::vector<float> pos);
+	Vertex(std::vector<float> pos, std::vector<float> color);
 	virtual ~Vertex() {
 	}
 	void setPosition(float x, float y, float z);

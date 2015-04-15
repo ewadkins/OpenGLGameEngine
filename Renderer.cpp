@@ -59,64 +59,40 @@ void Renderer::initialize() {
 // Test: Initializes data that will draw a triangle
 void Renderer::initializeVBOs() {
 
-	VBO<Triangle>* triangles = new VBO<Triangle>(VBOBase::STATIC);
-	// Left
-	triangles->add(
-			Triangle(Vertex(-0.5, -0.5, -0.5, 0.0, 0.0, 1.0),
-					Vertex(-0.5, -0.5, 0.5, 1.0, 0.0, 0.0),
-					Vertex(-0.5, 0.5, 0.5, 0.0, 1.0, 0.0)));
-	triangles->add(
-			Triangle(Vertex(-0.5, -0.5, -0.5, 0.0, 0.0, 1.0),
-					Vertex(-0.5, 0.5, -0.5, 1.0, 0.0, 0.0),
-					Vertex(-0.5, 0.5, 0.5, 0.0, 1.0, 0.0)));
-	// Right
-	triangles->add(
-			Triangle(Vertex(0.5, -0.5, -0.5, 1.0, 0.0, 0.0),
-					Vertex(0.5, -0.5, 0.5, 0.0, 1.0, 0.0),
-					Vertex(0.5, 0.5, 0.5, 0.0, 0.0, 1.0)));
-	triangles->add(
-			Triangle(Vertex(0.5, -0.5, -0.5, 1.0, 0.0, 0.0),
-					Vertex(0.5, 0.5, -0.5, 0.0, 1.0, 0.0),
-					Vertex(0.5, 0.5, 0.5, 0.0, 0.0, 1.0)));
-	// Back
-	triangles->add(
-			Triangle(Vertex(-0.5, -0.5, -0.5, 0.0, 0.0, 1.0),
-					Vertex(0.5, -0.5, -0.5, 1.0, 0.0, 0.0),
-					Vertex(0.5, 0.5, -0.5, 0.0, 1.0, 0.0)));
-	triangles->add(
-			Triangle(Vertex(-0.5, -0.5, -0.5, 0.0, 0.0, 1.0),
-					Vertex(-0.5, 0.5, -0.5, 1.0, 0.0, 0.0),
-					Vertex(0.5, 0.5, -0.5, 0.0, 1.0, 0.0)));
-	// Front
-	triangles->add(
-			Triangle(Vertex(-0.5, -0.5, 0.5, 1.0, 0.0, 0.0),
-					Vertex(0.5, -0.5, 0.5, 0.0, 1.0, 0.0),
-					Vertex(0.5, 0.5, 0.5, 0.0, 0.0, 1.0)));
-	triangles->add(
-			Triangle(Vertex(-0.5, -0.5, 0.5, 1.0, 0.0, 0.0),
-					Vertex(-0.5, 0.5, 0.5, 0.0, 1.0, 0.0),
-					Vertex(0.5, 0.5, 0.5, 0.0, 0.0, 1.0)));
-	// Bottom
-	triangles->add(
-			Triangle(Vertex(-0.5, -0.5, -0.5, 0.0, 0.0, 1.0),
-					Vertex(-0.5, -0.5, 0.5, 1.0, 0.0, 0.0),
-					Vertex(0.5, -0.5, 0.5, 0.0, 1.0, 0.0)));
-	triangles->add(
-			Triangle(Vertex(-0.5, -0.5, -0.5, 0.0, 0.0, 1.0),
-					Vertex(0.5, -0.5, -0.5, 1.0, 0.0, 0.0),
-					Vertex(0.5, -0.5, 0.5, 0.0, 1.0, 0.0)));
-	// Top
-	triangles->add(
-			Triangle(Vertex(-0.5, 0.5, -0.5, 1.0, 0.0, 0.0),
-					Vertex(-0.5, 0.5, 0.5, 0.0, 1.0, 0.0),
-					Vertex(0.5, 0.5, 0.5, 0.0, 0.0, 1.0)));
-	triangles->add(
-			Triangle(Vertex(-0.5, 0.5, -0.5, 1.0, 0.0, 0.0),
-					Vertex(0.5, 0.5, -0.5, 0.0, 1.0, 0.0),
-					Vertex(0.5, 0.5, 0.5, 0.0, 0.0, 1.0)));
+	std::vector<Drawable*> drawables;
 
-	triangles->updateData();
-	_vbos.push_back(triangles);
+	// Creates drawables and adds them to the list so that later they are broken down
+	// into their OpenGL parts and put into the respective VBOs
+	{
+
+		Drawable* d = new Triangle();
+		drawables.push_back(d);
+
+		Drawable* d2 = new Cube();
+		drawables.push_back(d2);
+
+	}
+
+	// Group all the triangles of the drawables and put them into a VBO
+	VBO<GLTriangle>* triangleVBO = new VBO<GLTriangle>(VBOBase::STATIC);
+	for (int i = 0; i < drawables.size(); i++) {
+		std::vector<GLTriangle*> triangles = drawables[i]->getTriangles();
+		for (int j = 0; j < triangles.size(); j++)
+			triangleVBO->add(triangles[j]);
+	}
+	triangleVBO->updateData();
+	_vbos.push_back(triangleVBO);
+
+	// Group all the lines of the drawables and put them into a VBO
+	VBO<GLLine>* lineVBO = new VBO<GLLine>(VBOBase::STATIC);
+	for (int i = 0; i < drawables.size(); i++) {
+		std::vector<GLLine*> lines = drawables[i]->getLines();
+		for (int j = 0; j < lines.size(); j++)
+			lineVBO->add(lines[j]);
+	}
+	lineVBO->updateData();
+	_vbos.push_back(lineVBO);
+
 
 	for (int i = 0; i < _vbos.size(); i++)
 		_vbos[i]->create();

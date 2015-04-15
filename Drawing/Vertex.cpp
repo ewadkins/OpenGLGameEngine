@@ -49,6 +49,34 @@ Vertex::Vertex(float x, float y, float z, float r, float g, float b) {
 	_texY = 0;
 }
 
+Vertex::Vertex(std::vector<float> pos) {
+	_x = pos[0];
+	_y = pos[1];
+	_z = pos[2];
+	_r = 0;
+	_g = 0;
+	_b = 0;
+	_normX = 0;
+	_normY = 0;
+	_normZ = 0;
+	_texX = 0;
+	_texY = 0;
+}
+
+Vertex::Vertex(std::vector<float> pos, std::vector<float> color) {
+	_x = pos[0];
+	_y = pos[1];
+	_z = pos[2];
+	_r = color[0];
+	_g = color[1];
+	_b = color[2];
+	_normX = 0;
+	_normY = 0;
+	_normZ = 0;
+	_texX = 0;
+	_texY = 0;
+}
+
 void Vertex::setPosition(float x, float y, float z) {
 	_x = x;
 	_y = y;

@@ -4,9 +4,13 @@ Input/Keyboard.d: ../Input/Keyboard.cpp ../Input/Keyboard.h \
   ../Input/../OpenGLApplication.h ../Input/../Logger.h \
   ../Input/../Math/Matrix.h ../Input/../Math/PolynomialMatrix.h \
   ../Input/../Math/Polynomial.h ../Input/../Renderer.h \
-  ../Input/../ShaderProgram.h ../Input/../Drawing/VBO.h \
-  ../Input/../Drawing/Vertex.h ../Input/../Drawing/Triangle.h \
-  ../Input/../Camera.h ../Input/../Math/GLMatrix.h
+  ../Input/../ShaderProgram.h ../Input/../Drawables/Drawable.h \
+  ../Input/../Drawables/../Drawing/GLTriangle.h \
+  ../Input/../Drawables/../Drawing/Vertex.h \
+  ../Input/../Drawables/../Drawing/GLLine.h \
+  ../Input/../Drawables/Triangle.h ../Input/../Drawables/Cube.h \
+  ../Input/../Drawing/VBO.h ../Input/../Camera.h \
+  ../Input/../Math/GLMatrix.h
 
 ../Input/Keyboard.h:
 
@@ -28,11 +32,19 @@ Input/Keyboard.d: ../Input/Keyboard.cpp ../Input/Keyboard.h \
 
 ../Input/../ShaderProgram.h:
 
+../Input/../Drawables/Drawable.h:
+
+../Input/../Drawables/../Drawing/GLTriangle.h:
+
+../Input/../Drawables/../Drawing/Vertex.h:
+
+../Input/../Drawables/../Drawing/GLLine.h:
+
+../Input/../Drawables/Triangle.h:
+
+../Input/../Drawables/Cube.h:
+
 ../Input/../Drawing/VBO.h:
-
-../Input/../Drawing/Vertex.h:
-
-../Input/../Drawing/Triangle.h:
 
 ../Input/../Camera.h:
 

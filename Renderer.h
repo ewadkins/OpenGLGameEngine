@@ -10,8 +10,12 @@
 
 #include "ShaderProgram.h"
 #include "Math/Matrix.h"
+#include "Drawables/Drawable.h"
+#include "Drawables/Triangle.h"
+#include "Drawables/Cube.h"
+#include "Drawing/GLTriangle.h"
+#include "Drawing/GLLine.h"
 #include "Drawing/VBO.h"
-#include "Drawing/Triangle.h"
 #include "Drawing/Vertex.h"
 #include <iostream>
 #include <fstream>
