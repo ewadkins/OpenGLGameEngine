@@ -301,7 +301,7 @@ void Polynomial<T>::set(Polynomial other) {
 }
 
 template<typename T>
-void Polynomial<T>::simplify() { // FIXME Broken
+void Polynomial<T>::simplify() {
 
 	// Check for 0 division
 	if (_denCoeffs.size() == 1 && _denCoeffs[0] == 0)

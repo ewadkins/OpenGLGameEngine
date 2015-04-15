@@ -17,6 +17,8 @@ public:
 	Vertex(float x, float y, float z, float r, float g, float b);
 	Vertex(std::vector<float> pos);
 	Vertex(std::vector<float> pos, std::vector<float> color);
+	Vertex(std::vector<float> pos, std::vector<float> color,
+			std::vector<float> norm, std::vector<float> tex);
 	virtual ~Vertex() {
 	}
 	void setPosition(float x, float y, float z);
@@ -27,6 +29,7 @@ public:
 	std::vector<float> getColor();
 	std::vector<float> getNormal();
 	std::vector<float> getTexCoords();
+	Vertex* clone();
 private:
 	float _x, _y, _z, _r, _g, _b, _normX, _normY, _normZ, _texX, _texY;
 };

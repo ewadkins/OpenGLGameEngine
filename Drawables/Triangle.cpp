@@ -15,6 +15,10 @@ Triangle::Triangle(Vertex* v1, Vertex* v2, Vertex* v3) {
 			new Vertex(v3->getPosition()));
 	_l3 = new GLLine(new Vertex(v3->getPosition()),
 			new Vertex(v1->getPosition()));
+	_components.push_back(_triangle);
+	_components.push_back(_l1);
+	_components.push_back(_l2);
+	_components.push_back(_l3);
 }
 
 Triangle::Triangle() {
@@ -28,19 +32,36 @@ Triangle::Triangle() {
 	_l1 = new GLLine(l1v1, l1v2);
 	_l2 = new GLLine(l1v2, l1v3);
 	_l3 = new GLLine(l1v3, l1v1);
+	_components.push_back(_triangle);
+	_components.push_back(_l1);
+	_components.push_back(_l2);
+	_components.push_back(_l3);
 }
 
 std::vector<GLTriangle*> Triangle::getTriangles() {
+	applyTransformations();
+	Triangle* transformed = (Triangle*)_transformed;
 	std::vector<GLTriangle*> triangles;
-	triangles.push_back(_triangle);
+	triangles.push_back(transformed->_triangle);
 	return triangles;
 }
 
 std::vector<GLLine*> Triangle::getLines() {
+	applyTransformations();
+	Triangle* transformed = (Triangle*)_transformed;
 	std::vector<GLLine*> lines;
-	lines.push_back(_l1);
-	lines.push_back(_l2);
-	lines.push_back(_l3);
+	lines.push_back(transformed->_l1);
+	lines.push_back(transformed->_l2);
+	lines.push_back(transformed->_l3);
 	return lines;
+}
+
+Drawable* Triangle::clone() {
+	Triangle* d = new Triangle();
+	d->_triangle = (GLTriangle*)_triangle->clone();
+	d->_l1 = (GLLine*)_l1->clone();
+	d->_l2 = (GLLine*)_l2->clone();
+	d->_l3 = (GLLine*)_l3->clone();
+	return d;
 }
 

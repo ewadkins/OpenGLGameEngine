@@ -50,17 +50,12 @@ public:
 	void setX(float x);
 	void setY(float y);
 	void setZ(float z);
+	void setXYZ(float x, float y, float z);
 	void setRotationX(float rotationX);
 	void setRotationY(float rotationY);
 	void setRotationZ(float rotationZ);
+	void setRotationXYZ(float rotationX, float rotationY, float rotationZ);
 private:
-	static Matrix<float> translate(float deltaX, float deltaY, float deltaZ);
-	static Matrix<float> scale(float scaleX, float scaleY, float scaleZ);
-	static Matrix<float> rotate(float thetaX, float thetaY, float thetaZ);
-	static Matrix<float> orthographic(int width, int height, float near,
-			float far);
-	static Matrix<float> perspective(int fov, int aspect, float near,
-			float far);
 	OpenGLApplication* _application;
 	float _fov, _near, _far, _x, _y, _z, _rotationX, _rotationY, _rotationZ;
 	Matrix<float> _orthographic, _perspective;

@@ -77,6 +77,21 @@ Vertex::Vertex(std::vector<float> pos, std::vector<float> color) {
 	_texY = 0;
 }
 
+Vertex::Vertex(std::vector<float> pos, std::vector<float> color,
+		std::vector<float> norm, std::vector<float> tex) {
+	_x = pos[0];
+	_y = pos[1];
+	_z = pos[2];
+	_r = color[0];
+	_g = color[1];
+	_b = color[2];
+	_normX = norm[0];
+	_normY = norm[1];
+	_normZ = norm[2];
+	_texX = tex[0];
+	_texY = tex[1];
+}
+
 void Vertex::setPosition(float x, float y, float z) {
 	_x = x;
 	_y = y;
@@ -122,5 +137,9 @@ std::vector<float> Vertex::getTexCoords() {
 	float arr[] = { _texX, _texY };
 	std::vector<float> vec(arr, arr + sizeof(arr) / sizeof(arr[0]));
 	return vec;
+}
+
+Vertex* Vertex::clone() {
+	return new Vertex(getPosition(), getColor(), getNormal(), getTexCoords());
 }
 

@@ -12,9 +12,9 @@ const float GLMatrix::PI = 3.1415926535897;
 // Returns the translation matrix given the desired change in x, y, and z coordinates
 Matrix<float> GLMatrix::translationMatrix(float deltaX, float deltaY, float deltaZ) {
 	Matrix<float> result = Matrix<float>::identity(4);
-	result.set(3, 0, deltaX);
-	result.set(3, 1, deltaY);
-	result.set(3, 2, deltaZ);
+	result.set(0, 3, deltaX);
+	result.set(1, 3, deltaY);
+	result.set(2, 3, deltaZ);
 	return result;
 }
 

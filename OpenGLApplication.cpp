@@ -268,8 +268,8 @@ void OpenGLApplication::initialize() {
 	start = clock();
 	{
 		// Create and initialize the camera
-		//_camera = new Camera(this, 0, 1.5, 4, -20, 0, 0);
-		_camera = new Camera(this, 0, 0, 0, 0, 0, 0);
+		_camera = new Camera(this, 1.5, 1.5, 4, -20, 20, 0);
+		//_camera = new Camera(this, 0, 0, 0, 0, 0, 0);
 		_camera->initialize();
 	}
 	finish = clock();

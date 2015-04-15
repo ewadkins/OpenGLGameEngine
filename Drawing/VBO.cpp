@@ -23,20 +23,27 @@ template<typename T>
 void VBO<T>::updateData() {
 	_data.clear();
 	for (int i = 0; i < _drawables.size(); i++) {
-		std::vector<Vertex*> vertices = _drawables[i]->getVertices();
-		for (int j = 0; j < vertices.size(); j++) {
-			Vertex* v = vertices[j];
-			_data.push_back(v->getPosition()[0]);
-			_data.push_back(v->getPosition()[1]);
-			_data.push_back(v->getPosition()[2]);
-			_data.push_back(v->getColor()[0]);
-			_data.push_back(v->getColor()[1]);
-			_data.push_back(v->getColor()[2]);
-			_data.push_back(v->getNormal()[0]);
-			_data.push_back(v->getNormal()[1]);
-			_data.push_back(v->getNormal()[2]);
-			_data.push_back(v->getTexCoords()[0]);
-			_data.push_back(v->getTexCoords()[1]);
+		std::vector<Vertex*>* vertices = _drawables[i]->getVertices();
+		for (int j = 0; j < vertices->size(); j++) {
+			Vertex* v = (*vertices)[j];
+			std::vector<float> pos = v->getPosition();
+			std::vector<float> color = v->getColor();
+			std::vector<float> norm = v->getNormal();
+			std::vector<float> tex = v->getTexCoords();
+
+			std::cout << pos[0] << ", " << pos[1] << ", " << pos[2] << std::endl;
+
+			_data.push_back(pos[0]);
+			_data.push_back(pos[1]);
+			_data.push_back(pos[2]);
+			_data.push_back(color[0]);
+			_data.push_back(color[1]);
+			_data.push_back(color[2]);
+			_data.push_back(norm[0]);
+			_data.push_back(norm[1]);
+			_data.push_back(norm[2]);
+			_data.push_back(tex[0]);
+			_data.push_back(tex[1]);
 		}
 	}
 }
@@ -89,13 +96,13 @@ void VBO<T>::draw() {
 
 	int vertexCount = 0;
 	for (int i = 0; i < _drawables.size(); i++)
-		vertexCount += _drawables[i]->getVertices().size();
+		vertexCount += _drawables[i]->getVertices()->size();
 
 	// Bind the VAO
 	glBindVertexArray(_vao);
 
 	// Draw the VAO
-	glDrawArrays(T::type, 0, vertexCount);
+	glDrawArrays(T::_type, 0, vertexCount);
 
 	// Unbind the VAO
 	glBindVertexArray(0);

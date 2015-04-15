@@ -18,6 +18,7 @@ public:
 	}
 	virtual std::vector<GLTriangle*> getTriangles();
 	virtual std::vector<GLLine*> getLines();
+	virtual Drawable* clone();
 	GLTriangle* _triangle;
 	GLLine* _l1;
 	GLLine* _l2;

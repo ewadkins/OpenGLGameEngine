@@ -7,19 +7,21 @@
 
 #include "GLTriangle.h"
 
-int GLTriangle::type = GL_TRIANGLES;
+int GLTriangle::_type = GL_TRIANGLES;
 
 GLTriangle::GLTriangle(Vertex* v1, Vertex* v2, Vertex* v3) {
-	_v1 = v1;
-	_v2 = v2;
-	_v3 = v3;
+	_vertices = new std::vector<Vertex*>(3);
+	(*_vertices)[0] = v1;
+	(*_vertices)[1] = v2;
+	(*_vertices)[2] = v3;
 }
 
-std::vector<Vertex*> GLTriangle::getVertices() {
-	std::vector<Vertex*> vertices;
-	vertices.push_back(_v1);
-	vertices.push_back(_v2);
-	vertices.push_back(_v3);
-	return vertices;
+std::vector<Vertex*>* GLTriangle::getVertices() {
+	return _vertices;
+}
+
+GLComponent* GLTriangle::clone() {
+	return new GLTriangle((*_vertices)[0]->clone(), (*_vertices)[1]->clone(),
+			(*_vertices)[2]->clone());
 }
 

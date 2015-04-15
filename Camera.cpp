@@ -35,28 +35,30 @@ void Camera::initialize() {
 // Creates and sets a view matrix representing the view of the camera
 void Camera::useView() {
 
-	Matrix<float> viewMatrix = rotate(getRotationX(), getRotationY(), getRotationZ())
-			<< translate(-getX(), -getY(), -getZ());
+	// FIXME You have to transpose the translation matrix for some reason
+	Matrix<float> viewMatrix = GLMatrix::rotationMatrixXYZ(getRotationX(),
+			getRotationY(), getRotationZ())
+			<< GLMatrix::translationMatrix(-getX(), -getY(), -getZ()).transpose();
 
 	/*_application->_logger->log("View matrix:").endLine().log(viewMatrix);
 
-	Matrix<float> projectionMatrix = Matrix<float>::identity(4);
-	if (_projectionType == ORTHOGRAPHIC)
-		projectionMatrix = _orthographic;
-	else if (_projectionType == PERSPECTIVE)
-		projectionMatrix = _perspective;
-	//_application->_logger->log("Projection matrix:").endLine().log(projectionMatrix);
+	 Matrix<float> projectionMatrix = Matrix<float>::identity(4);
+	 if (_projectionType == ORTHOGRAPHIC)
+	 projectionMatrix = _orthographic;
+	 else if (_projectionType == PERSPECTIVE)
+	 projectionMatrix = _perspective;
+	 //_application->_logger->log("Projection matrix:").endLine().log(projectionMatrix);
 
-	Matrix<float> pos = Matrix<float>(4, 1);
-	float arr[] = { 0, 0, 0, 1 };
-	std::vector<float> values(arr, arr + sizeof(arr) / sizeof(arr[0]));
-	pos.setVector(values);
+	 Matrix<float> pos = Matrix<float>(4, 1);
+	 float arr[] = { 0, 0, 0, 1 };
+	 std::vector<float> values(arr, arr + sizeof(arr) / sizeof(arr[0]));
+	 pos.setVector(values);
 
-	_application->_logger->log("Model Position: ").endLine().log(pos);
+	 _application->_logger->log("Model Position: ").endLine().log(pos);
 
-	_application->_logger->log("ModelView Position: ").endLine().log(viewMatrix * pos);
-	_application->_logger->log("ModelViewProjection Position: ").endLine().log(projectionMatrix * viewMatrix * pos);
-	*/
+	 _application->_logger->log("ModelView Position: ").endLine().log(viewMatrix * pos);
+	 _application->_logger->log("ModelViewProjection Position: ").endLine().log(projectionMatrix * viewMatrix * pos);
+	 */
 
 	_application->_renderer->_currentProgram->setUniformMatrix4x4f("viewMatrix",
 			viewMatrix.getArray());
@@ -69,8 +71,10 @@ void Camera::updateProjectionMatrices() {
 	float aspect = (float) _application->_windowSizeX
 			/ (float) _application->_windowSizeY;
 
-	_orthographic = orthographic(aspect, 1, getNear(), getFar());
-	_perspective = perspective(getFOV(), aspect, getNear(), getFar());
+	_orthographic = GLMatrix::orthographicProjectionMatrix(aspect, 1, getNear(),
+			getFar());
+	_perspective = GLMatrix::perspectiveProjectionMatrix(getFOV(), aspect,
+			getNear(), getFar());
 
 	_application->_logger->log("Orthographic matrix:").endLine().increaseIndent();
 	_application->_logger->log("Aspect: ").log(aspect).endLine().log("Z near: ").log(
@@ -102,32 +106,6 @@ void Camera::useProjectionMatrix() {
 void Camera::setProjectionType(ProjectionType type) {
 	_projectionType = type;
 	useProjectionMatrix();
-}
-
-// Returns the corresponding translation matrix
-Matrix<float> Camera::translate(float deltaX, float deltaY, float deltaZ) {
-	return GLMatrix::translationMatrix(deltaX, deltaY, deltaZ);
-}
-
-// Returns the corresponding scalar matrix
-Matrix<float> Camera::scale(float scaleX, float scaleY, float scaleZ) {
-	return GLMatrix::scalarMatrix(scaleX, scaleY, scaleZ);
-}
-
-// Returns the corresponding rotation matrix
-Matrix<float> Camera::rotate(float thetaX, float thetaY, float thetaZ) {
-	return GLMatrix::rotationMatrixXYZ(thetaX, thetaY, thetaZ);
-}
-
-// Returns the corresponding orthographic projection matrix
-Matrix<float> Camera::orthographic(int width, int height, float near,
-		float far) {
-	return GLMatrix::orthographicProjectionMatrix(width, height, near, far);
-}
-
-// Returns the corresponding perspective projection matrix
-Matrix<float> Camera::perspective(int fovX, int fovY, float near, float far) {
-	return GLMatrix::perspectiveProjectionMatrix(fovX, fovY, near, far);
 }
 
 // Returns the field of view
@@ -249,6 +227,13 @@ void Camera::setZ(float z) {
 	_z = z;
 }
 
+// Sets the camera's x, y, and z coordinates
+void Camera::setXYZ(float x, float y, float z) {
+	_x = x;
+	_y = y;
+	_z = z;
+}
+
 // Sets the camera's angle around the x axis
 void Camera::setRotationX(float rotationX) {
 	_rotationX = rotationX;
@@ -261,6 +246,13 @@ void Camera::setRotationY(float rotationY) {
 
 // Sets the camera's angle around the z axis
 void Camera::setRotationZ(float rotationZ) {
+	_rotationZ = rotationZ;
+}
+
+// Sets the camera's angle around the x, y, and z axes
+void Camera::setRotationXYZ(float rotationX, float rotationY, float rotationZ) {
+	_rotationX = rotationX;
+	_rotationY = rotationY;
 	_rotationZ = rotationZ;
 }
 

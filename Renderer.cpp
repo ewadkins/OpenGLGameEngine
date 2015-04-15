@@ -66,9 +66,12 @@ void Renderer::initializeVBOs() {
 	{
 
 		Drawable* d = new Triangle();
-		drawables.push_back(d);
+		//drawables.push_back(d);
 
 		Drawable* d2 = new Cube();
+		// FIXME Transformations have no effect
+		d2->setXYZ(3, 3, 3);
+		//d2->setRotationXYZ(45, 45, 45);
 		drawables.push_back(d2);
 
 	}

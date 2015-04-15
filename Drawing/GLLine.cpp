@@ -7,17 +7,19 @@
 
 #include "GLLine.h"
 
-int GLLine::type = GL_LINES;
+int GLLine::_type = GL_LINES;
 
 GLLine::GLLine(Vertex* v1, Vertex* v2) {
-	_v1 = v1;
-	_v2 = v2;
+	_vertices = new std::vector<Vertex*>(2);
+	(*_vertices)[0] = v1;
+	(*_vertices)[1] = v2;
 }
 
-std::vector<Vertex*> GLLine::getVertices() {
-	std::vector<Vertex*> vertices;
-	vertices.push_back(_v1);
-	vertices.push_back(_v2);
-	return vertices;
+std::vector<Vertex*>* GLLine::getVertices() {
+	return _vertices;
+}
+
+GLComponent* GLLine::clone() {
+	return new GLLine((*_vertices)[0]->clone(), (*_vertices)[1]->clone());
 }
 
