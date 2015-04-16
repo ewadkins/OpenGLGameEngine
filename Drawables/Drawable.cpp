@@ -11,12 +11,14 @@ Drawable::Drawable() {
 	_x = 0;
 	_y = 0;
 	_z = 0;
-	_scaleX = 0;
-	_scaleY = 0;
-	_scaleZ = 0;
+	_scaleX = 1;
+	_scaleY = 1;
+	_scaleZ = 1;
 	_rotationX = 0;
 	_rotationY = 0;
 	_rotationZ = 0;
+	_needsUpdating = true;
+	_drawOutline = true;
 	_transformed = nullptr;
 }
 
@@ -25,11 +27,13 @@ void Drawable::applyTransformations() {
 	_transformed = clone();
 
 	std::vector<GLComponent*> originalComponents = getComponents();
-	std::vector<GLComponent*> transformedComponents = _transformed->getComponents();
+	std::vector<GLComponent*> transformedComponents =
+			_transformed->getComponents();
 
 	for (int i = 0; i < originalComponents.size(); i++) {
 
-		std::vector<Vertex*> originalVertices = originalComponents[i]->getVertices();
+		std::vector<Vertex*> originalVertices =
+				originalComponents[i]->getVertices();
 		std::vector<Vertex*> transformedVertices;
 
 		for (int j = 0; j < originalVertices.size(); j++) {
@@ -37,6 +41,12 @@ void Drawable::applyTransformations() {
 			Vertex* transformedVertex = originalVertices[j]->clone();
 
 			Matrix<float> originalMatrix = Matrix<float>(4, 1);
+			Matrix<float> scalarMatrix = GLMatrix::scalarMatrix(getScaleX(),
+					getScaleY(), getScaleZ());
+			Matrix<float> rotationMatrix = GLMatrix::rotationMatrixXYZ(
+					getRotationX(), getRotationY(), getRotationZ());
+			Matrix<float> translationMatrix = GLMatrix::translationMatrix(
+					getX(), getY(), getZ());
 
 			// Applies transformations to the vertex's position
 			std::vector<float> pos = transformedVertex->getPosition();
@@ -44,37 +54,34 @@ void Drawable::applyTransformations() {
 			originalMatrix.setVector(pos);
 
 			/*std::vector<std::string> strings = originalMatrix.toStringVector();
-			std::cout << "Original pos: " << std::endl;
-			for (int i = 0; i < strings.size(); i++)
-				std::cout << strings[i] << std::endl;*/
+			 std::cout << "Original pos: " << std::endl;
+			 for (int i = 0; i < strings.size(); i++)
+			 std::cout << strings[i] << std::endl;*/
 
-			Matrix<float> transformedMatrix = originalMatrix
-					<< GLMatrix::rotationMatrixXYZ(getRotationX(),
-							getRotationY(), getRotationZ())
-					<< GLMatrix::translationMatrix(getX(), getY(), getZ());
-			transformedVertex->setPosition(transformedMatrix.get(0, 0), transformedMatrix.get(1, 0),
-					transformedMatrix.get(2, 0));
+			Matrix<float> transformedMatrix = originalMatrix << scalarMatrix
+					<< rotationMatrix << translationMatrix;
+			transformedVertex->setPosition(transformedMatrix.get(0, 0),
+					transformedMatrix.get(1, 0), transformedMatrix.get(2, 0));
 
 			/*strings = transformedMatrix.toStringVector();
-			std::cout << "Transformed pos: " << std::endl;
-			for (int i = 0; i < strings.size(); i++)
-				std::cout << strings[i] << std::endl;*/
+			 std::cout << "Transformed pos: " << std::endl;
+			 for (int i = 0; i < strings.size(); i++)
+			 std::cout << strings[i] << std::endl;*/
 
 			// Applies rotation to the vertex's normal, other transformations are irrelevant
 			std::vector<float> norm = transformedVertex->getNormal();
 			norm.push_back(1);
 			originalMatrix.setVector(norm);
-			transformedMatrix = originalMatrix
-					<< GLMatrix::rotationMatrixXYZ(getRotationX(),
-							getRotationY(), getRotationZ());
-			transformedVertex->setNormal(transformedMatrix.get(0, 0), transformedMatrix.get(1, 0),
-					transformedMatrix.get(2, 0));
+			transformedMatrix = originalMatrix << rotationMatrix;
+			transformedVertex->setNormal(transformedMatrix.get(0, 0),
+					transformedMatrix.get(1, 0), transformedMatrix.get(2, 0));
 
 			transformedVertices.push_back(transformedVertex);
 
 		}
 		transformedComponents[i]->setVertices(transformedVertices);
 	}
+	_needsUpdating = false;
 }
 
 // Moves the drawable in the x direction by the specified distance
@@ -191,16 +198,19 @@ float Drawable::getRotationZ() {
 // Sets the drawable's x coordinate
 void Drawable::setX(float x) {
 	_x = x;
+	_needsUpdating = true;
 }
 
 // Sets the drawable's y coordinate
 void Drawable::setY(float y) {
 	_y = y;
+	_needsUpdating = true;
 }
 
 // Sets the drawable's z coordinate
 void Drawable::setZ(float z) {
 	_z = z;
+	_needsUpdating = true;
 }
 
 // Sets the drawable's x, y, and z coordinates
@@ -208,21 +218,25 @@ void Drawable::setXYZ(float x, float y, float z) {
 	_x = x;
 	_y = y;
 	_z = z;
+	_needsUpdating = true;
 }
 
 // Sets the drawable's x scalar
 void Drawable::setScaleX(float scaleX) {
 	_scaleX = scaleX;
+	_needsUpdating = true;
 }
 
 // Sets the drawable's y scalar
 void Drawable::setScaleY(float scaleY) {
 	_scaleY = scaleY;
+	_needsUpdating = true;
 }
 
 // Sets the drawable's z scalar
 void Drawable::setScaleZ(float scaleZ) {
 	_scaleZ = scaleZ;
+	_needsUpdating = true;
 }
 
 // Sets the drawable's x, y, and z scalars
@@ -230,21 +244,25 @@ void Drawable::setScaleXYZ(float scaleX, float scaleY, float scaleZ) {
 	_scaleX = scaleX;
 	_scaleY = scaleY;
 	_scaleZ = scaleZ;
+	_needsUpdating = true;
 }
 
 // Sets the drawable's angle around the x axis
 void Drawable::setRotationX(float rotationX) {
 	_rotationX = rotationX;
+	_needsUpdating = true;
 }
 
 // Sets the drawable's angle around the y axis
 void Drawable::setRotationY(float rotationY) {
 	_rotationY = rotationY;
+	_needsUpdating = true;
 }
 
 // Sets the drawable's angle around the z axis
 void Drawable::setRotationZ(float rotationZ) {
 	_rotationZ = rotationZ;
+	_needsUpdating = true;
 }
 
 // Sets the drawable's angle around the x, y, and z axes
@@ -253,5 +271,22 @@ void Drawable::setRotationXYZ(float rotationX, float rotationY,
 	_rotationX = rotationX;
 	_rotationY = rotationY;
 	_rotationZ = rotationZ;
+	_needsUpdating = true;
+}
+
+void Drawable::setColor(float r, float g, float b) {
+	std::vector<GLTriangle*> triangles = getTriangles();
+	for (int i = 0; i < triangles.size(); i++)
+		triangles[i]->setColor(r, g, b);
+}
+
+void Drawable::setOutlineColor(float r, float g, float b) {
+	std::vector<GLLine*> lines = getLines();
+	for (int i = 0; i < lines.size(); i++)
+		lines[i]->setColor(r, g, b);
+}
+
+void Drawable::drawOutline(bool drawOutline) {
+	_drawOutline = drawOutline;
 }
 

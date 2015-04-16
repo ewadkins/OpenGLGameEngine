@@ -21,6 +21,7 @@ public:
 	virtual void setVertices(std::vector<Vertex*> vertices);
 	virtual GLComponent* clone();
 	static int _type;
+private:
 	std::vector<Vertex*> _vertices;
 };
 

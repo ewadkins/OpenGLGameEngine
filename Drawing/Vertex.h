@@ -15,10 +15,14 @@ public:
 	Vertex();
 	Vertex(float x, float y, float z);
 	Vertex(float x, float y, float z, float r, float g, float b);
+	Vertex(float x, float y, float z, float r, float g, float b, float normX,
+			float normY, float normZ);
+	Vertex(float x, float y, float z, float r, float g, float b, float normX,
+			float normY, float normZ, float texX, float texY);
 	Vertex(std::vector<float> pos);
 	Vertex(std::vector<float> pos, std::vector<float> color);
-	Vertex(std::vector<float> pos, std::vector<float> color,
-			std::vector<float> norm, std::vector<float> tex);
+	Vertex(std::vector<float> pos, std::vector<float> color, std::vector<float> norm);
+	Vertex(std::vector<float> pos, std::vector<float> color, std::vector<float> norm, std::vector<float> tex);
 	virtual ~Vertex() {
 	}
 	void setPosition(float x, float y, float z);

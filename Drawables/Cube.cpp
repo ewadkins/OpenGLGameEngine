@@ -88,73 +88,71 @@ Cube::Cube() {
 			new Vertex(f2t2v2->getPosition()));
 	_l12 = new GLLine(new Vertex(f1t2v3->getPosition()),
 			new Vertex(f2t2v3->getPosition()));
+
+	_triangles.push_back(_f1t1);
+	_triangles.push_back(_f1t2);
+	_triangles.push_back(_f2t1);
+	_triangles.push_back(_f2t2);
+	_triangles.push_back(_f3t1);
+	_triangles.push_back(_f3t2);
+	_triangles.push_back(_f4t1);
+	_triangles.push_back(_f4t2);
+	_triangles.push_back(_f5t1);
+	_triangles.push_back(_f5t2);
+	_triangles.push_back(_f6t1);
+	_triangles.push_back(_f6t2);
+
+	_lines.push_back(_l1);
+	_lines.push_back(_l2);
+	_lines.push_back(_l3);
+	_lines.push_back(_l4);
+	_lines.push_back(_l5);
+	_lines.push_back(_l6);
+	_lines.push_back(_l7);
+	_lines.push_back(_l8);
+	_lines.push_back(_l9);
+	_lines.push_back(_l10);
+	_lines.push_back(_l11);
+	_lines.push_back(_l12);
 }
 
 std::vector<GLComponent*> Cube::getComponents() {
 	std::vector<GLComponent*> components;
-	components.push_back(_f1t1);
-	components.push_back(_f1t2);
-	components.push_back(_f2t1);
-	components.push_back(_f2t2);
-	components.push_back(_f3t1);
-	components.push_back(_f3t2);
-	components.push_back(_f4t1);
-	components.push_back(_f4t2);
-	components.push_back(_f5t1);
-	components.push_back(_f5t2);
-	components.push_back(_f6t1);
-	components.push_back(_f6t2);
-	components.push_back(_l1);
-	components.push_back(_l2);
-	components.push_back(_l3);
-	components.push_back(_l4);
-	components.push_back(_l5);
-	components.push_back(_l6);
-	components.push_back(_l7);
-	components.push_back(_l8);
-	components.push_back(_l9);
-	components.push_back(_l10);
-	components.push_back(_l11);
-	components.push_back(_l12);
+	for (int i = 0; i < _triangles.size(); i++)
+		components.push_back(_triangles[i]);
+	for (int i = 0; i < _lines.size(); i++)
+		components.push_back(_lines[i]);
 	return components;
 }
 
-std::vector<GLTriangle*> Cube::getTriangles() {
-	applyTransformations();
-	Cube* transformed = (Cube*) _transformed;
+std::vector<GLTriangle*> Cube::getTransformedTriangles() {
+	if(_needsUpdating)
+		applyTransformations();
 	std::vector<GLTriangle*> triangles;
-	triangles.push_back(transformed->_f1t1);
-	triangles.push_back(transformed->_f1t2);
-	triangles.push_back(transformed->_f2t1);
-	triangles.push_back(transformed->_f2t2);
-	triangles.push_back(transformed->_f3t1);
-	triangles.push_back(transformed->_f3t2);
-	triangles.push_back(transformed->_f4t1);
-	triangles.push_back(transformed->_f4t2);
-	triangles.push_back(transformed->_f5t1);
-	triangles.push_back(transformed->_f5t2);
-	triangles.push_back(transformed->_f6t1);
-	triangles.push_back(transformed->_f6t2);
+	Cube* transformed = (Cube*) _transformed;
+	for (int i = 0; i < transformed->_triangles.size(); i++)
+		triangles.push_back(transformed->_triangles[i]);
 	return triangles;
 }
 
-std::vector<GLLine*> Cube::getLines() {
-	applyTransformations();
-	Cube* transformed = (Cube*) _transformed;
+std::vector<GLTriangle*> Cube::getTriangles() {
+	return _triangles;
+}
+
+std::vector<GLLine*> Cube::getTransformedLines() {
+	if(_needsUpdating)
+		applyTransformations();
 	std::vector<GLLine*> lines;
-	lines.push_back(transformed->_l1);
-	lines.push_back(transformed->_l2);
-	lines.push_back(transformed->_l3);
-	lines.push_back(transformed->_l4);
-	lines.push_back(transformed->_l5);
-	lines.push_back(transformed->_l6);
-	lines.push_back(transformed->_l7);
-	lines.push_back(transformed->_l8);
-	lines.push_back(transformed->_l9);
-	lines.push_back(transformed->_l10);
-	lines.push_back(transformed->_l11);
-	lines.push_back(transformed->_l12);
+	if (_drawOutline) {
+		Cube* transformed = (Cube*) _transformed;
+		for (int i = 0; i < transformed->_lines.size(); i++)
+			lines.push_back(transformed->_lines[i]);
+	}
 	return lines;
+}
+
+std::vector<GLLine*> Cube::getLines() {
+	return _lines;
 }
 
 Drawable* Cube::clone() {

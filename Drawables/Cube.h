@@ -16,7 +16,9 @@ public:
 	virtual ~Cube() {
 	}
 	virtual std::vector<GLComponent*> getComponents();
+	virtual std::vector<GLTriangle*> getTransformedTriangles();
 	virtual std::vector<GLTriangle*> getTriangles();
+	virtual std::vector<GLLine*> getTransformedLines();
 	virtual std::vector<GLLine*> getLines();
 	virtual Drawable* clone();
 	GLTriangle* _f1t1;
@@ -43,6 +45,9 @@ public:
 	GLLine* _l10;
 	GLLine* _l11;
 	GLLine* _l12;
+private:
+	std::vector<GLTriangle*> _triangles;
+	std::vector<GLLine*> _lines;
 };
 
 #endif /* CUBE_H_ */

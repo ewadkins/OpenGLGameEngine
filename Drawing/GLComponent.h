@@ -24,6 +24,7 @@ public:
 	virtual GLComponent* clone() {
 		return new GLComponent();
 	}
+	void setColor(float r, float g, float b);
 };
 
 #endif /* GLCOMPONENT_H_ */

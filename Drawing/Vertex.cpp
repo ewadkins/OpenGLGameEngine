@@ -49,6 +49,34 @@ Vertex::Vertex(float x, float y, float z, float r, float g, float b) {
 	_texY = 0;
 }
 
+Vertex::Vertex(float x, float y, float z, float r, float g, float b, float normX, float normY, float normZ) {
+	_x = x;
+	_y = y;
+	_z = z;
+	_r = r;
+	_g = g;
+	_b = b;
+	_normX = normX;
+	_normY = normY;
+	_normZ = normZ;
+	_texX = 0;
+	_texY = 0;
+}
+
+Vertex::Vertex(float x, float y, float z, float r, float g, float b, float normX, float normY, float normZ, float texX, float texY) {
+	_x = x;
+	_y = y;
+	_z = z;
+	_r = r;
+	_g = g;
+	_b = b;
+	_normX = normX;
+	_normY = normY;
+	_normZ = normZ;
+	_texX = texX;
+	_texY = texY;
+}
+
 Vertex::Vertex(std::vector<float> pos) {
 	_x = pos[0];
 	_y = pos[1];
@@ -77,8 +105,21 @@ Vertex::Vertex(std::vector<float> pos, std::vector<float> color) {
 	_texY = 0;
 }
 
-Vertex::Vertex(std::vector<float> pos, std::vector<float> color,
-		std::vector<float> norm, std::vector<float> tex) {
+Vertex::Vertex(std::vector<float> pos, std::vector<float> color, std::vector<float> norm) {
+	_x = pos[0];
+	_y = pos[1];
+	_z = pos[2];
+	_r = color[0];
+	_g = color[1];
+	_b = color[2];
+	_normX = norm[0];
+	_normY = norm[1];
+	_normZ = norm[2];
+	_texX = 0;
+	_texY = 0;
+}
+
+Vertex::Vertex(std::vector<float> pos, std::vector<float> color, std::vector<float> norm, std::vector<float> tex) {
 	_x = pos[0];
 	_y = pos[1];
 	_z = pos[2];
