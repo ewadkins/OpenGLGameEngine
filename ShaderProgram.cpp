@@ -8,10 +8,10 @@
 #define GLEW_STATIC
 
 #include "ShaderProgram.h"
-#include "../Application.h"
+#include "OpenGLApplication.h"
 
 // Basic constructor
-ShaderProgram::ShaderProgram(Application* application, const char* name,
+ShaderProgram::ShaderProgram(OpenGLApplication* application, const char* name,
 		const char* vertexPath, const char* fragmentPath) {
 	_application = application;
 	_name = name;

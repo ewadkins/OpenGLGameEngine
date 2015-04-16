@@ -1,5 +1,5 @@
 /*
- * Application.cpp
+ * OpenGLApplication.cpp
  *
  *  Created on: Feb 3, 2015
  *      Author: ericwadkins
@@ -7,7 +7,7 @@
 
 #define GLEW_STATIC
 
-#include "Application.h"
+#include "OpenGLApplication.h"
 #include "Main.h"
 
 void error_callback(int error, const char* description) {
@@ -18,7 +18,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action,
 		int mods) {
 
 	// Get the OpenGLApplication context running in the window
-	Application* application = nullptr;
+	OpenGLApplication* application = nullptr;
 	for (int i = 0; i < Main::applications.size(); i++)
 		if (Main::applications[i]->_window == window)
 			application = Main::applications[i];
@@ -31,7 +31,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
 	glViewport(0, 0, width, height);
 
 	// Get the OpenGLApplication context running in the window
-	Application* application = nullptr;
+	OpenGLApplication* application = nullptr;
 	for (int i = 0; i < Main::applications.size(); i++)
 		if (Main::applications[i]->_window == window)
 			application = Main::applications[i];
@@ -41,7 +41,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
 	application->_camera->updateProjectionMatrices();
 }
 
-Application::Application(int screenSizeX, int screenSizeY,
+OpenGLApplication::OpenGLApplication(int screenSizeX, int screenSizeY,
 		bool fullScreen) {
 	_application = this;
 	_window = nullptr;
@@ -55,7 +55,7 @@ Application::Application(int screenSizeX, int screenSizeY,
 	_averageFPS = 0;
 }
 
-void Application::setupWindow() {
+void OpenGLApplication::setupWindow() {
 	// Basic window setup
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -89,7 +89,7 @@ void Application::setupWindow() {
 
 }
 
-void Application::setupDisplay() {
+void OpenGLApplication::setupDisplay() {
 	// Depth buffer setup
 	glClearDepth(1.0f);
 
@@ -103,7 +103,7 @@ void Application::setupDisplay() {
 	glClearColor(1, 1, 1, 1);
 }
 
-void Application::initialize() {
+void OpenGLApplication::initialize() {
 
 	clock_t start, finish;
 
@@ -297,7 +297,7 @@ void Application::initialize() {
 	_logger->log("###").endLine().endLine();
 }
 
-void Application::gameLoop() {
+void OpenGLApplication::gameLoop() {
 
 	clock_t lastTime;
 
@@ -326,7 +326,7 @@ void Application::gameLoop() {
 	}
 }
 
-int Application::start() {
+int OpenGLApplication::start() {
 
 	int result = -1;
 	try {
@@ -373,20 +373,20 @@ int Application::start() {
 
 }
 
-void Application::warn(const char* warning) {
+void OpenGLApplication::warn(const char* warning) {
 	// Logs a warning message
 	_logger->endLine().log("* WARNING: ").log(warning).log(" *").endLine();
 }
 
-void Application::stop(const char* reason) {
+void OpenGLApplication::stop(const char* reason) {
 	throw reason;
 }
 
-void Application::stop() {
+void OpenGLApplication::stop() {
 	throw 0;
 }
 
-void Application::updateAverageFPS(float fps) {
+void OpenGLApplication::updateAverageFPS(float fps) {
 
 	static long count = 0;
 	int minData = std::max(1, std::min(10, (int) fps));

@@ -6,11 +6,10 @@
  */
 
 #include "Camera.h"
-
-#include "Application.h"
+#include "OpenGLApplication.h"
 
 // Basic constructor
-Camera::Camera(Application* application, float x, float y, float z,
+Camera::Camera(OpenGLApplication* application, float x, float y, float z,
 		float rotationX, float rotationY, float rotationZ) :
 		_orthographic(Matrix<float>::identity(4)), _perspective(
 				Matrix<float>::identity(4)) {
