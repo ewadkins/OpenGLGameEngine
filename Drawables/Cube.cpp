@@ -88,36 +88,40 @@ Cube::Cube() {
 			new Vertex(f2t2v2->getPosition()));
 	_l12 = new GLLine(new Vertex(f1t2v3->getPosition()),
 			new Vertex(f2t2v3->getPosition()));
+}
 
-	_components.push_back(_f1t1);
-	_components.push_back(_f1t2);
-	_components.push_back(_f2t1);
-	_components.push_back(_f2t2);
-	_components.push_back(_f3t1);
-	_components.push_back(_f3t2);
-	_components.push_back(_f4t1);
-	_components.push_back(_f4t2);
-	_components.push_back(_f5t1);
-	_components.push_back(_f5t2);
-	_components.push_back(_f6t1);
-	_components.push_back(_f6t2);
-	_components.push_back(_l1);
-	_components.push_back(_l2);
-	_components.push_back(_l3);
-	_components.push_back(_l4);
-	_components.push_back(_l5);
-	_components.push_back(_l6);
-	_components.push_back(_l7);
-	_components.push_back(_l8);
-	_components.push_back(_l9);
-	_components.push_back(_l10);
-	_components.push_back(_l11);
-	_components.push_back(_l12);
+std::vector<GLComponent*> Cube::getComponents() {
+	std::vector<GLComponent*> components;
+	components.push_back(_f1t1);
+	components.push_back(_f1t2);
+	components.push_back(_f2t1);
+	components.push_back(_f2t2);
+	components.push_back(_f3t1);
+	components.push_back(_f3t2);
+	components.push_back(_f4t1);
+	components.push_back(_f4t2);
+	components.push_back(_f5t1);
+	components.push_back(_f5t2);
+	components.push_back(_f6t1);
+	components.push_back(_f6t2);
+	components.push_back(_l1);
+	components.push_back(_l2);
+	components.push_back(_l3);
+	components.push_back(_l4);
+	components.push_back(_l5);
+	components.push_back(_l6);
+	components.push_back(_l7);
+	components.push_back(_l8);
+	components.push_back(_l9);
+	components.push_back(_l10);
+	components.push_back(_l11);
+	components.push_back(_l12);
+	return components;
 }
 
 std::vector<GLTriangle*> Cube::getTriangles() {
 	applyTransformations();
-	Cube* transformed = (Cube*)_transformed;
+	Cube* transformed = (Cube*) _transformed;
 	std::vector<GLTriangle*> triangles;
 	triangles.push_back(transformed->_f1t1);
 	triangles.push_back(transformed->_f1t2);
@@ -136,7 +140,7 @@ std::vector<GLTriangle*> Cube::getTriangles() {
 
 std::vector<GLLine*> Cube::getLines() {
 	applyTransformations();
-	Cube* transformed = (Cube*)_transformed;
+	Cube* transformed = (Cube*) _transformed;
 	std::vector<GLLine*> lines;
 	lines.push_back(transformed->_l1);
 	lines.push_back(transformed->_l2);
@@ -155,30 +159,30 @@ std::vector<GLLine*> Cube::getLines() {
 
 Drawable* Cube::clone() {
 	Cube* d = new Cube();
-	d->_f1t1 = (GLTriangle*)_f1t1->clone();
-	d->_f1t2 = (GLTriangle*)_f1t2->clone();
-	d->_f2t1 = (GLTriangle*)_f2t1->clone();
-	d->_f2t2 = (GLTriangle*)_f2t2->clone();
-	d->_f3t1 = (GLTriangle*)_f3t1->clone();
-	d->_f3t2 = (GLTriangle*)_f3t2->clone();
-	d->_f4t1 = (GLTriangle*)_f4t1->clone();
-	d->_f4t2 = (GLTriangle*)_f4t2->clone();
-	d->_f5t1 = (GLTriangle*)_f5t1->clone();
-	d->_f5t2 = (GLTriangle*)_f5t2->clone();
-	d->_f6t1 = (GLTriangle*)_f6t1->clone();
-	d->_f6t2 = (GLTriangle*)_f6t2->clone();
-	d->_l1 = (GLLine*)_l1->clone();
-	d->_l2 = (GLLine*)_l2->clone();
-	d->_l3 = (GLLine*)_l3->clone();
-	d->_l4 = (GLLine*)_l4->clone();
-	d->_l5 = (GLLine*)_l5->clone();
-	d->_l6 = (GLLine*)_l6->clone();
-	d->_l7 = (GLLine*)_l7->clone();
-	d->_l8 = (GLLine*)_l8->clone();
-	d->_l9 = (GLLine*)_l9->clone();
-	d->_l10 = (GLLine*)_l10->clone();
-	d->_l11 = (GLLine*)_l11->clone();
-	d->_l12 = (GLLine*)_l12->clone();
+	d->_f1t1 = (GLTriangle*) _f1t1->clone();
+	d->_f1t2 = (GLTriangle*) _f1t2->clone();
+	d->_f2t1 = (GLTriangle*) _f2t1->clone();
+	d->_f2t2 = (GLTriangle*) _f2t2->clone();
+	d->_f3t1 = (GLTriangle*) _f3t1->clone();
+	d->_f3t2 = (GLTriangle*) _f3t2->clone();
+	d->_f4t1 = (GLTriangle*) _f4t1->clone();
+	d->_f4t2 = (GLTriangle*) _f4t2->clone();
+	d->_f5t1 = (GLTriangle*) _f5t1->clone();
+	d->_f5t2 = (GLTriangle*) _f5t2->clone();
+	d->_f6t1 = (GLTriangle*) _f6t1->clone();
+	d->_f6t2 = (GLTriangle*) _f6t2->clone();
+	d->_l1 = (GLLine*) _l1->clone();
+	d->_l2 = (GLLine*) _l2->clone();
+	d->_l3 = (GLLine*) _l3->clone();
+	d->_l4 = (GLLine*) _l4->clone();
+	d->_l5 = (GLLine*) _l5->clone();
+	d->_l6 = (GLLine*) _l6->clone();
+	d->_l7 = (GLLine*) _l7->clone();
+	d->_l8 = (GLLine*) _l8->clone();
+	d->_l9 = (GLLine*) _l9->clone();
+	d->_l10 = (GLLine*) _l10->clone();
+	d->_l11 = (GLLine*) _l11->clone();
+	d->_l12 = (GLLine*) _l12->clone();
 	return d;
 }
 

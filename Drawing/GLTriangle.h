@@ -17,10 +17,11 @@ public:
 	GLTriangle(Vertex* v1, Vertex* v2, Vertex* v3);
 	virtual ~GLTriangle() {
 	}
-	virtual std::vector<Vertex*>* getVertices();
+	virtual std::vector<Vertex*> getVertices();
+	virtual void setVertices(std::vector<Vertex*> vertices);
 	virtual GLComponent* clone();
 	static int _type;
-	std::vector<Vertex*>* _vertices;
+	std::vector<Vertex*> _vertices;
 };
 
 #endif /* GLTRIANGLE_H_ */

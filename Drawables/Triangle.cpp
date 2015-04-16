@@ -15,10 +15,6 @@ Triangle::Triangle(Vertex* v1, Vertex* v2, Vertex* v3) {
 			new Vertex(v3->getPosition()));
 	_l3 = new GLLine(new Vertex(v3->getPosition()),
 			new Vertex(v1->getPosition()));
-	_components.push_back(_triangle);
-	_components.push_back(_l1);
-	_components.push_back(_l2);
-	_components.push_back(_l3);
 }
 
 Triangle::Triangle() {
@@ -32,10 +28,15 @@ Triangle::Triangle() {
 	_l1 = new GLLine(l1v1, l1v2);
 	_l2 = new GLLine(l1v2, l1v3);
 	_l3 = new GLLine(l1v3, l1v1);
-	_components.push_back(_triangle);
-	_components.push_back(_l1);
-	_components.push_back(_l2);
-	_components.push_back(_l3);
+}
+
+std::vector<GLComponent*> Triangle::getComponents() {
+	std::vector<GLComponent*> components;
+	components.push_back(_triangle);
+	components.push_back(_l1);
+	components.push_back(_l2);
+	components.push_back(_l3);
+	return components;
 }
 
 std::vector<GLTriangle*> Triangle::getTriangles() {

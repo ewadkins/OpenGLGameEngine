@@ -17,10 +17,11 @@ public:
 	GLLine(Vertex* v1, Vertex* v2);
 	virtual ~GLLine() {
 	}
-	virtual std::vector<Vertex*>* getVertices();
+	virtual std::vector<Vertex*> getVertices();
+	virtual void setVertices(std::vector<Vertex*> vertices);
 	virtual GLComponent* clone();
 	static int _type;
-	std::vector<Vertex*>* _vertices;
+	std::vector<Vertex*> _vertices;
 };
 
 #endif /* GLLINE_H_ */

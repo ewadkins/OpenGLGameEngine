@@ -16,8 +16,10 @@ public:
 	GLComponent();
 	virtual ~GLComponent() {
 	}
-	virtual std::vector<Vertex*>* getVertices() {
-		return new std::vector<Vertex*>();
+	virtual std::vector<Vertex*> getVertices() {
+		return std::vector<Vertex*>();
+	}
+	virtual void setVertices(std::vector<Vertex*> vertices) {
 	}
 	virtual GLComponent* clone() {
 		return new GLComponent();

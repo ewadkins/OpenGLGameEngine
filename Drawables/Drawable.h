@@ -8,6 +8,7 @@
 #ifndef DRAWABLE_H_
 #define DRAWABLE_H_
 
+#include "../Drawing/GLComponent.h"
 #include "../Drawing/GLTriangle.h"
 #include "../Drawing/GLLine.h"
 #include "../Math/Matrix.h"
@@ -18,6 +19,9 @@ class Drawable {
 public:
 	Drawable();
 	virtual ~Drawable() {
+	}
+	virtual std::vector<GLComponent*> getComponents() {
+		return std::vector<GLComponent*>();
 	}
 	virtual std::vector<GLTriangle*> getTriangles() {
 		return std::vector<GLTriangle*>();
@@ -62,7 +66,6 @@ public:
 	void setRotationY(float rotationY);
 	void setRotationZ(float rotationZ);
 	void setRotationXYZ(float rotationX, float rotationY, float rotationZ);
-	std::vector<GLComponent*> _components;
 	Drawable* _transformed;
 private:
 	float _x, _y, _z, _scaleX, _scaleY, _scaleZ, _rotationX, _rotationY, _rotationZ;

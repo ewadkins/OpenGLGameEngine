@@ -11,57 +11,70 @@ Drawable::Drawable() {
 	_x = 0;
 	_y = 0;
 	_z = 0;
+	_scaleX = 0;
+	_scaleY = 0;
+	_scaleZ = 0;
 	_rotationX = 0;
 	_rotationY = 0;
 	_rotationZ = 0;
+	_transformed = nullptr;
 }
 
 // Returns a transformed version of this drawable
 void Drawable::applyTransformations() {
-	Drawable* d = clone();
-	for (int i = 0; i < d->_components.size(); i++) {
-		GLComponent* comp = d->_components[i];
-		std::vector<Vertex*>* vertices = comp->getVertices();
-		for (int j = 0; j < vertices->size(); j++) {
-			Vertex* v = (*vertices)[j];
-			Matrix<float> original = Matrix<float>(4, 1);
+	_transformed = clone();
+
+	std::vector<GLComponent*> originalComponents = getComponents();
+	std::vector<GLComponent*> transformedComponents = _transformed->getComponents();
+
+	for (int i = 0; i < originalComponents.size(); i++) {
+
+		std::vector<Vertex*> originalVertices = originalComponents[i]->getVertices();
+		std::vector<Vertex*> transformedVertices;
+
+		for (int j = 0; j < originalVertices.size(); j++) {
+
+			Vertex* transformedVertex = originalVertices[j]->clone();
+
+			Matrix<float> originalMatrix = Matrix<float>(4, 1);
 
 			// Applies transformations to the vertex's position
-			std::vector<float> pos = v->getPosition();
+			std::vector<float> pos = transformedVertex->getPosition();
 			pos.push_back(1);
-			original.setVector(pos);
+			originalMatrix.setVector(pos);
 
-			std::vector<std::string> strings = original.toStringVector();
+			/*std::vector<std::string> strings = originalMatrix.toStringVector();
 			std::cout << "Original pos: " << std::endl;
 			for (int i = 0; i < strings.size(); i++)
-				std::cout << strings[i] << std::endl;
+				std::cout << strings[i] << std::endl;*/
 
-			Matrix<float> transformed = original
+			Matrix<float> transformedMatrix = originalMatrix
 					<< GLMatrix::rotationMatrixXYZ(getRotationX(),
 							getRotationY(), getRotationZ())
 					<< GLMatrix::translationMatrix(getX(), getY(), getZ());
-			v->setPosition(transformed.get(0, 0), transformed.get(1, 0),
-					transformed.get(2, 0));
+			transformedVertex->setPosition(transformedMatrix.get(0, 0), transformedMatrix.get(1, 0),
+					transformedMatrix.get(2, 0));
 
-			strings = transformed.toStringVector();
+			/*strings = transformedMatrix.toStringVector();
 			std::cout << "Transformed pos: " << std::endl;
 			for (int i = 0; i < strings.size(); i++)
-				std::cout << strings[i] << std::endl;
+				std::cout << strings[i] << std::endl;*/
 
 			// Applies rotation to the vertex's normal, other transformations are irrelevant
-			std::vector<float> norm = v->getNormal();
+			std::vector<float> norm = transformedVertex->getNormal();
 			norm.push_back(1);
-			original.setVector(norm);
-			transformed = original
+			originalMatrix.setVector(norm);
+			transformedMatrix = originalMatrix
 					<< GLMatrix::rotationMatrixXYZ(getRotationX(),
 							getRotationY(), getRotationZ());
-			v->setNormal(transformed.get(0, 0), transformed.get(1, 0),
-					transformed.get(2, 0));
+			transformedVertex->setNormal(transformedMatrix.get(0, 0), transformedMatrix.get(1, 0),
+					transformedMatrix.get(2, 0));
 
-			//vertices[j] = v;
+			transformedVertices.push_back(transformedVertex);
+
 		}
+		transformedComponents[i]->setVertices(transformedVertices);
 	}
-	_transformed = d;
 }
 
 // Moves the drawable in the x direction by the specified distance

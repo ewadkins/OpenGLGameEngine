@@ -16,6 +16,7 @@ public:
 	Triangle();
 	virtual ~Triangle() {
 	}
+	virtual std::vector<GLComponent*> getComponents();
 	virtual std::vector<GLTriangle*> getTriangles();
 	virtual std::vector<GLLine*> getLines();
 	virtual Drawable* clone();
