@@ -23,16 +23,16 @@ Triangle::Triangle(Vertex* v1, Vertex* v2, Vertex* v3) {
 }
 
 Triangle::Triangle() {
-	Vertex* t1v1 = new Vertex(0.0, 0.5, 0.0, 0.0, 1.0, 0.0);
-	Vertex* t1v2 = new Vertex(-0.5, -0.5, 0.0, 0.0, 1.0, 0.0);
-	Vertex* t1v3 = new Vertex(0.5, -0.5, 0.0, 0.0, 1.0, 0.0);
-	Vertex* l1v1 = new Vertex(0.0, 0.5, 0.0);
-	Vertex* l1v2 = new Vertex(-0.5, -0.5, 0.0);
-	Vertex* l1v3 = new Vertex(0.5, -0.5, 0.0);
-	_triangle = new GLTriangle(t1v1, t1v2, t1v3);
-	_l1 = new GLLine(l1v1, l1v2);
-	_l2 = new GLLine(l1v2, l1v3);
-	_l3 = new GLLine(l1v3, l1v1);
+	Vertex* v1 = new Vertex(0.0, 0.5, 0.0, 0.0, 1.0, 0.0);
+	Vertex* v2 = new Vertex(-0.5, -0.5, 0.0, 0.0, 1.0, 0.0);
+	Vertex* v3 = new Vertex(0.5, -0.5, 0.0, 0.0, 1.0, 0.0);
+	_triangle = new GLTriangle(v1, v2, v3);
+	_l1 = new GLLine(new Vertex(v1->getPosition()),
+			new Vertex(v2->getPosition()));
+	_l2 = new GLLine(new Vertex(v2->getPosition()),
+			new Vertex(v3->getPosition()));
+	_l3 = new GLLine(new Vertex(v3->getPosition()),
+			new Vertex(v1->getPosition()));
 
 	_triangles.push_back(_triangle);
 	_lines.push_back(_l1);
@@ -50,7 +50,7 @@ std::vector<GLComponent*> Triangle::getComponents() {
 }
 
 std::vector<GLTriangle*> Triangle::getTransformedTriangles() {
-	if(_needsUpdating)
+	if (_needsUpdating)
 		applyTransformations();
 	std::vector<GLTriangle*> triangles;
 	Triangle* transformed = (Triangle*) _transformed;
@@ -63,7 +63,7 @@ std::vector<GLTriangle*> Triangle::getTriangles() {
 	return _triangles;
 }
 
-std::vector<GLLine*> Triangle::getLines() {
+std::vector<GLLine*> Triangle::getTransformedLines() {
 	if(_needsUpdating)
 		applyTransformations();
 	std::vector<GLLine*> lines;
@@ -75,7 +75,7 @@ std::vector<GLLine*> Triangle::getLines() {
 	return lines;
 }
 
-std::vector<GLLine*> Triangle::getTransformedLines() {
+std::vector<GLLine*> Triangle::getLines() {
 	return _lines;
 }
 
