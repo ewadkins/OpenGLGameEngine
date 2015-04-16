@@ -8,7 +8,7 @@
 #ifndef GLCOMPONENT_H_
 #define GLCOMPONENT_H_
 
-#include "Vertex.h"
+#include "../Components/Vertex.h"
 #include <vector>
 
 class GLComponent {

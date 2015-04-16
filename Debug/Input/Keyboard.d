@@ -1,17 +1,19 @@
 Input/Keyboard.d: ../Input/Keyboard.cpp ../Input/Keyboard.h \
   /usr/local/Cellar/glew/1.11.0/include/GL/glew.h \
   /usr/local/Cellar/glfw3/3.0.4/include/GLFW/glfw3.h \
-  ../Input/../OpenGLApplication.h ../Input/../Logger.h \
+  ../Input/../Application.h ../Input/../Logger.h \
   ../Input/../Math/Matrix.h ../Input/../Math/PolynomialMatrix.h \
-  ../Input/../Math/Polynomial.h ../Input/../Renderer.h \
-  ../Input/../ShaderProgram.h ../Input/../Drawables/Drawable.h \
-  ../Input/../Drawables/../Drawing/GLComponent.h \
-  ../Input/../Drawables/../Drawing/Vertex.h \
-  ../Input/../Drawables/../Drawing/GLTriangle.h \
-  ../Input/../Drawables/../Drawing/GLLine.h \
-  ../Input/../Drawables/../Math/GLMatrix.h \
-  ../Input/../Drawables/Triangle.h ../Input/../Drawables/Cube.h \
-  ../Input/../Drawing/VBO.h ../Input/../Camera.h
+  ../Input/../Math/Polynomial.h ../Input/../Render/Renderer.h \
+  ../Input/../Render/ShaderProgram.h \
+  ../Input/../Render/../Drawables/Drawable.h \
+  ../Input/../Render/../Drawables/../Components/GLComponent.h \
+  ../Input/../Render/../Drawables/../Components/../Components/Vertex.h \
+  ../Input/../Render/../Drawables/../Components/GLTriangle.h \
+  ../Input/../Render/../Drawables/../Components/GLLine.h \
+  ../Input/../Render/../Drawables/../Math/GLMatrix.h \
+  ../Input/../Render/../Drawables/Triangle.h \
+  ../Input/../Render/../Drawables/Cube.h \
+  ../Input/../Render/../Render/VBO.h ../Input/../Camera.h
 
 ../Input/Keyboard.h:
 
@@ -19,7 +21,7 @@ Input/Keyboard.d: ../Input/Keyboard.cpp ../Input/Keyboard.h \
 
 /usr/local/Cellar/glfw3/3.0.4/include/GLFW/glfw3.h:
 
-../Input/../OpenGLApplication.h:
+../Input/../Application.h:
 
 ../Input/../Logger.h:
 
@@ -29,26 +31,26 @@ Input/Keyboard.d: ../Input/Keyboard.cpp ../Input/Keyboard.h \
 
 ../Input/../Math/Polynomial.h:
 
-../Input/../Renderer.h:
+../Input/../Render/Renderer.h:
 
-../Input/../ShaderProgram.h:
+../Input/../Render/ShaderProgram.h:
 
-../Input/../Drawables/Drawable.h:
+../Input/../Render/../Drawables/Drawable.h:
 
-../Input/../Drawables/../Drawing/GLComponent.h:
+../Input/../Render/../Drawables/../Components/GLComponent.h:
 
-../Input/../Drawables/../Drawing/Vertex.h:
+../Input/../Render/../Drawables/../Components/../Components/Vertex.h:
 
-../Input/../Drawables/../Drawing/GLTriangle.h:
+../Input/../Render/../Drawables/../Components/GLTriangle.h:
 
-../Input/../Drawables/../Drawing/GLLine.h:
+../Input/../Render/../Drawables/../Components/GLLine.h:
 
-../Input/../Drawables/../Math/GLMatrix.h:
+../Input/../Render/../Drawables/../Math/GLMatrix.h:
 
-../Input/../Drawables/Triangle.h:
+../Input/../Render/../Drawables/Triangle.h:
 
-../Input/../Drawables/Cube.h:
+../Input/../Render/../Drawables/Cube.h:
 
-../Input/../Drawing/VBO.h:
+../Input/../Render/../Render/VBO.h:
 
 ../Input/../Camera.h:
