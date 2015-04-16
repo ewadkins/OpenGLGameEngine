@@ -31,6 +31,7 @@ public:
 	}
 	void initialize();
 	void initializeVBOs();
+	void createStaticVBOs();
 	void render();
 	void display();
 	void useProgram(ShaderProgram*);
@@ -43,6 +44,7 @@ private:
 	OpenGLApplication* _application;
 	std::vector<VBOBase*> _vbos;
 	Matrix<float> _projectionMatrix;
+	std::vector<Drawable*> staticDrawables;
 };
 
 #endif /* RENDERER_H_ */

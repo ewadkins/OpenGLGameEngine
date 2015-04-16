@@ -59,26 +59,23 @@ void Renderer::initialize() {
 // Test: Initializes data that will draw a triangle
 void Renderer::initializeVBOs() {
 
-	std::vector<Drawable*> drawables;
+	Drawable* d = new Triangle();
+	staticDrawables.push_back(d);
 
-	// Creates drawables and adds them to the list so that later they are broken down
-	// into their OpenGL parts and put into the respective VBOs
-	{
+	Drawable* d2 = new Cube();
+	d2->setXYZ(2, 0, 0);
+	d2->setRotationXYZ(45, 45, 45);
+	staticDrawables.push_back(d2);
 
-		Drawable* d = new Triangle();
-		drawables.push_back(d);
+	createStaticVBOs();
+}
 
-		Drawable* d2 = new Cube();
-		d2->setXYZ(3, 3, 3);
-		//d2->setRotationXYZ(45, 45, 45);
-		drawables.push_back(d2);
-
-	}
+void Renderer::createStaticVBOs() {
 
 	// Group all the triangles of the drawables and put them into a VBO
 	VBO<GLTriangle>* triangleVBO = new VBO<GLTriangle>(VBOBase::STATIC);
-	for (int i = 0; i < drawables.size(); i++) {
-		std::vector<GLTriangle*> triangles = drawables[i]->getTriangles();
+	for (int i = 0; i < staticDrawables.size(); i++) {
+		std::vector<GLTriangle*> triangles = staticDrawables[i]->getTriangles();
 		for (int j = 0; j < triangles.size(); j++)
 			triangleVBO->add(triangles[j]);
 	}
@@ -87,18 +84,16 @@ void Renderer::initializeVBOs() {
 
 	// Group all the lines of the drawables and put them into a VBO
 	VBO<GLLine>* lineVBO = new VBO<GLLine>(VBOBase::STATIC);
-	for (int i = 0; i < drawables.size(); i++) {
-		std::vector<GLLine*> lines = drawables[i]->getLines();
+	for (int i = 0; i < staticDrawables.size(); i++) {
+		std::vector<GLLine*> lines = staticDrawables[i]->getLines();
 		for (int j = 0; j < lines.size(); j++)
 			lineVBO->add(lines[j]);
 	}
 	lineVBO->updateData();
 	_vbos.push_back(lineVBO);
 
-
 	for (int i = 0; i < _vbos.size(); i++)
 		_vbos[i]->create();
-
 }
 
 void Renderer::render() {
