@@ -9,7 +9,7 @@
 #define OPENGLAPPLICATION_H_
 
 #include "Logger.h"
-#include "Render/Renderer.h"
+#include "Renderer.h"
 #include "Camera.h"
 #include "Math/Matrix.h"
 #include <string>
