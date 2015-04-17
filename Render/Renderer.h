@@ -9,14 +9,14 @@
 #define RENDERER_H_
 
 #include "ShaderProgram.h"
-#include "Math/Matrix.h"
-#include "Drawables/Drawable.h"
-#include "Drawables/Triangle.h"
-#include "Drawables/Cube.h"
-#include "Drawing/GLTriangle.h"
-#include "Drawing/GLLine.h"
-#include "Drawing/VBO.h"
-#include "Drawing/Vertex.h"
+#include "../Math/Matrix.h"
+#include "../Drawables/Drawable.h"
+#include "../Drawables/Triangle.h"
+#include "../Drawables/Cube.h"
+#include "../Components/GLTriangle.h"
+#include "../Components/GLLine.h"
+#include "../Components/Vertex.h"
+#include "VBO.h"
 #include <iostream>
 #include <fstream>
 #include <GL/glew.h>

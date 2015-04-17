@@ -6,7 +6,7 @@
  */
 
 #include "Renderer.h"
-#include "OpenGLApplication.h"
+#include "../OpenGLApplication.h"
 
 Renderer::Renderer(OpenGLApplication* application) :
 		_projectionMatrix(Matrix<float>::identity(4)) {

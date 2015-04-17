@@ -7,25 +7,19 @@ CPP_SRCS += \
 ../Camera.cpp \
 ../Logger.cpp \
 ../Main.cpp \
-../OpenGLApplication.cpp \
-../Renderer.cpp \
-../ShaderProgram.cpp 
+../OpenGLApplication.cpp 
 
 OBJS += \
 ./Camera.o \
 ./Logger.o \
 ./Main.o \
-./OpenGLApplication.o \
-./Renderer.o \
-./ShaderProgram.o 
+./OpenGLApplication.o 
 
 CPP_DEPS += \
 ./Camera.d \
 ./Logger.d \
 ./Main.d \
-./OpenGLApplication.d \
-./Renderer.d \
-./ShaderProgram.d 
+./OpenGLApplication.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes
