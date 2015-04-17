@@ -5,10 +5,10 @@
  *      Author: ericwadkins
  */
 
-#ifndef GLCOMPONENT_H_
-#define GLCOMPONENT_H_
+#ifndef COMPONENTS_GLCOMPONENT_H_
+#define COMPONENTS_GLCOMPONENT_H_
 
-#include "Vertex.h"
+#include "../Components/Vertex.h"
 #include <vector>
 
 class GLComponent {
@@ -27,4 +27,4 @@ public:
 	void setColor(float r, float g, float b);
 };
 
-#endif /* GLCOMPONENT_H_ */
+#endif /* COMPONENTS_GLCOMPONENT_H_ */

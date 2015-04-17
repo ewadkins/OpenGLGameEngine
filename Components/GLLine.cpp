@@ -5,7 +5,7 @@
  *      Author: ericwadkins
  */
 
-#include "GLLine.h"
+#include "../Components/GLLine.h"
 
 int GLLine::_type = GL_LINES;
 

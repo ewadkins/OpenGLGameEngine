@@ -11,11 +11,11 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
-class OpenGLApplication;
+class Application;
 
 class Keyboard {
 public:
-	Keyboard(OpenGLApplication* application);
+	Keyboard(Application* application);
 	virtual ~Keyboard() {
 	}
 	void update();
@@ -24,7 +24,7 @@ public:
 	bool isKeyDown(int key);
 	int getKeyState(int key);
 private:
-	OpenGLApplication* _application;
+	Application* _application;
 	static const float PI;
 };
 

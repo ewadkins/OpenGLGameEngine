@@ -1,21 +1,21 @@
 /*
- * Line.h
+ * Triangle.h
  *
  *  Created on: Apr 13, 2015
  *      Author: ericwadkins
  */
 
-#ifndef GLLINE_H_
-#define GLLINE_H_
+#ifndef COMPONENTS_GLTRIANGLE_H_
+#define COMPONENTS_GLTRIANGLE_H_
 
-#include "GLComponent.h"
+#include "../Components/GLComponent.h"
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
-class GLLine : public GLComponent {
+class GLTriangle : public GLComponent {
 public:
-	GLLine(Vertex* v1, Vertex* v2);
-	virtual ~GLLine() {
+	GLTriangle(Vertex* v1, Vertex* v2, Vertex* v3);
+	virtual ~GLTriangle() {
 	}
 	virtual std::vector<Vertex*> getVertices();
 	virtual void setVertices(std::vector<Vertex*> vertices);
@@ -25,4 +25,4 @@ private:
 	std::vector<Vertex*> _vertices;
 };
 
-#endif /* GLLINE_H_ */
+#endif /* COMPONENTS_GLTRIANGLE_H_ */

@@ -5,7 +5,7 @@
  *      Author: ericwadkins
  */
 
-#include "GLComponent.h"
+#include "../Components/GLComponent.h"
 
 GLComponent::GLComponent() {
 

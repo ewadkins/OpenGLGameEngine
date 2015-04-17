@@ -5,12 +5,12 @@
  *      Author: ericwadkins
  */
 
-#ifndef VBO_H_
-#define VBO_H_
+#ifndef COMPONENTS_VBO_H_
+#define COMPONENTS_VBO_H_
 
-#include "Vertex.h"
-#include "GLTriangle.h"
-#include "GLLine.h"
+#include "../Components/GLLine.h"
+#include "../Components/GLTriangle.h"
+#include "../Components/Vertex.h"
 #include <vector>
 #include <iostream>
 #include <GL/glew.h>
@@ -43,4 +43,4 @@ private:
 	GLuint _vao, _vbo;
 };
 
-#endif /* VBO_H_ */
+#endif /* COMPONENTS_VBO_H_ */

@@ -8,9 +8,9 @@
 #ifndef DRAWABLE_H_
 #define DRAWABLE_H_
 
-#include "../Drawing/GLComponent.h"
-#include "../Drawing/GLTriangle.h"
-#include "../Drawing/GLLine.h"
+#include "../Components/GLComponent.h"
+#include "../Components/GLLine.h"
+#include "../Components/GLTriangle.h"
 #include "../Math/Matrix.h"
 #include "../Math/GLMatrix.h"
 #include <vector>

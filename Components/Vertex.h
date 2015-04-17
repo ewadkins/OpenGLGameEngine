@@ -5,8 +5,8 @@
  *      Author: ericwadkins
  */
 
-#ifndef VERTEX_H_
-#define VERTEX_H_
+#ifndef COMPONENTS_VERTEX_H_
+#define COMPONENTS_VERTEX_H_
 
 #include <vector>
 
@@ -38,4 +38,4 @@ private:
 	float _x, _y, _z, _r, _g, _b, _normX, _normY, _normZ, _texX, _texY;
 };
 
-#endif /* VERTEX_H_ */
+#endif /* COMPONENTS_VERTEX_H_ */

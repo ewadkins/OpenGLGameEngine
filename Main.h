@@ -8,11 +8,11 @@
 #ifndef MAIN_H_
 #define MAIN_H_
 
-#include "OpenGLApplication.h"
+#include "Application.h"
 
 class Main {
 public:
-	static std::vector<OpenGLApplication*> applications;
+	static std::vector<Application*> applications;
 };
 
 #endif /* MAIN_H_ */

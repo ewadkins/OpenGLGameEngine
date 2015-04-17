@@ -4,28 +4,19 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 CPP_SRCS += \
-../Camera.cpp \
+../Application.cpp \
 ../Logger.cpp \
-../Main.cpp \
-../OpenGLApplication.cpp \
-../Renderer.cpp \
-../ShaderProgram.cpp 
+../Main.cpp 
 
 OBJS += \
-./Camera.o \
+./Application.o \
 ./Logger.o \
-./Main.o \
-./OpenGLApplication.o \
-./Renderer.o \
-./ShaderProgram.o 
+./Main.o 
 
 CPP_DEPS += \
-./Camera.d \
+./Application.d \
 ./Logger.d \
-./Main.d \
-./OpenGLApplication.d \
-./Renderer.d \
-./ShaderProgram.d 
+./Main.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes
