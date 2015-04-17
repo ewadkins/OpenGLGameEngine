@@ -8,16 +8,16 @@
 #ifndef CAMERA_H_
 #define CAMERA_H_
 
-#include "../Math/GLMatrix.h"
-#include "../Math/Matrix.h"
+#include "Math/GLMatrix.h"
+#include "Math/Matrix.h"
 //#include <glm/glm.hpp>
 //#include <glm/gtx/transform.hpp>
 
-class Application;
+class OpenGLApplication;
 
 class Camera {
 public:
-	Camera(Application* application, float x, float y, float z,
+	Camera(OpenGLApplication* application, float x, float y, float z,
 			float rotationX, float rotationY, float rotationZ);
 	virtual ~Camera() {
 	}
@@ -56,7 +56,7 @@ public:
 	void setRotationZ(float rotationZ);
 	void setRotationXYZ(float rotationX, float rotationY, float rotationZ);
 private:
-	Application* _application;
+	OpenGLApplication* _application;
 	float _fov, _near, _far, _x, _y, _z, _rotationX, _rotationY, _rotationZ;
 	Matrix<float> _orthographic, _perspective;
 	ProjectionType _projectionType;

@@ -6,10 +6,9 @@
  */
 
 #include "Renderer.h"
+#include "OpenGLApplication.h"
 
-#include "../Application.h"
-
-Renderer::Renderer(Application* application) :
+Renderer::Renderer(OpenGLApplication* application) :
 		_projectionMatrix(Matrix<float>::identity(4)) {
 	_application = application;
 	_shaderProgram1 = nullptr;

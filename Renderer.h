@@ -9,24 +9,24 @@
 #define RENDERER_H_
 
 #include "ShaderProgram.h"
-#include "VBO.h"
-#include "../Math/Matrix.h"
-#include "../Drawables/Drawable.h"
-#include "../Drawables/Triangle.h"
-#include "../Drawables/Cube.h"
-#include "../Components/GLTriangle.h"
-#include "../Components/GLLine.h"
-#include "../Components/Vertex.h"
+#include "Math/Matrix.h"
+#include "Drawables/Drawable.h"
+#include "Drawables/Triangle.h"
+#include "Drawables/Cube.h"
+#include "Drawing/GLTriangle.h"
+#include "Drawing/GLLine.h"
+#include "Drawing/VBO.h"
+#include "Drawing/Vertex.h"
 #include <iostream>
 #include <fstream>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
-class Application;
+class OpenGLApplication;
 
 class Renderer {
 public:
-	Renderer(Application* application);
+	Renderer(OpenGLApplication* application);
 	virtual ~Renderer() {
 	}
 	void initialize();
@@ -41,7 +41,7 @@ public:
 private:
 	void setupShaders();
 	void updateUniforms();
-	Application* _application;
+	OpenGLApplication* _application;
 	std::vector<VBOBase*> _vbos;
 	Matrix<float> _projectionMatrix;
 	std::vector<Drawable*> staticDrawables;

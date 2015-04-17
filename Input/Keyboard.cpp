@@ -6,12 +6,11 @@
  */
 
 #include "Keyboard.h"
-
-#include "../Application.h"
+#include "../OpenGLApplication.h"
 
 const float Keyboard::PI = 3.1415926535897;
 
-Keyboard::Keyboard(Application* application) {
+Keyboard::Keyboard(OpenGLApplication* application) {
 	_application = application;
 }
 

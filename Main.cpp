@@ -7,11 +7,11 @@
 
 #include "Main.h"
 
-std::vector<Application*> Main::applications;
+std::vector<OpenGLApplication*> Main::applications;
 
 int main() {
 
-	Application* application = new Application(800, 600, false);
+	OpenGLApplication* application = new OpenGLApplication(800, 600, false);
 	Main::applications.push_back(application);
 	int result = application->start();
 	std::cout << "Exit code: " << result << std::endl;

@@ -6,8 +6,7 @@
  */
 
 #include "Logger.h"
-
-#include "Application.h"
+#include "OpenGLApplication.h"
 
 Logger::Logger() {
 	newLine = true;
