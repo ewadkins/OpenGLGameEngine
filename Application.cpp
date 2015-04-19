@@ -111,17 +111,15 @@ void Application::initialize() {
 	start = clock();
 	{
 
-		float numArr[] = { 5, 0, 1 };
+		float numArr[] = { -6 };
 		std::vector<float> numCoeffs(numArr,
 				numArr + sizeof(numArr) / sizeof(numArr[0]));
-		float denArr[] = { 1, 2 };
+		float denArr[] = { 0, 1 };
 		std::vector<float> denCoeffs(denArr,
 				denArr + sizeof(denArr) / sizeof(denArr[0]));
-		std::cout << "Debug 1" << std::endl;
-		Polynomial<float>* p = new Complex<float>(numCoeffs, denCoeffs);
-		std::cout << "Debug 2" << std::endl;
+		Polynomial<float> p = Polynomial<float>(numCoeffs, denCoeffs);
 
-		/*float numArr2[] = { 5 };
+		float numArr2[] = { 5 };
 		std::vector<float> numCoeffs2(numArr2,
 				numArr2 + sizeof(numArr2) / sizeof(numArr2[0]));
 		float denArr2[] = { 1 };
@@ -135,14 +133,14 @@ void Application::initialize() {
 		float denArr3[] = { 0, 1 };
 		std::vector<float> denCoeffs3(denArr3,
 				denArr3 + sizeof(denArr3) / sizeof(denArr3[0]));
-		Polynomial<float> p3 = Polynomial<float>(numCoeffs3, denCoeffs3);*/
+		Polynomial<float> p3 = Polynomial<float>(numCoeffs3, denCoeffs3);
 
 		_logger->log("p:").endLine().increaseIndent().log(p).endLine().decreaseIndent();
-		//_logger->log("p2:").endLine().increaseIndent().log(p2).endLine().decreaseIndent();
-		//_logger->log("p + p2:").endLine().increaseIndent().log(p + p2).endLine().decreaseIndent();
-		//_logger->log("p * p2:").endLine().increaseIndent().log(p * p2).endLine().decreaseIndent();
-		//_logger->log("p / p2:").endLine().increaseIndent().log(p / p2).endLine().decreaseIndent();
-		//_logger->log("p3:").endLine().increaseIndent().log(p3).endLine().decreaseIndent();
+		_logger->log("p2:").endLine().increaseIndent().log(p2).endLine().decreaseIndent();
+		_logger->log("p + p2:").endLine().increaseIndent().log(p + p2).endLine().decreaseIndent();
+		_logger->log("p * p2:").endLine().increaseIndent().log(p * p2).endLine().decreaseIndent();
+		_logger->log("p / p2:").endLine().increaseIndent().log(p / p2).endLine().decreaseIndent();
+		_logger->log("p3:").endLine().increaseIndent().log(p3).endLine().decreaseIndent();
 
 	}
 	finish = clock();
@@ -335,7 +333,7 @@ int Application::start() {
 		try {
 			try {
 				// Initialization
-				_logger->log("*** Starting Application ***").endLine().endLine();
+				_logger->log("*** Starting OpenGLApplication ***").endLine().endLine();
 				initialize();
 
 				// Start the game loop
@@ -349,7 +347,7 @@ int Application::start() {
 			} catch (const char* str) {
 				// Fatal error purposely thrown from within the application
 				_logger->endLine().setIndent(0).log(
-						"*** Stopping Application (").log(str).log(
+						"*** Stopping OpenGLApplication (").log(str).log(
 						") ***").endLine();
 
 			}
@@ -357,7 +355,7 @@ int Application::start() {
 			// Error thrown to signify the end of the application
 			if (e == 0) {
 				_logger->endLine().setIndent(0).log(
-						"*** Stopping Application ***").endLine();
+						"*** Stopping OpenGLApplication ***").endLine();
 				result = 0;
 			} else
 				throw;
@@ -365,7 +363,7 @@ int Application::start() {
 	} catch (...) {
 		// Fatal error caused the application to crash
 		_logger->endLine().setIndent(0).log(
-				"*** Stopping Application (Unknown reason) ***").endLine();
+				"*** Stopping OpenGLApplication (Unknown reason) ***").endLine();
 		throw;
 	}
 

@@ -26,8 +26,6 @@ public:
 	Polynomial(T num, T den);
 	Polynomial(T value);
 	template<typename S> Polynomial(Polynomial<S> other);
-	virtual ~Polynomial() {
-	}
 	T value(T x);
 	T value();
 	Polynomial add(Polynomial other);
@@ -41,8 +39,7 @@ public:
 	bool equals(Polynomial rhs);
 	std::string toString();
 	void print();
-	std::vector<T> getNumCoeffs();
-	std::vector<T> getDenCoeffs();
+	std::vector<T> coeffs();
 	Polynomial operator+(Polynomial rhs);
 	void operator+=(Polynomial rhs);
 	Polynomial operator-(Polynomial rhs);
@@ -67,14 +64,13 @@ public:
 	//operator float();
 	//operator double();
 	//operator long double();
-protected:
-	virtual std::string getVariable() {
-		return "x";
-	}
+private:
+	void set(Polynomial other);
+	void simplify();
+	static std::string trimNumber(std::string str);
 	std::vector<T> _numCoeffs;
 	std::vector<T> _denCoeffs;
-	void set(Polynomial other);
-	static std::string trimNumber(std::string str);
+	static std::string variable;
 };
 
 #endif /* POLYNOMIAL_H_ */

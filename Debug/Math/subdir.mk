@@ -4,25 +4,19 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 CPP_SRCS += \
-../Math/Complex.cpp \
 ../Math/GLMatrix.cpp \
-../Math/GenericPolynomial.cpp \
 ../Math/Matrix.cpp \
 ../Math/Polynomial.cpp \
 ../Math/PolynomialMatrix.cpp 
 
 OBJS += \
-./Math/Complex.o \
 ./Math/GLMatrix.o \
-./Math/GenericPolynomial.o \
 ./Math/Matrix.o \
 ./Math/Polynomial.o \
 ./Math/PolynomialMatrix.o 
 
 CPP_DEPS += \
-./Math/Complex.d \
 ./Math/GLMatrix.d \
-./Math/GenericPolynomial.d \
 ./Math/Matrix.d \
 ./Math/Polynomial.d \
 ./Math/PolynomialMatrix.d 

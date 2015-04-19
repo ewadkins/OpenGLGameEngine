@@ -6,8 +6,7 @@ Drawables/Cube.d: ../Drawables/Cube.cpp ../Drawables/Cube.h \
   /usr/local/Cellar/glfw3/3.0.4/include/GLFW/glfw3.h \
   ../Drawables/../Components/GLTriangle.h ../Drawables/../Math/Matrix.h \
   ../Drawables/../Math/PolynomialMatrix.h \
-  ../Drawables/../Math/Polynomial.h ../Drawables/../Math/Complex.h \
-  ../Drawables/../Math/GLMatrix.h
+  ../Drawables/../Math/Polynomial.h ../Drawables/../Math/GLMatrix.h
 
 ../Drawables/Cube.h:
 
@@ -30,7 +29,5 @@ Drawables/Cube.d: ../Drawables/Cube.cpp ../Drawables/Cube.h \
 ../Drawables/../Math/PolynomialMatrix.h:
 
 ../Drawables/../Math/Polynomial.h:
-
-../Drawables/../Math/Complex.h:
 
 ../Drawables/../Math/GLMatrix.h:

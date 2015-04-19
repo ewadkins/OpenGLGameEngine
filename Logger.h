@@ -30,7 +30,7 @@ public:
 	Logger& log(const double d);
 	Logger& log(const long l);
 	template<typename T> Logger& log(Matrix<T> m);
-	template<typename T> Logger& log(Polynomial<T>* m);
+	template<typename T> Logger& log(Polynomial<T> m);
 	Logger& endLine();
 	Logger& increaseIndent();
 	Logger& decreaseIndent();

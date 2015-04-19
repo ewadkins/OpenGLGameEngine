@@ -10,7 +10,6 @@
 
 #include "PolynomialMatrix.h"
 #include "Polynomial.h"
-#include "Complex.h"
 #include <iostream>
 #include <stdexcept>
 #include <vector>
