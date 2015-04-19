@@ -9,6 +9,7 @@
 #define GLMATRIX_H_
 
 #include "Matrix.h"
+#include "PolynomialMatrix.h"
 
 class GLMatrix {
 public:
