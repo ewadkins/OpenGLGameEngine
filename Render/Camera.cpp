@@ -22,7 +22,7 @@ Camera::Camera(Application* application, float x, float y, float z,
 	_rotationY = rotationY;
 	_rotationZ = rotationZ;
 	_fov = 70;
-	_near = 0.01;
+	_near = 0.001;
 	_far = 1000;
 	_projectionType = PERSPECTIVE;
 }
@@ -36,7 +36,7 @@ void Camera::initialize() {
 // Creates and sets a view matrix representing the view of the camera
 void Camera::useView() {
 
-	// FIXME You have to transpose the translation matrix for some reason
+	// XXX You have to transpose the translation matrix for some reason
 	Matrix<float> viewMatrix = GLMatrix::rotationMatrixXYZ(getRotationX(),
 			getRotationY(), getRotationZ())
 			<< GLMatrix::translationMatrix(-getX(), -getY(), -getZ()).transpose();

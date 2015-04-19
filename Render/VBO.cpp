@@ -31,8 +31,6 @@ void VBO<T>::updateData() {
 			std::vector<float> norm = v->getNormal();
 			std::vector<float> tex = v->getTexCoords();
 
-			std::cout << pos[0] << ", " << pos[1] << ", " << pos[2] << std::endl;
-
 			_data.push_back(pos[0]);
 			_data.push_back(pos[1]);
 			_data.push_back(pos[2]);
