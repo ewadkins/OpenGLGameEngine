@@ -9,7 +9,9 @@
 #define MATRIX_H_
 
 #include "PolynomialMatrix.h"
+#include "ComplexMatrix.h"
 #include "Polynomial.h"
+#include "Complex.h"
 #include <iostream>
 #include <stdexcept>
 #include <vector>
@@ -46,6 +48,7 @@ public:
 	T get(int i, int j);
 	Matrix clone();
 	PolynomialMatrix<T> toPolynomialMatrix();
+	ComplexMatrix<T> toComplexMatrix();
 	std::vector<std::string> toStringVector();
 	void print();
 	Matrix operator+(Matrix rhs);

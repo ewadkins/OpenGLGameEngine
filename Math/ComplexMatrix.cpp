@@ -1,43 +1,43 @@
 /*
- * Matrix.cpp
+ * ComplexMatrix.cpp
  *
- *  Created on: Mar 24, 2015
+ *  Created on: Apr 19, 2015
  *      Author: ericwadkins
  */
 
-#include "Matrix.h"
+#include "ComplexMatrix.h"
 
 // Basic constructor
 template<typename T>
-Matrix<T>::Matrix(int rows, int cols) {
+ComplexMatrix<T>::ComplexMatrix(int rows, int cols) {
 	_rows = rows;
 	_cols = cols;
-	_matrix = new T*[_rows];
+	_matrix = new Complex<T>*[_rows];
 	for (int i = 0; i < _rows; i++)
-		_matrix[i] = new T[_cols];
+		_matrix[i] = new Complex<T> [_cols];
 	fill(0);
 }
 
 // Square matrix constructor
 template<typename T>
-Matrix<T>::Matrix(int size) {
+ComplexMatrix<T>::ComplexMatrix(int size) {
 	_rows = size;
 	_cols = size;
-	_matrix = new T*[_rows];
+	_matrix = new Complex<T>*[_rows];
 	for (int i = 0; i < _rows; i++)
-		_matrix[i] = new T[_cols];
+		_matrix[i] = new Complex<T> [_cols];
 	fill(0);
 }
 
 // Constructor that allows matrix casting
 template<typename T>
 template<typename S>
-Matrix<T>::Matrix(Matrix<S> other) {
+ComplexMatrix<T>::ComplexMatrix(ComplexMatrix<S> other) {
 	_rows = other.rows();
 	_cols = other.cols();
-	_matrix = new T*[_rows];
+	_matrix = new Complex<T>*[_rows];
 	for (int i = 0; i < _rows; i++)
-		_matrix[i] = new T[_cols];
+		_matrix[i] = new Complex<T> [_cols];
 	for (int i = 0; i < _rows; i++)
 		for (int j = 0; j < _cols; j++) {
 			set(i, j, other.getMatrix()[i][j]);
@@ -46,10 +46,10 @@ Matrix<T>::Matrix(Matrix<S> other) {
 
 // Returns the sum of this matrix with another
 template<typename T>
-Matrix<T> Matrix<T>::add(Matrix other) {
+ComplexMatrix<T> ComplexMatrix<T>::add(ComplexMatrix other) {
 	if (_rows != other._rows || _cols != other._cols)
 		throw std::runtime_error("Matrix dimensions do not match");
-	Matrix<T> result = Matrix<T>(_rows, _cols);
+	ComplexMatrix<T> result = ComplexMatrix<T>(_rows, _cols);
 	for (int i = 0; i < _rows; i++)
 		for (int j = 0; j < _cols; j++)
 			result.set(i, j, get(i, j) + other.get(i, j));
@@ -58,8 +58,8 @@ Matrix<T> Matrix<T>::add(Matrix other) {
 
 // Returns this matrix multiplied by a scalar
 template<typename T>
-Matrix<T> Matrix<T>::scale(T k) {
-	Matrix<T> result = Matrix<T>(_rows, _cols);
+ComplexMatrix<T> ComplexMatrix<T>::scale(T k) {
+	ComplexMatrix<T> result = ComplexMatrix<T>(_rows, _cols);
 	for (int i = 0; i < _rows; i++)
 		for (int j = 0; j < _cols; j++)
 			result.set(i, j, get(i, j) * k);
@@ -68,8 +68,8 @@ Matrix<T> Matrix<T>::scale(T k) {
 
 // Returns the transpose of this matrix
 template<typename T>
-Matrix<T> Matrix<T>::transpose() {
-	Matrix<T> result = Matrix<T>(_cols, _rows);
+ComplexMatrix<T> ComplexMatrix<T>::transpose() {
+	ComplexMatrix<T> result = ComplexMatrix<T>(_cols, _rows);
 	for (int i = 0; i < _rows; i++)
 		for (int j = 0; j < _cols; j++) {
 			result.set(j, i, get(i, j));
@@ -79,13 +79,13 @@ Matrix<T> Matrix<T>::transpose() {
 
 // Returns the product of this matrix with another
 template<typename T>
-Matrix<T> Matrix<T>::mul(Matrix other) {
+ComplexMatrix<T> ComplexMatrix<T>::mul(ComplexMatrix other) {
 	if (_cols != other._rows)
 		throw std::runtime_error("Matrix dimensions do not match");
-	Matrix<T> result = Matrix<T>(_rows, other.cols());
+	ComplexMatrix<T> result = ComplexMatrix<T>(_rows, other.cols());
 	for (int i = 0; i < _rows; i++)
 		for (int j = 0; j < other.cols(); j++) {
-			T sum = 0;
+			Complex<T> sum = Complex<T>(0, 1);
 			for (int k = 0; k < _cols; k++)
 				sum += get(i, k) * other.get(k, j);
 			result.set(i, j, sum);
@@ -95,8 +95,8 @@ Matrix<T> Matrix<T>::mul(Matrix other) {
 
 // Returns the reduced row echelon form of this matrix
 template<typename T>
-Matrix<T> Matrix<T>::rref() {
-	Matrix<T> result = clone();
+ComplexMatrix<T> ComplexMatrix<T>::rref() {
+	ComplexMatrix<T> result = clone();
 	int x = 0;
 	int y = 0;
 	while (x < _rows) {
@@ -107,7 +107,7 @@ Matrix<T> Matrix<T>::rref() {
 					rowToExchange = i;
 			if (rowToExchange != 0) {
 				for (int j = 0; j < _cols; j++) {
-					T temp = result.get(x, j);
+					Complex<T> temp = result.get(x, j);
 					result.set(x, j, result.get(rowToExchange, j));
 					result.set(rowToExchange, j, temp);
 				}
@@ -120,16 +120,16 @@ Matrix<T> Matrix<T>::rref() {
 			 result.print();*/
 		}
 		if (result.get(x, y) != 1 && result.get(x, y) != 0) {
-			T k = result.get(x, y);
+			Complex<T> k = result.get(x, y);
 			for (int j = 0; j < _cols; j++)
 				result.set(x, j, result.get(x, j) / k);
-			/*std::cout << "Row division (Row " << x + 1 << " / " << k << ")"
+			/*std::cout << "Row division (Row " << x + 1 << " / " << k.toString() << ")"
 			 << std::endl;
 			 result.print();*/
 		}
 		for (int i = 0; i < _rows; i++) {
 			if (i != x && result.get(i, y) != 0) {
-				T n = -(result.get(i, y) / result.get(x, y));
+				Complex<T> n = -(result.get(i, y) / result.get(x, y));
 				for (int j = 0; j < _cols; j++) {
 					result.set(i, j, result.get(i, j) + result.get(x, j) * n);
 				}
@@ -145,10 +145,10 @@ Matrix<T> Matrix<T>::rref() {
 
 // Returns the upper triangular factorization of this matrix
 template<typename T>
-Matrix<T> Matrix<T>::upperTriangular() {
+ComplexMatrix<T> ComplexMatrix<T>::upperTriangular() {
 	if (_rows != _cols)
 		throw std::runtime_error("Matrix must be a square matrix");
-	Matrix<T> result = clone();
+	ComplexMatrix<T> result = clone();
 	int x = 0;
 	int y = 0;
 	while (x < _rows) {
@@ -159,7 +159,7 @@ Matrix<T> Matrix<T>::upperTriangular() {
 					rowToExchange = i;
 			if (rowToExchange != 0) {
 				for (int j = 0; j < _cols; j++) {
-					T temp = result.get(x, j);
+					Complex<T> temp = result.get(x, j);
 					result.set(x, j, result.get(rowToExchange, j));
 					result.set(rowToExchange, j, temp);
 				}
@@ -170,7 +170,7 @@ Matrix<T> Matrix<T>::upperTriangular() {
 		}
 		for (int i = x; i < _rows; i++) {
 			if (i != x && result.get(i, y) != 0) {
-				T n = -(result.get(i, y) / result.get(x, y));
+				Complex<T> n = -(result.get(i, y) / result.get(x, y));
 				for (int j = 0; j < _cols; j++) {
 					result.set(i, j, result.get(i, j) + n * result.get(x, j));
 				}
@@ -184,10 +184,10 @@ Matrix<T> Matrix<T>::upperTriangular() {
 
 // Returns the determinant of this matrix
 template<typename T>
-T Matrix<T>::determinant() {
+Complex<T> ComplexMatrix<T>::determinant() {
 	if (_rows != _cols)
 		throw std::runtime_error("Matrix must be a square matrix");
-	Matrix<T> result = clone();
+	ComplexMatrix<T> result = clone();
 	int rowChanges = 0;
 	int x = 0;
 	int y = 0;
@@ -199,7 +199,7 @@ T Matrix<T>::determinant() {
 					rowToExchange = i;
 			if (rowToExchange != 0) {
 				for (int j = 0; j < _cols; j++) {
-					T temp = result.get(x, j);
+					Complex<T> temp = result.get(x, j);
 					result.set(x, j, result.get(rowToExchange, j));
 					result.set(rowToExchange, j, temp);
 					rowChanges++;
@@ -211,7 +211,7 @@ T Matrix<T>::determinant() {
 		}
 		for (int i = x; i < _rows; i++) {
 			if (i != x && result.get(i, y) != 0) {
-				T n = -(result.get(i, y) / result.get(x, y));
+				Complex<T> n = -(result.get(i, y) / result.get(x, y));
 				for (int j = 0; j < _cols; j++) {
 					result.set(i, j, result.get(i, j) + n * result.get(x, j));
 				}
@@ -220,7 +220,7 @@ T Matrix<T>::determinant() {
 		x++;
 		y++;
 	}
-	T determinant = 1;
+	Complex<T> determinant = 1;
 	for (int n = 0; n < _rows; n++)
 		determinant *= result.get(n, n);
 	if (rowChanges % 2 == 1)
@@ -230,66 +230,40 @@ T Matrix<T>::determinant() {
 
 // Returns the inverse of this matrix
 template<typename T>
-Matrix<T> Matrix<T>::inverse() {
+ComplexMatrix<T> ComplexMatrix<T>::inverse() {
 	if (_rows != _cols)
 		throw std::runtime_error("Matrix must be a square matrix");
 	if (determinant() == 0)
-		throw std::runtime_error(
-				"Matrix is std::singular, inverse doesn't exist");
-
-	Matrix<T> m = Matrix<T>(_rows, 2 * _cols);
+		throw std::runtime_error("Matrix is singular, inverse doesn't exist");
+	ComplexMatrix<T> m = ComplexMatrix<T>(_rows, 2 * _cols);
 	for (int i = 0; i < _rows; i++)
 		for (int j = 0; j < _cols; j++)
 			m.set(i, j, get(i, j));
 	for (int n = 0; n < _rows; n++)
 		m.set(n, n + _cols, 1);
 	m = m.rref();
-	Matrix<T> result = Matrix<T>(_rows);
+	ComplexMatrix<T> result = ComplexMatrix<T>(_rows);
 	for (int i = 0; i < _rows; i++)
 		for (int j = 0; j < _cols; j++)
 			result.set(i, j, m.get(i, j + _cols));
 	return result;
 }
 
-// Returns a vector of the eigenvalues of this matrix
-template<typename T>
-std::vector<T> Matrix<T>::eigenvalues() {
-	if (_rows != _cols)
-		throw std::runtime_error("Matrix must be a square matrix");
-	PolynomialMatrix<T> m = toPolynomialMatrix();
-	PolynomialMatrix<T> lambdaI = PolynomialMatrix<T>(_rows);
-	T arr[] = { 0, -1 };
-	std::vector<T> coeffs(arr, arr + sizeof(arr) / sizeof(arr[0]));
-	for (int n = 0; n < _rows; n ++)
-		lambdaI.set(n, n, Polynomial<T>(coeffs, 1));
-
-	m = m + lambdaI;
-	m.print();
-	m.determinant().print();
-	std::cout << m.determinant().value() << std::endl;
-
-	//throw std::runtime_error("Matrix eigenvalues operation not available");
-
-	std::vector<T> eigenvalues;
-
-	return eigenvalues;
-}
-
 // Returns the number of rows in this matrix
 template<typename T>
-int Matrix<T>::rows() {
+int ComplexMatrix<T>::rows() {
 	return _rows;
 }
 
 // Returns the number of columns in this matrix
 template<typename T>
-int Matrix<T>::cols() {
+int ComplexMatrix<T>::cols() {
 	return _cols;
 }
 
 // Fills this entire matrix with a given value
 template<typename T>
-void Matrix<T>::fill(T value) {
+void ComplexMatrix<T>::fill(T value) {
 	for (int i = 0; i < _rows; i++)
 		for (int j = 0; j < _cols; j++)
 			set(i, j, value);
@@ -297,7 +271,32 @@ void Matrix<T>::fill(T value) {
 
 // sets the values of the matrix given a two dimensional array of values
 template<typename T>
-void Matrix<T>::setMatrix(T** matrix) {
+void ComplexMatrix<T>::setMatrix(T** matrix) {
+	for (int i = 0; i < _rows; i++)
+		for (int j = 0; j < _cols; j++) {
+			set(i, j, Complex<T>(matrix[i][j]));
+		}
+}
+
+// sets the values of this matrix given a vector of values
+template<typename T>
+void ComplexMatrix<T>::setVector(std::vector<T> values) {
+	if (values.size() != _rows * _cols)
+		throw std::runtime_error("Incorrect number of values to fill matrix");
+	for (int i = 0; i < _rows * _cols; i++) {
+		set(i / _cols, i % _cols, Complex<T>(values[i]));
+	}
+}
+
+// sets the specified element of this matrix to a given value
+template<typename T>
+void ComplexMatrix<T>::set(int i, int j, T value) {
+	_matrix[i][j] = value;
+}
+
+// sets the values of the matrix given a two dimensional array of values
+template<typename T>
+void ComplexMatrix<T>::setMatrix(Complex<T>** matrix) {
 	for (int i = 0; i < _rows; i++)
 		for (int j = 0; j < _cols; j++) {
 			set(i, j, matrix[i][j]);
@@ -306,7 +305,7 @@ void Matrix<T>::setMatrix(T** matrix) {
 
 // sets the values of this matrix given a vector of values
 template<typename T>
-void Matrix<T>::setVector(std::vector<T> values) {
+void ComplexMatrix<T>::setVector(std::vector<Complex<T> > values) {
 	if (values.size() != _rows * _cols)
 		throw std::runtime_error("Incorrect number of values to fill matrix");
 	for (int i = 0; i < _rows * _cols; i++) {
@@ -316,26 +315,20 @@ void Matrix<T>::setVector(std::vector<T> values) {
 
 // sets the specified element of this matrix to a given value
 template<typename T>
-void Matrix<T>::set(int i, int j, T value) {
+void ComplexMatrix<T>::set(int i, int j, Complex<T> value) {
 	_matrix[i][j] = value;
 }
 
 // Returns the values of this matrix in a two dimensional array
 template<typename T>
-T** Matrix<T>::getMatrix() {
-	T** matrix = new T*[_rows];
-	for (int i = 0; i < _rows; i++)
-		matrix[i] = new T[_cols];
-	for (int i = 0; i < _rows; i++)
-		for (int j = 0; i < _cols; j++)
-			matrix[i][j] = _matrix[i][j];
-	return matrix;
+Complex<T>** ComplexMatrix<T>::getMatrix() {
+	return _matrix;
 }
 
 // Returns the values of this matrix in a vector
 template<typename T>
-std::vector<T> Matrix<T>::getVector() {
-	std::vector<T> values;
+std::vector<Complex<T> > ComplexMatrix<T>::getVector() {
+	std::vector<Complex<T> > values;
 	for (int i = 0; i < _rows; i++)
 		for (int j = 0; j < _cols; j++)
 			values.push_back(_matrix[i][j]);
@@ -344,8 +337,8 @@ std::vector<T> Matrix<T>::getVector() {
 
 // Returns the values of this matrix in a one dimensional array
 template<typename T>
-T* Matrix<T>::getArray() {
-	T* values = new T[_rows * _cols];
+Complex<T>* ComplexMatrix<T>::getArray() {
+	Complex<T>* values = new Complex<T> [_rows * _cols];
 	for (int i = 0; i < _rows; i++)
 		for (int j = 0; j < _cols; j++)
 			values[i * _cols + j] = _matrix[i][j];
@@ -354,59 +347,65 @@ T* Matrix<T>::getArray() {
 
 // Returns the value of the specified element of this matrix
 template<typename T>
-T Matrix<T>::get(int i, int j) {
+Complex<T> ComplexMatrix<T>::get(int i, int j) {
 	return _matrix[i][j];
+}
+
+// Returns the values of this matrix in a two dimensional array
+template<typename T>
+T** ComplexMatrix<T>::getMatrixConstants() {
+	T** matrix = new T*[_rows];
+	for (int i = 0; i < _rows; i++)
+		matrix[i] = new T[_cols];
+	for (int i = 0; i < _rows; i++)
+		for (int j = 0; i < _cols; j++)
+			matrix[i][j] = _matrix[i][j].value();
+	return matrix;
+}
+
+// Returns the values of this matrix in a vector
+template<typename T>
+std::vector<T> ComplexMatrix<T>::getVectorConstants() {
+	std::vector<T> values;
+	for (int i = 0; i < _rows; i++)
+		for (int j = 0; j < _cols; j++)
+			values.push_back(_matrix[i][j].value());
+	return values;
+}
+
+// Returns the values of this matrix in a one dimensional array
+template<typename T>
+T* ComplexMatrix<T>::getArrayConstants() {
+	T* values = new T[_rows * _cols];
+	for (int i = 0; i < _rows; i++)
+		for (int j = 0; j < _cols; j++)
+			values[i * _cols + j] = _matrix[i][j].value();
+	return values;
+}
+
+// Returns the value of the specified element of this matrix
+template<typename T>
+T ComplexMatrix<T>::getConstant(int i, int j) {
+	return _matrix[i][j].value();
 }
 
 // Returns a copy of this object (another matrix with the same values)
 template<typename T>
-Matrix<T> Matrix<T>::clone() {
-	Matrix<T> result = Matrix<T>(_rows, _cols);
+ComplexMatrix<T> ComplexMatrix<T>::clone() {
+	ComplexMatrix<T> result = ComplexMatrix<T>(_rows, _cols);
 	result.setMatrix(_matrix);
 	return result;
 }
 
-// Returns a polynomial version of this matrix
-template<typename T>
-PolynomialMatrix<T> Matrix<T>::toPolynomialMatrix() {
-	PolynomialMatrix<T> m = PolynomialMatrix<T>(_rows);
-	std::vector<T> values = getVector();
-	std::vector<Polynomial<T> > polyValues;
-	for (int i = 0; i < values.size(); i++)
-		polyValues.push_back(Polynomial<T>(values[i]));
-	m.setVector(polyValues);
-	return m;
-}
-
-// Returns a complex version of this matrix
-template<typename T>
-ComplexMatrix<T> Matrix<T>::toComplexMatrix() {
-	ComplexMatrix<T> m = ComplexMatrix<T>(_rows);
-	std::vector<T> values = getVector();
-	std::vector<Complex<T> > polyValues;
-	for (int i = 0; i < values.size(); i++)
-		polyValues.push_back(Complex<T>(values[i]));
-	m.setVector(polyValues);
-	return m;
-}
-
 // Returns a vector of strings representing this matrix
 template<typename T>
-std::vector<std::string> Matrix<T>::toStringVector() {
+std::vector<std::string> ComplexMatrix<T>::toStringVector() {
 	std::vector<std::string> strings;
 	std::string** arr = new std::string*[_rows];
 	for (int i = 0; i < _rows; i++) {
 		arr[i] = new std::string[_cols];
 		for (int j = 0; j < _cols; j++) {
-			std::string str = std::to_string(_matrix[i][j]);
-			if (str.find(std::string(".")) != std::string::npos) {
-				for (int c = str.length() - 1; c >= 0; c--) {
-					if (str.at(c) != '0' || str.at(c - 1) == '.')
-						break;
-					str = str.substr(0, c);
-				}
-			}
-			arr[i][j] = str;
+			arr[i][j] = _matrix[i][j].toString();
 		}
 	}
 	for (int j = 0; j < _cols; j++) {
@@ -434,7 +433,7 @@ std::vector<std::string> Matrix<T>::toStringVector() {
 
 // Prints the string representation of this matrix to the standard output stream
 template<typename T>
-void Matrix<T>::print() {
+void ComplexMatrix<T>::print() {
 	std::vector<std::string> strings = toStringVector();
 	for (int i = 0; i < strings.size(); i++)
 		std::cout << strings[i] << std::endl;
@@ -443,50 +442,50 @@ void Matrix<T>::print() {
 
 // Allows for the addition of two matrices with the + operator
 template<typename T>
-Matrix<T> Matrix<T>::operator+(Matrix<T> rhs) {
+ComplexMatrix<T> ComplexMatrix<T>::operator+(ComplexMatrix<T> rhs) {
 	return add(rhs);
 }
 
 // Allows for the subtraction of two matrices with the - operator
 template<typename T>
-Matrix<T> Matrix<T>::operator-(Matrix<T> rhs) {
+ComplexMatrix<T> ComplexMatrix<T>::operator-(ComplexMatrix<T> rhs) {
 	return add(rhs.scale(-1));
 }
 
 // Allows for the negation of a matrix with the - operator
 template<typename T>
-Matrix<T> Matrix<T>::operator-() {
+ComplexMatrix<T> ComplexMatrix<T>::operator-() {
 	return scale(-1);
 }
 
 // Allows for the scaling of a matrix with the * operator
 template<typename T>
-Matrix<T> Matrix<T>::operator*(T rhs) {
+ComplexMatrix<T> ComplexMatrix<T>::operator*(T rhs) {
 	return scale(rhs);
 }
 
 // Allows for the multiplication of two matrices with the * operator
 template<typename T>
-Matrix<T> Matrix<T>::operator*(Matrix<T> rhs) {
+ComplexMatrix<T> ComplexMatrix<T>::operator*(ComplexMatrix<T> rhs) {
 	return mul(rhs);
 }
 
 // Allows for the division of two matrices with the / operator
 template<typename T>
-Matrix<T> Matrix<T>::operator/(Matrix<T> rhs) {
+ComplexMatrix<T> ComplexMatrix<T>::operator/(ComplexMatrix<T> rhs) {
 	return mul(rhs.inverse());
 }
 
 // Allows for the scaling of a matrix with the / operator
 template<typename T>
-Matrix<T> Matrix<T>::operator/(T rhs) {
+ComplexMatrix<T> ComplexMatrix<T>::operator/(T rhs) {
 	return scale(1 / rhs);
 }
 
 // Allows for the exponentiation of two matrices with the ^ operator
 template<typename T>
-Matrix<T> Matrix<T>::operator^(int rhs) {
-	Matrix<T> result = clone();
+ComplexMatrix<T> ComplexMatrix<T>::operator^(int rhs) {
+	ComplexMatrix<T> result = clone();
 	for (int i = 0; i < rhs; i++)
 		result = result.mul(result);
 	return result;
@@ -494,42 +493,35 @@ Matrix<T> Matrix<T>::operator^(int rhs) {
 
 // Allows for the left multiplication of two matrices with the << operator
 template<typename T>
-Matrix<T> Matrix<T>::operator<<(Matrix<T> rhs) {
+ComplexMatrix<T> ComplexMatrix<T>::operator<<(ComplexMatrix<T> rhs) {
 	return rhs.mul(clone());
 }
 
 // Returns a matrix of the specified size filled with zeros
 template<typename T>
-Matrix<T> Matrix<T>::zeros(int m, int n) {
-	Matrix<T> result = Matrix<T>(m, n);
+ComplexMatrix<T> ComplexMatrix<T>::zeros(int m, int n) {
+	ComplexMatrix<T> result = ComplexMatrix<T>(m, n);
 	return result;
 }
 
 // Returns a matrix of the specified size filled with ones
 template<typename T>
-Matrix<T> Matrix<T>::ones(int m, int n) {
-	Matrix<T> result = Matrix<T>(m, n);
+ComplexMatrix<T> ComplexMatrix<T>::ones(int m, int n) {
+	ComplexMatrix<T> result = ComplexMatrix<T>(m, n);
 	result.fill(1);
 	return result;
 }
 
 // Returns the identity matrix of the specified size
 template<typename T>
-Matrix<T> Matrix<T>::identity(int size) {
-	Matrix<T> result = Matrix<T>(size, size);
+ComplexMatrix<T> ComplexMatrix<T>::identity(int size) {
+	ComplexMatrix<T> result = ComplexMatrix<T>(size, size);
 	for (int n = 0; n < size; n++)
 		result.set(n, n, 1);
 	return result;
 }
 
 // Explicit instantiation of template classes
-template class Matrix<float> ;
-template class Matrix<double> ;
-template class Matrix<long double> ;
-//template class Matrix<Polynomial<float> > ;
-//template class Matrix<Polynomial<double> > ;
-//template class Matrix<Polynomial<long double> > ;
-//template class Matrix<Complex<float> > ;
-//template class Matrix<Complex<double> > ;
-//template class Matrix<Complex<long double> > ;
-
+template class ComplexMatrix<float> ;
+template class ComplexMatrix<double> ;
+template class ComplexMatrix<long double> ;

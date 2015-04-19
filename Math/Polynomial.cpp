@@ -159,7 +159,7 @@ Polynomial<T> Polynomial<T>::mul(Polynomial other) {
 }
 
 template<typename T>
-std::vector<T> Polynomial<T>::roots() {
+std::vector<T> Polynomial<T>::roots() { //TODO Find factorization algorithm, including complex numbers
 	std::vector<T> result;
 
 	return result;

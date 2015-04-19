@@ -163,37 +163,56 @@ void Application::initialize() {
 	_logger->log("Testing matrices...").endLine().increaseIndent();
 	start = clock();
 	{
+		{
+			PolynomialMatrix<float> pm = PolynomialMatrix<float>(3, 3);
+
+			float numArr[] = { 5, 3, 2, -2, 1, 4, 2, 5, -2 };
+			std::vector<float> values2(numArr,
+					numArr + sizeof(numArr) / sizeof(numArr[0]));
+			pm.setVector(values2);
+
+			float denArr[] = { 5, 1 };
+			std::vector<float> numCoeffs(denArr,
+					denArr + sizeof(denArr) / sizeof(denArr[0]));
+
+			Polynomial<float> p = Polynomial<float>(numCoeffs, 1);
+			pm.set(0, 0, p);
+
+			pm.print();
+			pm.upperTriangular().print();
+			pm.determinant().print();
+		}
+
+		std::cout << std::endl << "-------------------" << std::endl
+				<< std::endl;
+
+		{
+			ComplexMatrix<float> cm = ComplexMatrix<float>(3, 3);
+
+			float numArr[] = { 5, 3, 2, -2, 1, 4, 2, 5, -2 };
+			std::vector<float> values2(numArr,
+					numArr + sizeof(numArr) / sizeof(numArr[0]));
+			cm.setVector(values2);
+
+			float denArr[] = { 5, 1 };
+			std::vector<float> numCoeffs(denArr,
+					denArr + sizeof(denArr) / sizeof(denArr[0]));
+
+			Complex<float> c = Complex<float>(numCoeffs, 1);
+			cm.set(0, 0, c);
+
+			cm.print();
+			cm.upperTriangular().print();
+			cm.determinant().print();
+		}
+
+		std::cout << std::endl << "-------------------" << std::endl
+				<< std::endl;
 
 		Matrix<float> m1 = Matrix<float>(3, 3);
 		float arr[] = { 5, 3, 2, -2, 1, 4, 2, 5, -2 };
 		std::vector<float> values(arr, arr + sizeof(arr) / sizeof(arr[0]));
 		m1.setVector(values);
-
-		m1.print();
-		m1.upperTriangular().print();
-		std::cout << m1.determinant() << std::endl;
-
-		std::cout << std::endl << "-------------------" << std::endl
-				<< std::endl;
-
-		PolynomialMatrix<float> m2 = PolynomialMatrix<float>(3, 3);
-		float arr2[] = { 5, 3, 2, -2, 1, 4, 2, 5, -2 };
-		std::vector<float> values2(arr2, arr2 + sizeof(arr2) / sizeof(arr2[0]));
-		m2.setVector(values2);
-
-		float arr3[] = { 5, 1 };
-		std::vector<float> numCoeffs(arr3,
-				arr3 + sizeof(arr3) / sizeof(arr3[0]));
-		Polynomial<float> p = Polynomial<float>(numCoeffs, 1);
-		m2.set(0, 0, p);
-
-		m2.print();
-		m2.upperTriangular().print();
-		m2.determinant().print();
-		std::cout << m2.determinant().value(0) << std::endl;
-
-		std::cout << std::endl << "-------------------" << std::endl
-				<< std::endl;
 
 		m1.print();
 		m1.eigenvalues();
