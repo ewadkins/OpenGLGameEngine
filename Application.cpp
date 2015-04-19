@@ -164,7 +164,7 @@ void Application::initialize() {
 	start = clock();
 	{
 
-		Matrix<float> m1 = Matrix<float>(3, 3);
+		/*Matrix<float> m1 = Matrix<float>(3, 3);
 		float arr[] = { 5, 3, 2, -2, 1, 4, 2, 5, -2 };
 		std::vector<float> values(arr, arr + sizeof(arr) / sizeof(arr[0]));
 		m1.setVector(values);
@@ -196,7 +196,7 @@ void Application::initialize() {
 				<< std::endl;
 
 		m1.print();
-		m1.eigenvalues();
+		m1.eigenvalues();*/
 
 	}
 	finish = clock();

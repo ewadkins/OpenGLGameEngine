@@ -1,95 +1,73 @@
 /*
- * GenericMatrix.cpp
+ * ComplexMatrix.cpp
  *
  *  Created on: Apr 19, 2015
  *      Author: ericwadkins
  */
 
-#include "GenericMatrix.h"
+#include "ComplexMatrix.h"
 #include "Matrix.h"
 
 // Basic constructor
 template<typename T>
-GenericMatrix<T>::GenericMatrix(int rows, int cols) :
+ComplexMatrix<T>::ComplexMatrix(int rows, int cols) :
 		Matrix<T>(rows, cols) {
 }
 
 // Square matrix constructor
 template<typename T>
-GenericMatrix<T>::GenericMatrix(int size) :
+ComplexMatrix<T>::ComplexMatrix(int size) :
 		Matrix<T>(size) {
 }
 
 // Constructor that allows matrix casting
 template<typename T>
 template<typename S>
-GenericMatrix<T>::GenericMatrix(GenericMatrix<S> other) :
+ComplexMatrix<T>::ComplexMatrix(ComplexMatrix<S> other) :
 		Matrix<T>(other) {
 }
 
 // Returns a vector of the eigenvalues of this matrix
 template<typename T>
-std::vector<T> GenericMatrix<T>::eigenvalues() {
-	if (this->_rows != this->_cols)
-		throw std::runtime_error("Matrix must be a square matrix");
-	PolynomialMatrix<T> m = toPolynomialMatrix();
-	PolynomialMatrix<T> lambdaI = PolynomialMatrix<T>(this->_rows);
-	T arr[] = { 0, -1 };
-	std::vector<T> coeffs(arr, arr + sizeof(arr) / sizeof(arr[0]));
-	for (int n = 0; n < this->_rows; n ++)
-		lambdaI.set(n, n, Polynomial<T>(coeffs, 1));
-
-	m = m + lambdaI;
-	m.print();
-	m.determinant().print();
-	std::cout << m.determinant().value() << std::endl;
-
-	//throw std::runtime_error("Matrix eigenvalues operation not available");
-
-	std::vector<T> eigenvalues;
-
-	return eigenvalues;
+std::vector<Complex<T> > ComplexMatrix<T>::eigenvalues() {
+	throw std::runtime_error(
+			"Eigenvalues function of ComplexMatrix is not supported");
 }
 
 // Returns a generic version of this matrix
 template<typename T>
 GenericMatrix<T>* GenericMatrix<T>::toGenericMatrix() {
-	return this->clone();
+	GenericMatrix<T>* m = new GenericMatrix<T>(this->_rows);
+	std::vector<T> polyValues = this->getVector();
+	std::vector<T> values;
+	for (int i = 0; i < values.size(); i++)
+		values.push_back(polyValues[i].value());
+	m->setVector(values);
+	return m;
 }
 
 // Returns a polynomial version of this matrix
 template<typename T>
-PolynomialMatrix<T>* GenericMatrix<T>::toPolynomialMatrix() {
-	PolynomialMatrix<T>* m = new PolynomialMatrix<T>(this->_rows);
-	std::vector<T> values = this->getVector();
-	std::vector<Polynomial<T> > polyValues;
-	for (int i = 0; i < values.size(); i++)
-		polyValues.push_back(Polynomial<T>(values[i]));
-	m->setVector(polyValues);
-	return m;
+PolynomialMatrix<T>* ComplexMatrix<T>::toPolynomialMatrix() {
+	throw std::runtime_error(
+			"Cannot cast from complex to polynomial matrix");
 }
 
 // Returns a complex version of this matrix
 template<typename T>
 ComplexMatrix<T>* GenericMatrix<T>::toComplexMatrix() {
-	ComplexMatrix<T>* m = new ComplexMatrix<T>(this->_rows);
-	std::vector<T> values = this->getVector();
-	std::vector<Complex<T> > polyValues;
-	for (int i = 0; i < values.size(); i++)
-		polyValues.push_back(Complex<T>(values[i]));
-	m->setVector(polyValues);
-	return m;
+	return this->clone();
 }
 
 // Returns a vector of strings representing this matrix
 template<typename T>
-std::vector<std::string> GenericMatrix<T>::toStringVector() {
+std::vector<std::string> ComplexMatrix<T>::toStringVector() {
 	std::vector<std::string> strings;
 	std::string** arr = new std::string*[this->_rows];
 	for (int i = 0; i < this->_rows; i++) {
 		arr[i] = new std::string[this->_cols];
 		for (int j = 0; j < this->_cols; j++) {
-			std::string str = std::to_string(this->_matrix[i][j]);
+			std::string str = (this->_matrix[i][j]).toString();
 			if (str.find(std::string(".")) != std::string::npos) {
 				for (int c = str.length() - 1; c >= 0; c--) {
 					if (str.at(c) != '0' || str.at(c - 1) == '.')
@@ -124,6 +102,6 @@ std::vector<std::string> GenericMatrix<T>::toStringVector() {
 }
 
 // Explicit instantiation of template classes
-template class GenericMatrix<float> ;
-template class GenericMatrix<double> ;
-template class GenericMatrix<long double> ;
+template class ComplexMatrix<float> ;
+template class ComplexMatrix<double> ;
+template class ComplexMatrix<long double> ;

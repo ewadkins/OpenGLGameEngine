@@ -1,13 +1,14 @@
 /*
- * GenericMatrix.h
+ * ComplexMatrix.h
  *
  *  Created on: Apr 19, 2015
  *      Author: ericwadkins
  */
 
-#ifndef GENERICMATRIX_H_
-#define GENERICMATRIX_H_
+#ifndef COMPLEXMATRIX_H_
+#define COMPLEXMATRIX_H_
 
+#include "Complex.h"
 #include <stdexcept>
 #include <vector>
 #include <string>
@@ -15,23 +16,23 @@
 template<typename T>
 class Matrix;
 template<typename T>
-class PolynomialMatrix;
+class GenericMatrix;
 template<typename T>
-class ComplexMatrix;
+class PolynomialMatrix;
 
 template<typename T>
-class GenericMatrix: public Matrix<T> {
+class ComplexMatrix: public Matrix<Complex<T> > {
 public:
-	GenericMatrix(int m, int n);
-	GenericMatrix(int size);
-	template<typename S> GenericMatrix(GenericMatrix<S> other);
-	virtual ~GenericMatrix() {
+	ComplexMatrix(int m, int n);
+	ComplexMatrix(int size);
+	template<typename S> ComplexMatrix(ComplexMatrix<S> other);
+	virtual ~ComplexMatrix() {
 	}
-	virtual std::vector<T> eigenvalues();
+	virtual std::vector<Complex<T> > eigenvalues();
 	virtual GenericMatrix<T>* toGenericMatrix();
 	virtual PolynomialMatrix<T>* toPolynomialMatrix();
 	virtual ComplexMatrix<T>* toComplexMatrix();
 	virtual std::vector<std::string> toStringVector();
 };
 
-#endif /* GENERICMATRIX_H_ */
+#endif /* COMPLEXMATRIX_H_ */

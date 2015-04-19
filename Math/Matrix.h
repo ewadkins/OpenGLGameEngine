@@ -8,8 +8,11 @@
 #ifndef MATRIX_H_
 #define MATRIX_H_
 
+#include "GenericMatrix.h"
 #include "PolynomialMatrix.h"
+#include "ComplexMatrix.h"
 #include "Polynomial.h"
+#include "Complex.h"
 #include <iostream>
 #include <stdexcept>
 #include <vector>
@@ -27,13 +30,16 @@ public:
 	}
 	Matrix add(Matrix other);
 	Matrix scale(T k);
+	Matrix inverseScale(T k);
 	Matrix transpose();
 	Matrix mul(Matrix other);
 	Matrix rref();
 	Matrix upperTriangular();
 	T determinant();
 	Matrix inverse();
-	std::vector<T> eigenvalues();
+	virtual std::vector<T> eigenvalues() {
+		return std::vector<T>();
+	}
 	int rows();
 	int cols();
 	void fill(T value);
@@ -44,9 +50,19 @@ public:
 	std::vector<T> getVector();
 	T* getArray();
 	T get(int i, int j);
-	Matrix clone();
-	PolynomialMatrix<T> toPolynomialMatrix();
-	std::vector<std::string> toStringVector();
+	Matrix* clone();
+	virtual GenericMatrix<T>* toGenericMatrix() {
+		return new GenericMatrix<T>(1);
+	}
+	virtual PolynomialMatrix<T>* toPolynomialMatrix() {
+		return new PolynomialMatrix<T>(1);
+	}
+	virtual ComplexMatrix<T>* toComplexMatrix() {
+		return new ComplexMatrix<T>(1);
+	}
+	virtual std::vector<std::string> toStringVector() {
+		return std::vector<std::string>();
+	}
 	void print();
 	Matrix operator+(Matrix rhs);
 	Matrix operator-(Matrix rhs);
@@ -60,7 +76,7 @@ public:
 	static Matrix zeros(int m, int n);
 	static Matrix ones(int m, int n);
 	static Matrix identity(int size);
-private:
+protected:
 	int _rows;
 	int _cols;
 	T** _matrix;

@@ -66,6 +66,16 @@ Matrix<T> Matrix<T>::scale(T k) {
 	return result;
 }
 
+// Returns this matrix multiplied by a scalar
+template<typename T>
+Matrix<T> Matrix<T>::inverseScale(T k) {
+	Matrix<T> result = Matrix<T>(_rows, _cols);
+	for (int i = 0; i < _rows; i++)
+		for (int j = 0; j < _cols; j++)
+			result.set(i, j, get(i, j) / k);
+	return result;
+}
+
 // Returns the transpose of this matrix
 template<typename T>
 Matrix<T> Matrix<T>::transpose() {
@@ -96,20 +106,20 @@ Matrix<T> Matrix<T>::mul(Matrix other) {
 // Returns the reduced row echelon form of this matrix
 template<typename T>
 Matrix<T> Matrix<T>::rref() {
-	Matrix<T> result = clone();
+	Matrix<T>* result = clone();
 	int x = 0;
 	int y = 0;
 	while (x < _rows) {
-		if (result.get(x, y) == 0) {
+		if (result->get(x, y) == 0) {
 			int rowToExchange = 0;
 			for (int i = x; i < _rows; i++)
-				if (result.get(i, y) == 0)
+				if (result->get(i, y) == 0)
 					rowToExchange = i;
 			if (rowToExchange != 0) {
 				for (int j = 0; j < _cols; j++) {
-					T temp = result.get(x, j);
-					result.set(x, j, result.get(rowToExchange, j));
-					result.set(rowToExchange, j, temp);
+					T temp = result->get(x, j);
+					result->set(x, j, result->get(rowToExchange, j));
+					result->set(rowToExchange, j, temp);
 				}
 			} else {
 				y++;
@@ -119,19 +129,19 @@ Matrix<T> Matrix<T>::rref() {
 			 << rowToExchange + 1 << ")" << std::endl;
 			 result.print();*/
 		}
-		if (result.get(x, y) != 1 && result.get(x, y) != 0) {
-			T k = result.get(x, y);
+		if (result->get(x, y) != 1 && result->get(x, y) != 0) {
+			T k = result->get(x, y);
 			for (int j = 0; j < _cols; j++)
-				result.set(x, j, result.get(x, j) / k);
+				result->set(x, j, result->get(x, j) / k);
 			/*std::cout << "Row division (Row " << x + 1 << " / " << k << ")"
 			 << std::endl;
 			 result.print();*/
 		}
 		for (int i = 0; i < _rows; i++) {
-			if (i != x && result.get(i, y) != 0) {
-				T n = -(result.get(i, y) / result.get(x, y));
+			if (i != x && result->get(i, y) != 0) {
+				T n = -(result->get(i, y) / result->get(x, y));
 				for (int j = 0; j < _cols; j++) {
-					result.set(i, j, result.get(i, j) + result.get(x, j) * n);
+					result->set(i, j, result->get(i, j) + result->get(x, j) * n);
 				}
 			}
 		}
@@ -140,7 +150,7 @@ Matrix<T> Matrix<T>::rref() {
 		/*std::cout << "Row elimination" << std::endl;
 		 result.print();*/
 	}
-	return result;
+	return *result;
 }
 
 // Returns the upper triangular factorization of this matrix
@@ -148,20 +158,20 @@ template<typename T>
 Matrix<T> Matrix<T>::upperTriangular() {
 	if (_rows != _cols)
 		throw std::runtime_error("Matrix must be a square matrix");
-	Matrix<T> result = clone();
+	Matrix<T>* result = clone();
 	int x = 0;
 	int y = 0;
 	while (x < _rows) {
-		if (result.get(x, y) == 0) {
+		if (result->get(x, y) == 0) {
 			int rowToExchange = 0;
 			for (int i = x; i < _rows; i++)
-				if (result.get(i, y) != 0)
+				if (result->get(i, y) != 0)
 					rowToExchange = i;
 			if (rowToExchange != 0) {
 				for (int j = 0; j < _cols; j++) {
-					T temp = result.get(x, j);
-					result.set(x, j, result.get(rowToExchange, j));
-					result.set(rowToExchange, j, temp);
+					T temp = result->get(x, j);
+					result->set(x, j, result->get(rowToExchange, j));
+					result->set(rowToExchange, j, temp);
 				}
 			} else {
 				y++;
@@ -169,17 +179,17 @@ Matrix<T> Matrix<T>::upperTriangular() {
 			}
 		}
 		for (int i = x; i < _rows; i++) {
-			if (i != x && result.get(i, y) != 0) {
-				T n = -(result.get(i, y) / result.get(x, y));
+			if (i != x && result->get(i, y) != 0) {
+				T n = -(result->get(i, y) / result->get(x, y));
 				for (int j = 0; j < _cols; j++) {
-					result.set(i, j, result.get(i, j) + n * result.get(x, j));
+					result->set(i, j, result->get(i, j) + n * result->get(x, j));
 				}
 			}
 		}
 		x++;
 		y++;
 	}
-	return result;
+	return *result;
 }
 
 // Returns the determinant of this matrix
@@ -187,21 +197,21 @@ template<typename T>
 T Matrix<T>::determinant() {
 	if (_rows != _cols)
 		throw std::runtime_error("Matrix must be a square matrix");
-	Matrix<T> result = clone();
+	Matrix<T>* result = clone();
 	int rowChanges = 0;
 	int x = 0;
 	int y = 0;
 	while (x < _rows) {
-		if (result.get(x, y) == 0) {
+		if (result->get(x, y) == 0) {
 			int rowToExchange = 0;
 			for (int i = x; i < _rows; i++)
-				if (result.get(i, y) != 0)
+				if (result->get(i, y) != 0)
 					rowToExchange = i;
 			if (rowToExchange != 0) {
 				for (int j = 0; j < _cols; j++) {
-					T temp = result.get(x, j);
-					result.set(x, j, result.get(rowToExchange, j));
-					result.set(rowToExchange, j, temp);
+					T temp = result->get(x, j);
+					result->set(x, j, result->get(rowToExchange, j));
+					result->set(rowToExchange, j, temp);
 					rowChanges++;
 				}
 			} else {
@@ -210,10 +220,10 @@ T Matrix<T>::determinant() {
 			}
 		}
 		for (int i = x; i < _rows; i++) {
-			if (i != x && result.get(i, y) != 0) {
-				T n = -(result.get(i, y) / result.get(x, y));
+			if (i != x && result->get(i, y) != 0) {
+				T n = -(result->get(i, y) / result->get(x, y));
 				for (int j = 0; j < _cols; j++) {
-					result.set(i, j, result.get(i, j) + n * result.get(x, j));
+					result->set(i, j, result->get(i, j) + n * result->get(x, j));
 				}
 			}
 		}
@@ -222,7 +232,7 @@ T Matrix<T>::determinant() {
 	}
 	T determinant = 1;
 	for (int n = 0; n < _rows; n++)
-		determinant *= result.get(n, n);
+		determinant *= result->get(n, n);
 	if (rowChanges % 2 == 1)
 		determinant *= -1;
 	return determinant;
@@ -249,30 +259,6 @@ Matrix<T> Matrix<T>::inverse() {
 		for (int j = 0; j < _cols; j++)
 			result.set(i, j, m.get(i, j + _cols));
 	return result;
-}
-
-// Returns a vector of the eigenvalues of this matrix
-template<typename T>
-std::vector<T> Matrix<T>::eigenvalues() {
-	if (_rows != _cols)
-		throw std::runtime_error("Matrix must be a square matrix");
-	PolynomialMatrix<T> m = toPolynomialMatrix();
-	PolynomialMatrix<T> lambdaI = PolynomialMatrix<T>(_rows);
-	T arr[] = { 0, -1 };
-	std::vector<T> coeffs(arr, arr + sizeof(arr) / sizeof(arr[0]));
-	for (int n = 0; n < _rows; n ++)
-		lambdaI.set(n, n, Polynomial<T>(coeffs, 1));
-
-	m = m + lambdaI;
-	m.print();
-	m.determinant().print();
-	std::cout << m.determinant().value() << std::endl;
-
-	//throw std::runtime_error("Matrix eigenvalues operation not available");
-
-	std::vector<T> eigenvalues;
-
-	return eigenvalues;
 }
 
 // Returns the number of rows in this matrix
@@ -360,64 +346,10 @@ T Matrix<T>::get(int i, int j) {
 
 // Returns a copy of this object (another matrix with the same values)
 template<typename T>
-Matrix<T> Matrix<T>::clone() {
-	Matrix<T> result = Matrix<T>(_rows, _cols);
-	result.setMatrix(_matrix);
+Matrix<T>* Matrix<T>::clone() {
+	Matrix<T>* result = new Matrix<T>(_rows, _cols);
+	result->setMatrix(_matrix);
 	return result;
-}
-
-// Returns a polynomial version of this matrix
-template<typename T>
-PolynomialMatrix<T> Matrix<T>::toPolynomialMatrix() {
-	PolynomialMatrix<T> m = PolynomialMatrix<T>(_rows);
-	std::vector<T> values = getVector();
-	std::vector<Polynomial<T> > polyValues;
-	for (int i = 0; i < values.size(); i++)
-		polyValues.push_back(Polynomial<T>(values[i]));
-	m.setVector(polyValues);
-	return m;
-}
-
-// Returns a vector of strings representing this matrix
-template<typename T>
-std::vector<std::string> Matrix<T>::toStringVector() {
-	std::vector<std::string> strings;
-	std::string** arr = new std::string*[_rows];
-	for (int i = 0; i < _rows; i++) {
-		arr[i] = new std::string[_cols];
-		for (int j = 0; j < _cols; j++) {
-			std::string str = std::to_string(_matrix[i][j]);
-			if (str.find(std::string(".")) != std::string::npos) {
-				for (int c = str.length() - 1; c >= 0; c--) {
-					if (str.at(c) != '0' || str.at(c - 1) == '.')
-						break;
-					str = str.substr(0, c);
-				}
-			}
-			arr[i][j] = str;
-		}
-	}
-	for (int j = 0; j < _cols; j++) {
-		int maxLength = 0;
-		for (int i = 0; i < _rows; i++)
-			if (arr[i][j].length() > maxLength)
-				maxLength = arr[i][j].length();
-		for (int i = 0; i < _rows; i++)
-			while (arr[i][j].length() < maxLength)
-				arr[i][j] = " " + arr[i][j];
-	}
-	for (int i = 0; i < _rows; i++) {
-		std::string str = "";
-		for (int j = 0; j < _cols; j++) {
-			if (j == 0)
-				str += "[";
-			str += " " + arr[i][j] + " ";
-			if (j == _cols - 1)
-				str += "]";
-		}
-		strings.push_back(str);
-	}
-	return strings;
 }
 
 // Prints the string representation of this matrix to the standard output stream
@@ -468,22 +400,22 @@ Matrix<T> Matrix<T>::operator/(Matrix<T> rhs) {
 // Allows for the scaling of a matrix with the / operator
 template<typename T>
 Matrix<T> Matrix<T>::operator/(T rhs) {
-	return scale(1 / rhs);
+	return inverseScale(rhs);
 }
 
 // Allows for the exponentiation of two matrices with the ^ operator
 template<typename T>
 Matrix<T> Matrix<T>::operator^(int rhs) {
-	Matrix<T> result = clone();
+	Matrix<T>* result = clone();
 	for (int i = 0; i < rhs; i++)
-		result = result.mul(result);
-	return result;
+		*result = result->mul(*result);
+	return *result;
 }
 
 // Allows for the left multiplication of two matrices with the << operator
 template<typename T>
 Matrix<T> Matrix<T>::operator<<(Matrix<T> rhs) {
-	return rhs.mul(clone());
+	return rhs.mul(*(clone()));
 }
 
 // Returns a matrix of the specified size filled with zeros
@@ -514,10 +446,10 @@ Matrix<T> Matrix<T>::identity(int size) {
 template class Matrix<float> ;
 template class Matrix<double> ;
 template class Matrix<long double> ;
-//template class Matrix<Polynomial<float> > ;
-//template class Matrix<Polynomial<double> > ;
-//template class Matrix<Polynomial<long double> > ;
-//template class Matrix<Complex<float> > ;
-//template class Matrix<Complex<double> > ;
-//template class Matrix<Complex<long double> > ;
+template class Matrix<Polynomial<float> > ;
+template class Matrix<Polynomial<double> > ;
+template class Matrix<Polynomial<long double> > ;
+template class Matrix<Complex<float> > ;
+template class Matrix<Complex<double> > ;
+template class Matrix<Complex<long double> > ;
 

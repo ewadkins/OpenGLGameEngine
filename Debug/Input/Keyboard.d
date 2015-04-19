@@ -2,7 +2,8 @@ Input/Keyboard.d: ../Input/Keyboard.cpp ../Input/Keyboard.h \
   /usr/local/Cellar/glew/1.11.0/include/GL/glew.h \
   /usr/local/Cellar/glfw3/3.0.4/include/GLFW/glfw3.h \
   ../Input/../Application.h ../Input/../Logger.h \
-  ../Input/../Math/Matrix.h ../Input/../Math/PolynomialMatrix.h \
+  ../Input/../Math/Matrix.h ../Input/../Math/GenericMatrix.h \
+  ../Input/../Math/PolynomialMatrix.h ../Input/../Math/ComplexMatrix.h \
   ../Input/../Math/Polynomial.h ../Input/../Math/Complex.h \
   ../Input/../Render/Renderer.h ../Input/../Render/ShaderProgram.h \
   ../Input/../Render/../Drawables/Drawable.h \
@@ -27,7 +28,11 @@ Input/Keyboard.d: ../Input/Keyboard.cpp ../Input/Keyboard.h \
 
 ../Input/../Math/Matrix.h:
 
+../Input/../Math/GenericMatrix.h:
+
 ../Input/../Math/PolynomialMatrix.h:
+
+../Input/../Math/ComplexMatrix.h:
 
 ../Input/../Math/Polynomial.h:
 

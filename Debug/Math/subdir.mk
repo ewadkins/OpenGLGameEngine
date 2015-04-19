@@ -5,6 +5,7 @@
 # Add inputs and outputs from these tool invocations to the build variables 
 CPP_SRCS += \
 ../Math/Complex.cpp \
+../Math/ComplexMatrix.cpp \
 ../Math/GLMatrix.cpp \
 ../Math/GenericMatrix.cpp \
 ../Math/Matrix.cpp \
@@ -13,6 +14,7 @@ CPP_SRCS += \
 
 OBJS += \
 ./Math/Complex.o \
+./Math/ComplexMatrix.o \
 ./Math/GLMatrix.o \
 ./Math/GenericMatrix.o \
 ./Math/Matrix.o \
@@ -21,6 +23,7 @@ OBJS += \
 
 CPP_DEPS += \
 ./Math/Complex.d \
+./Math/ComplexMatrix.d \
 ./Math/GLMatrix.d \
 ./Math/GenericMatrix.d \
 ./Math/Matrix.d \
