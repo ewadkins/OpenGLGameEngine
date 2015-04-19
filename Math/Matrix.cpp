@@ -514,4 +514,10 @@ Matrix<T> Matrix<T>::identity(int size) {
 template class Matrix<float> ;
 template class Matrix<double> ;
 template class Matrix<long double> ;
+//template class Matrix<Polynomial<float> > ;
+//template class Matrix<Polynomial<double> > ;
+//template class Matrix<Polynomial<long double> > ;
+//template class Matrix<Complex<float> > ;
+//template class Matrix<Complex<double> > ;
+//template class Matrix<Complex<long double> > ;
 

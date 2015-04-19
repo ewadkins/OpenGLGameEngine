@@ -78,6 +78,12 @@ Logger& Logger::log(Polynomial<T> p) {
 	return log(p.toString());
 }
 
+// Logs a Complex
+template<typename T>
+Logger& Logger::log(Complex<T> c) {
+	return log(c.toString());
+}
+
 // Creates a new line
 Logger& Logger::endLine() {
 	_log.push_back(std::string(""));
@@ -144,4 +150,8 @@ template Logger& Logger::log(Polynomial<int>);
 template Logger& Logger::log(Polynomial<float>);
 template Logger& Logger::log(Polynomial<double>);
 template Logger& Logger::log(Polynomial<long double>);
+template Logger& Logger::log(Complex<int>);
+template Logger& Logger::log(Complex<float>);
+template Logger& Logger::log(Complex<double>);
+template Logger& Logger::log(Complex<long double>);
 

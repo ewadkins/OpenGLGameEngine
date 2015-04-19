@@ -10,6 +10,7 @@
 
 #include "Math/Matrix.h"
 #include "Math/Polynomial.h"
+#include "Math/Complex.h"
 #include <vector>
 #include <string>
 #include <iostream>
@@ -30,7 +31,8 @@ public:
 	Logger& log(const double d);
 	Logger& log(const long l);
 	template<typename T> Logger& log(Matrix<T> m);
-	template<typename T> Logger& log(Polynomial<T> m);
+	template<typename T> Logger& log(Polynomial<T> p);
+	template<typename T> Logger& log(Complex<T> c);
 	Logger& endLine();
 	Logger& increaseIndent();
 	Logger& decreaseIndent();

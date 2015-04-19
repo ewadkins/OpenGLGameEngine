@@ -41,8 +41,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
 	application->_camera->updateProjectionMatrices();
 }
 
-Application::Application(int screenSizeX, int screenSizeY,
-		bool fullScreen) {
+Application::Application(int screenSizeX, int screenSizeY, bool fullScreen) {
 	_application = this;
 	_window = nullptr;
 	_logger = new Logger();
@@ -110,6 +109,19 @@ void Application::initialize() {
 	_logger->log("Testing polynomials...").endLine().increaseIndent();
 	start = clock();
 	{
+		{
+			float numArr[] = { 6, 1, 2, 5, 2, -5, 2 };
+			std::vector<float> numCoeffs(numArr,
+					numArr + sizeof(numArr) / sizeof(numArr[0]));
+			float denArr[] = { 0, 1, 5, 2, -1, 4 };
+			std::vector<float> denCoeffs(denArr,
+					denArr + sizeof(denArr) / sizeof(denArr[0]));
+
+			Complex<float> c = Complex<float>(numCoeffs, denCoeffs);
+
+			_logger->log("c:").endLine().increaseIndent().log(c).endLine().decreaseIndent();
+
+		}
 
 		float numArr[] = { -6 };
 		std::vector<float> numCoeffs(numArr,
