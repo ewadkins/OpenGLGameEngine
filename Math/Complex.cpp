@@ -77,9 +77,16 @@ Complex<T>::Complex(T value) {
 template<typename T>
 template<typename S>
 Complex<T>::Complex(Complex<S> other) {
-	_numCoeffs = other._numCoeffs;
-	_denCoeffs = other._denCoeffs;
+	std::vector<T> numCoeffs;
+	for (int i = 0; i < other.getNumCoeffs().size(); i++)
+		numCoeffs.push_back((T)other.getNumCoeffs()[i]);
+	std::vector<T> denCoeffs;
+	for (int i = 0; i < other.getDenCoeffs().size(); i++)
+		denCoeffs.push_back((T)other.getDenCoeffs()[i]);
+	_numCoeffs = numCoeffs;
+	_denCoeffs = denCoeffs;
 }
+
 
 template<typename T>
 T Complex<T>::value(T x) {
@@ -295,8 +302,13 @@ void Complex<T>::print() {
 }
 
 template<typename T>
-std::vector<T> Complex<T>::coeffs() {
+std::vector<T> Complex<T>::getNumCoeffs() {
 	return _numCoeffs;
+}
+
+template<typename T>
+std::vector<T> Complex<T>::getDenCoeffs() {
+	return _denCoeffs;
 }
 
 template<typename T>
@@ -540,3 +552,12 @@ std::string Complex<T>::trimNumber(std::string str) {
 template class Complex<float> ;
 template class Complex<double> ;
 template class Complex<long double> ;
+template Complex<float>::Complex(Complex<float>);
+template Complex<float>::Complex(Complex<double>);
+template Complex<float>::Complex(Complex<long double>);
+template Complex<double>::Complex(Complex<float>);
+template Complex<double>::Complex(Complex<double>);
+template Complex<double>::Complex(Complex<long double>);
+template Complex<long double>::Complex(Complex<float>);
+template Complex<long double>::Complex(Complex<double>);
+template Complex<long double>::Complex(Complex<long double>);

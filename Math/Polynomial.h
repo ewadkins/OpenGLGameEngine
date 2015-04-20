@@ -41,7 +41,8 @@ public:
 	bool equals(Polynomial rhs);
 	std::string toString();
 	void print();
-	std::vector<T> coeffs();
+	std::vector<T> getNumCoeffs();
+	std::vector<T> getDenCoeffs();
 	Polynomial operator+(Polynomial rhs);
 	void operator+=(Polynomial rhs);
 	Polynomial operator-(Polynomial rhs);

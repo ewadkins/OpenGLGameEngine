@@ -39,7 +39,8 @@ public:
 	bool equals(Complex rhs);
 	std::string toString();
 	void print();
-	std::vector<T> coeffs();
+	std::vector<T> getNumCoeffs();
+	std::vector<T> getDenCoeffs();
 	Complex operator+(Complex rhs);
 	void operator+=(Complex rhs);
 	Complex operator-(Complex rhs);

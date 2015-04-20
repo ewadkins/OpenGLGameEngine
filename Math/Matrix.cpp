@@ -268,7 +268,7 @@ std::vector<T> Matrix<T>::eigenvalues() {
 	m.upperTriangular().print();
 	m.determinant().print();
 	std::vector<Complex<T> > roots = m.determinant().roots(); // FIXME Determinant is not what it should be
-	std::cout << "Roots:" << std::endl;
+	std::cout << "Eigenvalues (Roots^):" << std::endl;
 	for (int i = 0; i < roots.size(); i++)
 		roots[i].print();
 
@@ -530,4 +530,12 @@ Matrix<T> Matrix<T>::identity(int size) {
 template class Matrix<float> ;
 template class Matrix<double> ;
 template class Matrix<long double> ;
-
+template Matrix<float>::Matrix(Matrix<float>);
+template Matrix<float>::Matrix(Matrix<double>);
+template Matrix<float>::Matrix(Matrix<long double>);
+template Matrix<double>::Matrix(Matrix<float>);
+template Matrix<double>::Matrix(Matrix<double>);
+template Matrix<double>::Matrix(Matrix<long double>);
+template Matrix<long double>::Matrix(Matrix<float>);
+template Matrix<long double>::Matrix(Matrix<double>);
+template Matrix<long double>::Matrix(Matrix<long double>);

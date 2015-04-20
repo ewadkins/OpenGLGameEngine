@@ -109,88 +109,42 @@ void Application::initialize() {
 	_logger->log("Testing polynomials...").endLine().increaseIndent();
 	start = clock();
 	{
+
 		{
-
-			{
-				float numArr2[] = { 5, 6 };
-				std::vector<float> values2(numArr2,
-						numArr2 + sizeof(numArr2) / sizeof(numArr2[0]));
-				Complex<float> c1 = Complex<float>(values2, 1);
-				c1.print();
-				(c1^3).print();
-
-				std::cout << std::endl;
-			}
-
-			float numArr[] = { -5, 3, -3, 1 };
-			std::vector<float> values(numArr,
-					numArr + sizeof(numArr) / sizeof(numArr[0]));
-			Polynomial<float> p = Polynomial<float>(values, 1);
-			p.print();
-
-			/*float numArr3[] = { 3, 5, 2, 1 };
-			 std::vector<float> values3(numArr3,
-			 numArr3 + sizeof(numArr3) / sizeof(numArr3[0]));
-			 Complex<float> c2 = Complex<float>(values3, 1);
-			 c2.print();
-
-			 (c1 / c2).print();*/
-
-			/*float denArr[] = { 5, 1 };
-			 std::vector<float> numCoeffs(denArr,
-			 denArr + sizeof(denArr) / sizeof(denArr[0]));
-			 Complex<float> c = Complex<float>(numCoeffs, 1);*/
-
-			std::vector<Complex<float> > roots = p.roots();
-			std::cout << "Roots: " << std::endl;
-			for (int i = 0; i < roots.size(); i++)
-				roots[i].print();
-
-			std::cout << std::endl << std::endl;
-
-			float numArr2[] = { -122, 25, 4, -1 };
+			float numArr2[] = { -4, 1 };
 			std::vector<float> values2(numArr2,
 					numArr2 + sizeof(numArr2) / sizeof(numArr2[0]));
-			Polynomial<float> p2 = Polynomial<float>(values2, 1);
-			p2.print();
+			Polynomial<float> p1 = Polynomial<float>(values2, 1);
+			p1.print();
+			(p1 ^ 3).print();
 
-			std::vector<Complex<float> > roots2 = p2.roots();
-			std::cout << "Roots: " << std::endl;
-			for (int i = 0; i < roots2.size(); i++)
-				roots2[i].print();
-
+			std::cout << std::endl;
 		}
 
-		float numArr[] = { -6 };
-		std::vector<float> numCoeffs(numArr,
+		//float numArr[] = { -5, 3, -3, 1 };
+		float numArr[] = { -64, 48, -12, 1 };
+		std::vector<float> values(numArr,
 				numArr + sizeof(numArr) / sizeof(numArr[0]));
-		float denArr[] = { 0, 1 };
-		std::vector<float> denCoeffs(denArr,
-				denArr + sizeof(denArr) / sizeof(denArr[0]));
-		Polynomial<float> p = Polynomial<float>(numCoeffs, denCoeffs);
+		Polynomial<float> p = Polynomial<float>(values, 1);
+		p.print();
 
-		float numArr2[] = { 5 };
-		std::vector<float> numCoeffs2(numArr2,
+		std::vector<Complex<float> > roots = p.roots();
+		std::cout << "Roots: " << std::endl;
+		for (int i = 0; i < roots.size(); i++)
+			roots[i].print();
+
+		std::cout << std::endl;
+
+		float numArr2[] = { -122, 25, 4, -1 };
+		std::vector<float> values2(numArr2,
 				numArr2 + sizeof(numArr2) / sizeof(numArr2[0]));
-		float denArr2[] = { 1 };
-		std::vector<float> denCoeffs2(denArr2,
-				denArr2 + sizeof(denArr2) / sizeof(denArr2[0]));
-		Polynomial<float> p2 = Polynomial<float>(numCoeffs2, denCoeffs2);
+		Polynomial<float> p2 = Polynomial<float>(values2, 1);
+		p2.print();
 
-		float numArr3[] = { -6, 5 };
-		std::vector<float> numCoeffs3(numArr3,
-				numArr3 + sizeof(numArr3) / sizeof(numArr3[0]));
-		float denArr3[] = { 0, 1 };
-		std::vector<float> denCoeffs3(denArr3,
-				denArr3 + sizeof(denArr3) / sizeof(denArr3[0]));
-		Polynomial<float> p3 = Polynomial<float>(numCoeffs3, denCoeffs3);
-
-		_logger->log("p:").endLine().increaseIndent().log(p).endLine().decreaseIndent();
-		_logger->log("p2:").endLine().increaseIndent().log(p2).endLine().decreaseIndent();
-		_logger->log("p + p2:").endLine().increaseIndent().log(p + p2).endLine().decreaseIndent();
-		_logger->log("p * p2:").endLine().increaseIndent().log(p * p2).endLine().decreaseIndent();
-		_logger->log("p / p2:").endLine().increaseIndent().log(p / p2).endLine().decreaseIndent();
-		_logger->log("p3:").endLine().increaseIndent().log(p3).endLine().decreaseIndent();
+		std::vector<Complex<float> > roots2 = p2.roots();
+		std::cout << "Roots: " << std::endl;
+		for (int i = 0; i < roots2.size(); i++)
+			roots2[i].print();
 
 	}
 	finish = clock();

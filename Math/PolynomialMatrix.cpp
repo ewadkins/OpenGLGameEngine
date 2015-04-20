@@ -525,3 +525,12 @@ PolynomialMatrix<T> PolynomialMatrix<T>::identity(int size) {
 template class PolynomialMatrix<float> ;
 template class PolynomialMatrix<double> ;
 template class PolynomialMatrix<long double> ;
+template PolynomialMatrix<float>::PolynomialMatrix(PolynomialMatrix<float>);
+template PolynomialMatrix<float>::PolynomialMatrix(PolynomialMatrix<double>);
+template PolynomialMatrix<float>::PolynomialMatrix(PolynomialMatrix<long double>);
+template PolynomialMatrix<double>::PolynomialMatrix(PolynomialMatrix<float>);
+template PolynomialMatrix<double>::PolynomialMatrix(PolynomialMatrix<double>);
+template PolynomialMatrix<double>::PolynomialMatrix(PolynomialMatrix<long double>);
+template PolynomialMatrix<long double>::PolynomialMatrix(PolynomialMatrix<float>);
+template PolynomialMatrix<long double>::PolynomialMatrix(PolynomialMatrix<double>);
+template PolynomialMatrix<long double>::PolynomialMatrix(PolynomialMatrix<long double>);

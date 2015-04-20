@@ -525,3 +525,12 @@ ComplexMatrix<T> ComplexMatrix<T>::identity(int size) {
 template class ComplexMatrix<float> ;
 template class ComplexMatrix<double> ;
 template class ComplexMatrix<long double> ;
+template ComplexMatrix<float>::ComplexMatrix(ComplexMatrix<float>);
+template ComplexMatrix<float>::ComplexMatrix(ComplexMatrix<double>);
+template ComplexMatrix<float>::ComplexMatrix(ComplexMatrix<long double>);
+template ComplexMatrix<double>::ComplexMatrix(ComplexMatrix<float>);
+template ComplexMatrix<double>::ComplexMatrix(ComplexMatrix<double>);
+template ComplexMatrix<double>::ComplexMatrix(ComplexMatrix<long double>);
+template ComplexMatrix<long double>::ComplexMatrix(ComplexMatrix<float>);
+template ComplexMatrix<long double>::ComplexMatrix(ComplexMatrix<double>);
+template ComplexMatrix<long double>::ComplexMatrix(ComplexMatrix<long double>);

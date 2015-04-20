@@ -77,8 +77,14 @@ Polynomial<T>::Polynomial(T value) {
 template<typename T>
 template<typename S>
 Polynomial<T>::Polynomial(Polynomial<S> other) {
-	_numCoeffs = other._numCoeffs;
-	_denCoeffs = other._denCoeffs;
+	std::vector<T> numCoeffs;
+	for (int i = 0; i < other.getNumCoeffs().size(); i++)
+		numCoeffs.push_back((T)other.getNumCoeffs()[i]);
+	std::vector<T> denCoeffs;
+	for (int i = 0; i < other.getDenCoeffs().size(); i++)
+		denCoeffs.push_back((T)other.getDenCoeffs()[i]);
+	_numCoeffs = numCoeffs;
+	_denCoeffs = denCoeffs;
 }
 
 template<typename T>
@@ -177,63 +183,60 @@ Polynomial<T> Polynomial<T>::mul(Polynomial other) {
 
 template<typename T>
 std::vector<Complex<T> > Polynomial<T>::roots() {
-	Polynomial<T> p = clone();
-	if (p._numCoeffs[p._numCoeffs.size() - 1] != 1)
-		p /= p._numCoeffs[p._numCoeffs.size() - 1];
+	Polynomial<long double> p = clone();
+	if (p.getNumCoeffs()[p.getNumCoeffs().size() - 1] != 1)
+		p /= p.getNumCoeffs()[p.getNumCoeffs().size() - 1];
 
-	std::vector<T> numCoeffs;
+	std::vector<long double> numCoeffs;
 	numCoeffs.push_back(0.4);
 	numCoeffs.push_back(0.9);
-	std::vector<T> denCoeffs;
+	std::vector<long double> denCoeffs;
 	denCoeffs.push_back(1);
-	Complex<T> init = Complex<T>(numCoeffs, denCoeffs);
+	Complex<long double> init = Complex<long double>(numCoeffs, denCoeffs);
 
-	std::vector<Complex<T> > result;
+	std::vector<Complex<long double> > c;
 	for (int i = 0; i < _numCoeffs.size() - 1; i++) {
-		result.push_back(init^i);
+		c.push_back(init^i);
 	}
 
-	/*std::cout << "Initial values:" << std::endl;
-	for (int i = 0; i < result.size(); i++)
-		result[i].print();*/
-
-
-	std::vector<Complex<T> > c0;
-	for (int i = 0; i < result.size(); i++)
-		c0.push_back(result[i]);
+	std::vector<Complex<long double> > c0;
+	for (int i = 0; i < c.size(); i++)
+		c0.push_back(c[i]);
 
 	int max = 0;
-	while (max < 20) {
+	while (max < 30) {
 		max++;
 
-		//std::cout << "Iteration " << count << ":" << std::endl;
-		for (int i = 0; i < result.size(); i++) {
-			c0[i] = result[i];
+		for (int i = 0; i < c.size(); i++) {
+			c0[i] = c[i];
 		}
 
-		for (int i = 0; i < result.size(); i++) {
-			Complex<T> temp = Complex<T>(1);
-			for (int j = 0; j < result.size(); j++) {
+		for (int i = 0; i < c.size(); i++) {
+			Complex<long double> temp = Complex<long double>(1);
+			for (int j = 0; j < c.size(); j++) {
 				if (j > i)
 					temp *= (c0[i] - c0[j]);
 				else if (j < i)
-					temp *= (c0[i] - result[j]);
+					temp *= (c0[i] - c[j]);
 			}
-			result[i] = c0[i] - (temp.reciprocal() * p.value(c0[i]));
+			c[i] = c0[i] - (temp.reciprocal() * p.value(c0[i]));
 		}
+
+		bool finished = true;
+		for (int i = 0; i < c.size(); i++)
+			if (c[i] != c0[i])
+				finished = false;
+		if (finished)
+			break;
 
 		/*std::cout << "Updated values:" << std::endl;
 		for (int i = 0; i < result.size(); i++)
 			result[i].print();*/
 
-		bool finished = true;
-		for (int i = 0; i < result.size(); i++)
-			if (result[i] != c0[i])
-				finished = false;
-		if (finished)
-			break;
-
 	}
+	std::vector<Complex<T> > result;
+	for (int i = 0; i < c.size(); i++)
+		result.push_back(Complex<T>(c[i]));
 	return result;
 }
 
@@ -356,8 +359,13 @@ void Polynomial<T>::print() {
 }
 
 template<typename T>
-std::vector<T> Polynomial<T>::coeffs() {
+std::vector<T> Polynomial<T>::getNumCoeffs() {
 	return _numCoeffs;
+}
+
+template<typename T>
+std::vector<T> Polynomial<T>::getDenCoeffs() {
+	return _denCoeffs;
 }
 
 template<typename T>
@@ -581,3 +589,12 @@ std::string Polynomial<T>::trimNumber(std::string str) {
 template class Polynomial<float> ;
 template class Polynomial<double> ;
 template class Polynomial<long double> ;
+template Polynomial<float>::Polynomial(Polynomial<float>);
+template Polynomial<float>::Polynomial(Polynomial<double>);
+template Polynomial<float>::Polynomial(Polynomial<long double>);
+template Polynomial<double>::Polynomial(Polynomial<float>);
+template Polynomial<double>::Polynomial(Polynomial<double>);
+template Polynomial<double>::Polynomial(Polynomial<long double>);
+template Polynomial<long double>::Polynomial(Polynomial<float>);
+template Polynomial<long double>::Polynomial(Polynomial<double>);
+template Polynomial<long double>::Polynomial(Polynomial<long double>);
