@@ -83,11 +83,11 @@ Complex<T>::Complex(Complex<S> other) {
 
 template<typename T>
 T Complex<T>::value(T x) {
-	T num = _numCoeffs[0];
-	for (int i = 1; i < _numCoeffs.size(); i++)
+	T num = 0;
+	for (int i = 0; i < _numCoeffs.size(); i++)
 		num += _numCoeffs[i] * (std::pow(x, i));
-	T den = _denCoeffs[0];
-	for (int i = 1; i < _denCoeffs.size(); i++)
+	T den = 0;
+	for (int i = 0; i < _denCoeffs.size(); i++)
 		den += _denCoeffs[i] * (std::pow(x, i));
 
 	return num / den;
@@ -123,7 +123,7 @@ Complex<T> Complex<T>::add(Complex other) {
 		for (int i = 0; i < p2._numCoeffs.size(); i++)
 			numCoeffs[i] += p2._numCoeffs[i];
 
-		return Complex<T>(numCoeffs, cd._numCoeffs);
+		return Complex(numCoeffs, cd._numCoeffs);
 	} else {
 		std::vector<T> numCoeffs(
 				std::max(_numCoeffs.size(), other._numCoeffs.size()));
@@ -132,7 +132,7 @@ Complex<T> Complex<T>::add(Complex other) {
 		for (int i = 0; i < other._numCoeffs.size(); i++)
 			numCoeffs[i] += other._numCoeffs[i];
 
-		return Complex<T>(numCoeffs, _denCoeffs);
+		return Complex(numCoeffs);
 	}
 }
 
@@ -141,7 +141,7 @@ Complex<T> Complex<T>::mul(T n) {
 	std::vector<T> numCoeffs(_numCoeffs.size());
 	for (int i = 0; i < _numCoeffs.size(); i++)
 		numCoeffs[i] = n * _numCoeffs[i];
-	return Complex<T>(numCoeffs, _denCoeffs);
+	return Complex(numCoeffs);
 }
 
 template<typename T>
@@ -160,7 +160,7 @@ Complex<T> Complex<T>::mul(Complex other) {
 				denCoeffs.push_back(0);
 			denCoeffs[i + j] += _denCoeffs[i] * other._denCoeffs[j];
 		}
-	return Complex<T>(numCoeffs, denCoeffs);
+	return Complex(numCoeffs, denCoeffs);
 }
 
 template<typename T>
@@ -169,8 +169,21 @@ Complex<T> Complex<T>::reciprocal() {
 }
 
 template<typename T>
+Complex<T> Complex<T>::conjugate() {
+	if (_numCoeffs.size() > 2 || _denCoeffs.size() > 1)
+		throw std::runtime_error("Must be simplified before the conjugate can be found");
+	std::vector<T> numCoeffs = _numCoeffs;
+	numCoeffs[1] *= -1;
+	std::vector<T> denCoeffs = _denCoeffs;
+	return Complex(numCoeffs, denCoeffs);
+}
+
+template<typename T>
 Complex<T> Complex<T>::clone() {
-	return Complex<T>(_numCoeffs, _denCoeffs);
+	Complex<T> result = Complex<T>();
+	result._numCoeffs = _numCoeffs;
+	result._denCoeffs = _denCoeffs;
+	return result;
 }
 
 template<typename T>
@@ -206,7 +219,7 @@ template<typename T>
 std::string Complex<T>::toString() {
 
 	// Whether to display terms in order of decreasing order or increasing order
-	const bool decreasingOrder = true;
+	const bool decreasingOrder = false;
 
 	std::vector<T> num = _numCoeffs;
 	std::vector<T> den = _denCoeffs;
@@ -311,6 +324,16 @@ void Complex<T>::simplify() {
 	while (_denCoeffs.size() > 1 && _denCoeffs[_denCoeffs.size() - 1] == 0)
 		_denCoeffs.pop_back();
 
+	// Simplifies terms with an exponent greater than 1
+	while (_numCoeffs.size() > 2) {
+		_numCoeffs[_numCoeffs.size() - 3] -= _numCoeffs[_numCoeffs.size() - 1];
+		_numCoeffs.pop_back();
+	}
+	while (_denCoeffs.size() > 2) {
+		_denCoeffs[_denCoeffs.size() - 3] -= _denCoeffs[_denCoeffs.size() - 1];
+		_denCoeffs.pop_back();
+	}
+
 	// If a variable can be factored out of all terms, do this until there is a constant that prevents it
 	while (_numCoeffs.size() > 1 && _denCoeffs.size() > 1 && _numCoeffs[0] == 0
 			&& _denCoeffs[0] == 0) {
@@ -332,44 +355,45 @@ void Complex<T>::simplify() {
 		_denCoeffs[0] = 1;
 	}
 
-	while (_numCoeffs.size() > 2) {
-		_numCoeffs[_numCoeffs.size() - 3] -= _numCoeffs[_numCoeffs.size() - 1];
-		_numCoeffs.pop_back();
-	}
-	while (_denCoeffs.size() > 2) {
-		_denCoeffs[_denCoeffs.size() - 3] -= _denCoeffs[_denCoeffs.size() - 1];
-		_denCoeffs.pop_back();
+	// Complex number division
+	if (_denCoeffs.size() > 1) {
+		Complex<T> numerator = Complex(_numCoeffs);
+		Complex<T> denominator = Complex(_denCoeffs);
+		numerator *= denominator.conjugate();
+		denominator *= denominator.conjugate();
+		_numCoeffs = numerator._numCoeffs;
+		_denCoeffs = denominator._numCoeffs;
 	}
 
-	// Complex long division
+	// Polynomial long division
 	/*if (_denCoeffs.size() > 1 && _numCoeffs.size() >= _denCoeffs.size()) {
-	 Complex<T> dividend = Complex(_numCoeffs);
-	 Complex<T> divisor = Complex(_denCoeffs);
-	 Complex<T> result = Complex();
-	 Complex<T> remainder = dividend;
-	 while (remainder != 0
-	 && remainder._numCoeffs.size() >= divisor._numCoeffs.size()) {
-	 std::vector<T> remainderLead;
-	 for (int i = 0; i < remainder._numCoeffs.size() - 1; i++)
-	 remainderLead.push_back(0);
-	 remainderLead.push_back(
-	 remainder._numCoeffs[remainder._numCoeffs.size() - 1]);
+		Complex<T> dividend = Complex(_numCoeffs);
+		Complex<T> divisor = Complex(_denCoeffs);
+		Complex<T> result = Complex();
+		Complex<T> remainder = dividend;
+		while (remainder != 0
+				&& remainder._numCoeffs.size() >= divisor._numCoeffs.size()) {
+			std::vector<T> remainderLead;
+			for (int i = 0; i < remainder._numCoeffs.size() - 1; i++)
+				remainderLead.push_back(0);
+			remainderLead.push_back(
+					remainder._numCoeffs[remainder._numCoeffs.size() - 1]);
 
-	 std::vector<T> divisorLead;
-	 for (int i = 0; i < divisor._numCoeffs.size() - 1; i++)
-	 divisorLead.push_back(0);
-	 divisorLead.push_back(
-	 divisor._numCoeffs[divisor._numCoeffs.size() - 1]);
+			std::vector<T> divisorLead;
+			for (int i = 0; i < divisor._numCoeffs.size() - 1; i++)
+				divisorLead.push_back(0);
+			divisorLead.push_back(
+					divisor._numCoeffs[divisor._numCoeffs.size() - 1]);
 
-	 Complex<T> temp = Complex(remainderLead, divisorLead);
-	 result += temp;
-	 remainder -= (temp * divisor);
-	 }
-	 if (remainder == 0) {
-	 _numCoeffs = result._numCoeffs;
-	 _denCoeffs = result._denCoeffs;
-	 }
-	 }*/
+			Complex<T> temp = Complex(remainderLead, divisorLead);
+			result += temp;
+			remainder -= (temp * divisor);
+		}
+		if (remainder == 0) {
+			_numCoeffs = result._numCoeffs;
+			_denCoeffs = result._denCoeffs;
+		}
+	}*/
 
 	// If the numerator is 0, regardless of the denominator, set the Complex to 0/1
 	if (_numCoeffs.size() == 1 && _numCoeffs[0] == 0) {
@@ -513,7 +537,6 @@ std::string Complex<T>::trimNumber(std::string str) {
 }
 
 // Explicit instantiation of template classes
-template class Complex<int> ;
 template class Complex<float> ;
 template class Complex<double> ;
 template class Complex<long double> ;

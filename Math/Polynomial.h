@@ -8,6 +8,7 @@
 #ifndef POLYNOMIAL_H_
 #define POLYNOMIAL_H_
 
+#include "Complex.h"
 #include <iostream>
 #include <vector>
 #include <algorithm>
@@ -27,11 +28,12 @@ public:
 	Polynomial(T value);
 	template<typename S> Polynomial(Polynomial<S> other);
 	T value(T x);
+	Complex<T> value(Complex<T> x);
 	T value();
 	Polynomial add(Polynomial other);
 	Polynomial mul(T n);
 	Polynomial mul(Polynomial other);
-	std::vector<T> roots();
+	std::vector<Complex<T> > roots();
 	Polynomial<T> reciprocal();
 	Polynomial clone();
 	bool isConstant();

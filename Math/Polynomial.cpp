@@ -94,6 +94,18 @@ T Polynomial<T>::value(T x) {
 }
 
 template<typename T>
+Complex<T> Polynomial<T>::value(Complex<T> x) {
+	Complex<T> num = 0;
+	for (int i = 0; i < _numCoeffs.size(); i++)
+		num += (x^i) * _numCoeffs[i];
+	Complex<T> den = 0;
+	for (int i = 0; i < _denCoeffs.size(); i++)
+		den += (x^i) * _denCoeffs[i];
+
+	return num / den;
+}
+
+template<typename T>
 T Polynomial<T>::value() {
 	return value(0);
 }
@@ -101,15 +113,20 @@ T Polynomial<T>::value() {
 template<typename T>
 Polynomial<T> Polynomial<T>::add(Polynomial other) {
 	if (_denCoeffs != other._denCoeffs) {
-		Polynomial<T> cd = Polynomial<T>(
-				(Polynomial<T>(_denCoeffs, 1)
-						* Polynomial<T>(other._denCoeffs, 1))._numCoeffs, 1);
-		Polynomial<T> p1 = Polynomial<T>(
-				(Polynomial<T>(_numCoeffs, 1)
-						* Polynomial<T>(other._denCoeffs, 1))._numCoeffs, 1);
-		Polynomial<T> p2 = Polynomial<T>(
-				(Polynomial<T>(other._numCoeffs, 1)
-						* Polynomial<T>(_denCoeffs, 1))._numCoeffs, 1);
+		Polynomial<T> cd =
+				Polynomial<T>(
+						(Polynomial<T>(_denCoeffs, 1)
+								* Polynomial<T>(other._denCoeffs, 1))._numCoeffs,
+						1);
+		Polynomial<T> p1 =
+				Polynomial<T>(
+						(Polynomial<T>(_numCoeffs, 1)
+								* Polynomial<T>(other._denCoeffs, 1))._numCoeffs,
+						1);
+		Polynomial<T> p2 =
+				Polynomial<T>(
+						(Polynomial<T>(other._numCoeffs, 1)
+								* Polynomial<T>(_denCoeffs, 1))._numCoeffs, 1);
 
 		std::vector<T> numCoeffs(
 				std::max(p1._numCoeffs.size(), p2._numCoeffs.size()));
@@ -118,7 +135,7 @@ Polynomial<T> Polynomial<T>::add(Polynomial other) {
 		for (int i = 0; i < p2._numCoeffs.size(); i++)
 			numCoeffs[i] += p2._numCoeffs[i];
 
-		return Polynomial<T>(numCoeffs, cd._numCoeffs);
+		return Polynomial(numCoeffs, cd._numCoeffs);
 	} else {
 		std::vector<T> numCoeffs(
 				std::max(_numCoeffs.size(), other._numCoeffs.size()));
@@ -127,7 +144,7 @@ Polynomial<T> Polynomial<T>::add(Polynomial other) {
 		for (int i = 0; i < other._numCoeffs.size(); i++)
 			numCoeffs[i] += other._numCoeffs[i];
 
-		return Polynomial<T>(numCoeffs, _denCoeffs);
+		return Polynomial(numCoeffs);
 	}
 }
 
@@ -136,7 +153,7 @@ Polynomial<T> Polynomial<T>::mul(T n) {
 	std::vector<T> numCoeffs(_numCoeffs.size());
 	for (int i = 0; i < _numCoeffs.size(); i++)
 		numCoeffs[i] = n * _numCoeffs[i];
-	return Polynomial<T>(numCoeffs, _denCoeffs);
+	return Polynomial(numCoeffs);
 }
 
 template<typename T>
@@ -155,13 +172,68 @@ Polynomial<T> Polynomial<T>::mul(Polynomial other) {
 				denCoeffs.push_back(0);
 			denCoeffs[i + j] += _denCoeffs[i] * other._denCoeffs[j];
 		}
-	return Polynomial<T>(numCoeffs, denCoeffs);
+	return Polynomial(numCoeffs, denCoeffs);
 }
 
 template<typename T>
-std::vector<T> Polynomial<T>::roots() { //TODO Find factorization algorithm, including complex numbers
-	std::vector<T> result;
+std::vector<Complex<T> > Polynomial<T>::roots() {
+	Polynomial<T> p = clone();
+	if (p._numCoeffs[p._numCoeffs.size() - 1] != 1)
+		p /= p._numCoeffs[p._numCoeffs.size() - 1];
 
+	std::vector<T> numCoeffs;
+	numCoeffs.push_back(0.4);
+	numCoeffs.push_back(0.9);
+	std::vector<T> denCoeffs;
+	denCoeffs.push_back(1);
+	Complex<T> init = Complex<T>(numCoeffs, denCoeffs);
+
+	std::vector<Complex<T> > result;
+	for (int i = 0; i < _numCoeffs.size() - 1; i++) {
+		result.push_back(init^i);
+	}
+
+	/*std::cout << "Initial values:" << std::endl;
+	for (int i = 0; i < result.size(); i++)
+		result[i].print();*/
+
+
+	std::vector<Complex<T> > c0;
+	for (int i = 0; i < result.size(); i++)
+		c0.push_back(result[i]);
+
+	int max = 0;
+	while (max < 20) {
+		max++;
+
+		//std::cout << "Iteration " << count << ":" << std::endl;
+		for (int i = 0; i < result.size(); i++) {
+			c0[i] = result[i];
+		}
+
+		for (int i = 0; i < result.size(); i++) {
+			Complex<T> temp = Complex<T>(1);
+			for (int j = 0; j < result.size(); j++) {
+				if (j > i)
+					temp *= (c0[i] - c0[j]);
+				else if (j < i)
+					temp *= (c0[i] - result[j]);
+			}
+			result[i] = c0[i] - (temp.reciprocal() * p.value(c0[i]));
+		}
+
+		/*std::cout << "Updated values:" << std::endl;
+		for (int i = 0; i < result.size(); i++)
+			result[i].print();*/
+
+		bool finished = true;
+		for (int i = 0; i < result.size(); i++)
+			if (result[i] != c0[i])
+				finished = false;
+		if (finished)
+			break;
+
+	}
 	return result;
 }
 
@@ -506,7 +578,6 @@ std::string Polynomial<T>::trimNumber(std::string str) {
 }
 
 // Explicit instantiation of template classes
-template class Polynomial<int> ;
 template class Polynomial<float> ;
 template class Polynomial<double> ;
 template class Polynomial<long double> ;

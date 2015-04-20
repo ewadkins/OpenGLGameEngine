@@ -265,8 +265,12 @@ std::vector<T> Matrix<T>::eigenvalues() {
 
 	m = m + lambdaI;
 	m.print();
+	m.upperTriangular().print();
 	m.determinant().print();
-	std::cout << m.determinant().value() << std::endl;
+	std::vector<Complex<T> > roots = m.determinant().roots(); // FIXME Determinant is not what it should be
+	std::cout << "Roots:" << std::endl;
+	for (int i = 0; i < roots.size(); i++)
+		roots[i].print();
 
 	//throw std::runtime_error("Matrix eigenvalues operation not available");
 
@@ -526,10 +530,4 @@ Matrix<T> Matrix<T>::identity(int size) {
 template class Matrix<float> ;
 template class Matrix<double> ;
 template class Matrix<long double> ;
-//template class Matrix<Polynomial<float> > ;
-//template class Matrix<Polynomial<double> > ;
-//template class Matrix<Polynomial<long double> > ;
-//template class Matrix<Complex<float> > ;
-//template class Matrix<Complex<double> > ;
-//template class Matrix<Complex<long double> > ;
 

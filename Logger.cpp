@@ -146,11 +146,9 @@ std::vector<std::string> Logger::getLog() {
 template Logger& Logger::log(Matrix<float>);
 template Logger& Logger::log(Matrix<double>);
 template Logger& Logger::log(Matrix<long double>);
-template Logger& Logger::log(Polynomial<int>);
 template Logger& Logger::log(Polynomial<float>);
 template Logger& Logger::log(Polynomial<double>);
 template Logger& Logger::log(Polynomial<long double>);
-template Logger& Logger::log(Complex<int>);
 template Logger& Logger::log(Complex<float>);
 template Logger& Logger::log(Complex<double>);
 template Logger& Logger::log(Complex<long double>);

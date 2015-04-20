@@ -110,16 +110,54 @@ void Application::initialize() {
 	start = clock();
 	{
 		{
-			float numArr[] = { 6, 1, 2, 5, 2, -5, 2 };
-			std::vector<float> numCoeffs(numArr,
+
+			{
+				float numArr2[] = { 5, 6 };
+				std::vector<float> values2(numArr2,
+						numArr2 + sizeof(numArr2) / sizeof(numArr2[0]));
+				Complex<float> c1 = Complex<float>(values2, 1);
+				c1.print();
+				(c1^3).print();
+
+				std::cout << std::endl;
+			}
+
+			float numArr[] = { -5, 3, -3, 1 };
+			std::vector<float> values(numArr,
 					numArr + sizeof(numArr) / sizeof(numArr[0]));
-			float denArr[] = { 0, 1, 5, 2, -1, 4 };
-			std::vector<float> denCoeffs(denArr,
-					denArr + sizeof(denArr) / sizeof(denArr[0]));
+			Polynomial<float> p = Polynomial<float>(values, 1);
+			p.print();
 
-			Complex<float> c = Complex<float>(numCoeffs, denCoeffs);
+			/*float numArr3[] = { 3, 5, 2, 1 };
+			 std::vector<float> values3(numArr3,
+			 numArr3 + sizeof(numArr3) / sizeof(numArr3[0]));
+			 Complex<float> c2 = Complex<float>(values3, 1);
+			 c2.print();
 
-			_logger->log("c:").endLine().increaseIndent().log(c).endLine().decreaseIndent();
+			 (c1 / c2).print();*/
+
+			/*float denArr[] = { 5, 1 };
+			 std::vector<float> numCoeffs(denArr,
+			 denArr + sizeof(denArr) / sizeof(denArr[0]));
+			 Complex<float> c = Complex<float>(numCoeffs, 1);*/
+
+			std::vector<Complex<float> > roots = p.roots();
+			std::cout << "Roots: " << std::endl;
+			for (int i = 0; i < roots.size(); i++)
+				roots[i].print();
+
+			std::cout << std::endl << std::endl;
+
+			float numArr2[] = { -122, 25, 4, -1 };
+			std::vector<float> values2(numArr2,
+					numArr2 + sizeof(numArr2) / sizeof(numArr2[0]));
+			Polynomial<float> p2 = Polynomial<float>(values2, 1);
+			p2.print();
+
+			std::vector<Complex<float> > roots2 = p2.roots();
+			std::cout << "Roots: " << std::endl;
+			for (int i = 0; i < roots2.size(); i++)
+				roots2[i].print();
 
 		}
 
@@ -181,6 +219,7 @@ void Application::initialize() {
 			pm.print();
 			pm.upperTriangular().print();
 			pm.determinant().print();
+
 		}
 
 		std::cout << std::endl << "-------------------" << std::endl

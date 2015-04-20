@@ -32,6 +32,7 @@ public:
 	Complex mul(T n);
 	Complex mul(Complex other);
 	Complex<T> reciprocal();
+	Complex<T> conjugate();
 	Complex clone();
 	bool isConstant();
 	bool equals(T rhs);
