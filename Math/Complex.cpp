@@ -62,6 +62,7 @@ Complex<T>::Complex(T num, T den) {
 	std::vector<T> denCoeffs;
 	denCoeffs.push_back(1);
 	_denCoeffs = denCoeffs;
+	simplify();
 }
 
 template<typename T>
@@ -72,6 +73,7 @@ Complex<T>::Complex(T value) {
 	std::vector<T> denCoeffs;
 	denCoeffs.push_back(1);
 	_denCoeffs = denCoeffs;
+	simplify();
 }
 
 template<typename T>
@@ -85,6 +87,7 @@ Complex<T>::Complex(Complex<S> other) {
 		denCoeffs.push_back((T)other.getDenCoeffs()[i]);
 	_numCoeffs = numCoeffs;
 	_denCoeffs = denCoeffs;
+	simplify();
 }
 
 
@@ -139,7 +142,7 @@ Complex<T> Complex<T>::add(Complex other) {
 		for (int i = 0; i < other._numCoeffs.size(); i++)
 			numCoeffs[i] += other._numCoeffs[i];
 
-		return Complex(numCoeffs);
+		return Complex(numCoeffs, _denCoeffs);
 	}
 }
 
@@ -148,7 +151,7 @@ Complex<T> Complex<T>::mul(T n) {
 	std::vector<T> numCoeffs(_numCoeffs.size());
 	for (int i = 0; i < _numCoeffs.size(); i++)
 		numCoeffs[i] = n * _numCoeffs[i];
-	return Complex(numCoeffs);
+	return Complex(numCoeffs, _denCoeffs);
 }
 
 template<typename T>
@@ -325,6 +328,15 @@ void Complex<T>::set(Complex other) {
 
 template<typename T>
 void Complex<T>::simplify() {
+
+	// FIXME Causes complex division by zero error
+	// Replaces incredibly small numbers with 0, accounts for floating point errors
+	/*for (int i = 0; i < _numCoeffs.size(); i++)
+		if (std::abs(_numCoeffs[i]) < 0.00001)
+			_numCoeffs[i] = 0;
+	for (int i = 0; i < _denCoeffs.size(); i++)
+		if (std::abs(_denCoeffs[i]) < 0.00001)
+			_denCoeffs[i] = 0;*/
 
 	// Check for 0 division
 	if (_denCoeffs.size() == 1 && _denCoeffs[0] == 0)

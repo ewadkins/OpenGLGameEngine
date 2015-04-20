@@ -115,17 +115,17 @@ ComplexMatrix<T> ComplexMatrix<T>::rref() {
 				y++;
 				continue;
 			}
-			/*std::cout << "Row exchange (Row " << x + 1 << " <-> Row "
+			std::cout << "Row exchange (Row " << x + 1 << " <-> Row "
 			 << rowToExchange + 1 << ")" << std::endl;
-			 result.print();*/
+			 result.print();
 		}
 		if (result.get(x, y) != 1 && result.get(x, y) != 0) {
 			Complex<T> k = result.get(x, y);
 			for (int j = 0; j < _cols; j++)
 				result.set(x, j, result.get(x, j) / k);
-			/*std::cout << "Row division (Row " << x + 1 << " / " << k.toString() << ")"
+			std::cout << "Row division (Row " << x + 1 << " / " << k.toString() << ")"
 			 << std::endl;
-			 result.print();*/
+			 result.print();
 		}
 		for (int i = 0; i < _rows; i++) {
 			if (i != x && result.get(i, y) != 0) {
@@ -137,8 +137,8 @@ ComplexMatrix<T> ComplexMatrix<T>::rref() {
 		}
 		x++;
 		y++;
-		/*std::cout << "Row elimination" << std::endl;
-		 result.print();*/
+		std::cout << "Row elimination" << std::endl;
+		 result.print();
 	}
 	return result;
 }

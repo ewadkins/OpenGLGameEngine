@@ -35,7 +35,8 @@ public:
 	Matrix upperTriangular();
 	T determinant();
 	Matrix inverse();
-	std::vector<T> eigenvalues();
+	std::vector<Complex<T> > eigenvalues();
+	std::vector<Matrix<T> > eigenvectors();
 	int rows();
 	int cols();
 	void fill(T value);

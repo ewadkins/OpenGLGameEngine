@@ -62,6 +62,7 @@ Polynomial<T>::Polynomial(T num, T den) {
 	std::vector<T> denCoeffs;
 	denCoeffs.push_back(1);
 	_denCoeffs = denCoeffs;
+	simplify();
 }
 
 template<typename T>
@@ -72,6 +73,7 @@ Polynomial<T>::Polynomial(T value) {
 	std::vector<T> denCoeffs;
 	denCoeffs.push_back(1);
 	_denCoeffs = denCoeffs;
+	simplify();
 }
 
 template<typename T>
@@ -85,6 +87,7 @@ Polynomial<T>::Polynomial(Polynomial<S> other) {
 		denCoeffs.push_back((T)other.getDenCoeffs()[i]);
 	_numCoeffs = numCoeffs;
 	_denCoeffs = denCoeffs;
+	simplify();
 }
 
 template<typename T>
@@ -150,7 +153,7 @@ Polynomial<T> Polynomial<T>::add(Polynomial other) {
 		for (int i = 0; i < other._numCoeffs.size(); i++)
 			numCoeffs[i] += other._numCoeffs[i];
 
-		return Polynomial(numCoeffs);
+		return Polynomial(numCoeffs, _denCoeffs);
 	}
 }
 
@@ -159,7 +162,7 @@ Polynomial<T> Polynomial<T>::mul(T n) {
 	std::vector<T> numCoeffs(_numCoeffs.size());
 	for (int i = 0; i < _numCoeffs.size(); i++)
 		numCoeffs[i] = n * _numCoeffs[i];
-	return Polynomial(numCoeffs);
+	return Polynomial(numCoeffs, _denCoeffs);
 }
 
 template<typename T>

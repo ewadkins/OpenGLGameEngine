@@ -110,19 +110,11 @@ void Application::initialize() {
 	start = clock();
 	{
 
-		{
-			float numArr2[] = { -4, 1 };
-			std::vector<float> values2(numArr2,
-					numArr2 + sizeof(numArr2) / sizeof(numArr2[0]));
-			Polynomial<float> p1 = Polynomial<float>(values2, 1);
-			p1.print();
-			(p1 ^ 3).print();
-
-			std::cout << std::endl;
-		}
-
 		//float numArr[] = { -5, 3, -3, 1 };
-		float numArr[] = { -64, 48, -12, 1 };
+		//float numArr[] = { -64, 48, -12, 1 };
+		//float numArr[] = { 1200, -140, -270, 0, 10 };
+		float numArr[] = { -22680, 6966, 25209, -7884, -2521, 934, -9, -16, 1 };
+		//float numArr[] = { 5, 3, 2, -2, 1, 4, 2, 5, -2 };
 		std::vector<float> values(numArr,
 				numArr + sizeof(numArr) / sizeof(numArr[0]));
 		Polynomial<float> p = Polynomial<float>(values, 1);
@@ -156,18 +148,18 @@ void Application::initialize() {
 	start = clock();
 	{
 		{
-			PolynomialMatrix<float> pm = PolynomialMatrix<float>(3, 3);
+			PolynomialMatrix<double> pm = PolynomialMatrix<double>(3, 3);
 
-			float numArr[] = { 5, 3, 2, -2, 1, 4, 2, 5, -2 };
-			std::vector<float> values2(numArr,
+			double numArr[] = { 5, 3, 2, -2, 1, 4, 2, 5, -2 };
+			std::vector<double> values2(numArr,
 					numArr + sizeof(numArr) / sizeof(numArr[0]));
 			pm.setVector(values2);
 
-			float denArr[] = { 5, 1 };
-			std::vector<float> numCoeffs(denArr,
+			double denArr[] = { 5, 1 };
+			std::vector<double> numCoeffs(denArr,
 					denArr + sizeof(denArr) / sizeof(denArr[0]));
 
-			Polynomial<float> p = Polynomial<float>(numCoeffs, 1);
+			Polynomial<double> p = Polynomial<double>(numCoeffs, 1);
 			pm.set(0, 0, p);
 
 			pm.print();
@@ -180,18 +172,18 @@ void Application::initialize() {
 				<< std::endl;
 
 		{
-			ComplexMatrix<float> cm = ComplexMatrix<float>(3, 3);
+			ComplexMatrix<double> cm = ComplexMatrix<double>(3, 3);
 
-			float numArr[] = { 5, 3, 2, -2, 1, 4, 2, 5, -2 };
-			std::vector<float> values2(numArr,
+			double numArr[] = { 5, 3, 2, -2, 1, 4, 2, 5, -2 };
+			std::vector<double> values2(numArr,
 					numArr + sizeof(numArr) / sizeof(numArr[0]));
 			cm.setVector(values2);
 
-			float denArr[] = { 5, 1 };
-			std::vector<float> numCoeffs(denArr,
+			double denArr[] = { 5, 1 };
+			std::vector<double> numCoeffs(denArr,
 					denArr + sizeof(denArr) / sizeof(denArr[0]));
 
-			Complex<float> c = Complex<float>(numCoeffs, 1);
+			Complex<double> c = Complex<double>(numCoeffs, 1);
 			cm.set(0, 0, c);
 
 			cm.print();
@@ -202,13 +194,45 @@ void Application::initialize() {
 		std::cout << std::endl << "-------------------" << std::endl
 				<< std::endl;
 
-		Matrix<float> m1 = Matrix<float>(3, 3);
-		float arr[] = { 5, 3, 2, -2, 1, 4, 2, 5, -2 };
-		std::vector<float> values(arr, arr + sizeof(arr) / sizeof(arr[0]));
+		Matrix<double> m1 = Matrix<double>(3, 3);
+		double arr[] = { 5, 3, 2, -2, 1, 4, 2, 5, -2 };
+		//double arr[] = { 5, 25, 2, -2, -10, 4, 2, 10, -2 };
+		//double arr[] = { 5, 0, 2, -2, 0, 4, 2, 0, -2 };
+		std::vector<double> values(arr, arr + sizeof(arr) / sizeof(arr[0]));
 		m1.setVector(values);
 
 		m1.print();
-		m1.eigenvalues();
+		std::vector<Complex<double> > eigenvalues = m1.eigenvalues();
+		for (int i = 0; i < eigenvalues.size(); i++)
+			eigenvalues[i].print();
+
+		m1.eigenvectors();
+
+
+
+
+		std::cout << std::endl << "-------------------" << std::endl
+				<< std::endl;
+
+		double arr2[] = { 5, 25, 2, -2, -10, 4, 2, 10, -2 };
+		//double arr2[] = { 5, 0, 2, -2, 0, 4, 2, 0, -2 };
+		std::vector<double> values2(arr2, arr2 + sizeof(arr2) / sizeof(arr2[0]));
+		m1.setVector(values2);
+
+		m1.print();
+		eigenvalues = m1.eigenvalues();
+		for (int i = 0; i < eigenvalues.size(); i++)
+			eigenvalues[i].print();
+
+		std::cout << std::endl << "-------------------" << std::endl
+				<< std::endl;
+
+		m1 = Matrix<double>::identity(3);
+
+		m1.print();
+		eigenvalues = m1.eigenvalues();
+		for (int i = 0; i < eigenvalues.size(); i++)
+			eigenvalues[i].print();
 
 	}
 	finish = clock();

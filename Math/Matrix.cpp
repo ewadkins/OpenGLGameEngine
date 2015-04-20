@@ -253,30 +253,41 @@ Matrix<T> Matrix<T>::inverse() {
 
 // Returns a vector of the eigenvalues of this matrix
 template<typename T>
-std::vector<T> Matrix<T>::eigenvalues() {
+std::vector<Complex<T> > Matrix<T>::eigenvalues() {
 	if (_rows != _cols)
 		throw std::runtime_error("Matrix must be a square matrix");
 	PolynomialMatrix<T> m = toPolynomialMatrix();
 	PolynomialMatrix<T> lambdaI = PolynomialMatrix<T>(_rows);
-	T arr[] = { 0, -1 };
+	T arr[] = { 0, 1 };
 	std::vector<T> coeffs(arr, arr + sizeof(arr) / sizeof(arr[0]));
 	for (int n = 0; n < _rows; n ++)
 		lambdaI.set(n, n, Polynomial<T>(coeffs, 1));
 
-	m = m + lambdaI;
-	m.print();
-	m.upperTriangular().print();
-	m.determinant().print();
-	std::vector<Complex<T> > roots = m.determinant().roots(); // FIXME Determinant is not what it should be
-	std::cout << "Eigenvalues (Roots^):" << std::endl;
-	for (int i = 0; i < roots.size(); i++)
-		roots[i].print();
+	m = m - lambdaI;
+	std::vector<Complex<T> > result = m.determinant().roots();
 
-	//throw std::runtime_error("Matrix eigenvalues operation not available");
+	return result;
+}
 
-	std::vector<T> eigenvalues;
+// Returns a vector of the eigenvectors of this matrix
+template<typename T>
+std::vector<Matrix<T> > Matrix<T>::eigenvectors() {
 
-	return eigenvalues;
+	std::vector<Complex<T> > evalues = eigenvalues();
+	for (int i = 0; i < evalues.size(); i++) {
+		ComplexMatrix<T> m = toComplexMatrix();
+		ComplexMatrix<T> lambdaI = ComplexMatrix<T>(_rows);
+		for (int n = 0; n < _rows; n ++)
+			lambdaI.set(n, n, evalues[i]);
+		m = m - lambdaI;
+		m.print();
+		m.determinant().print();
+		m.rref().print();
+	}
+
+	std::vector<Matrix<T> > result;
+
+	return result;
 }
 
 // Returns the number of rows in this matrix
