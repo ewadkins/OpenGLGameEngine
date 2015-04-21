@@ -100,7 +100,8 @@ ComplexMatrix<T> ComplexMatrix<T>::rref() {
 	int x = 0;
 	int y = 0;
 	while (x < _rows) {
-		if (result.get(x, y) == 0) {
+		if (result.get(x, y).almostEquals(0)) {
+			result.set(x, y, 0);
 			int rowToExchange = 0;
 			for (int i = x; i < _rows; i++)
 				if (result.get(i, y) == 0)
@@ -116,16 +117,34 @@ ComplexMatrix<T> ComplexMatrix<T>::rref() {
 				continue;
 			}
 			std::cout << "Row exchange (Row " << x + 1 << " <-> Row "
-			 << rowToExchange + 1 << ")" << std::endl;
-			 result.print();
+					<< rowToExchange + 1 << ")" << std::endl;
+			result.print();
 		}
+		std::cout
+				<< (result.get(x, y).almostEquals(0) ?
+						"Almost 0" : "Not almost 0") << std::endl;
 		if (result.get(x, y) != 1 && result.get(x, y) != 0) {
-			Complex<T> k = result.get(x, y);
-			for (int j = 0; j < _cols; j++)
-				result.set(x, j, result.get(x, j) / k);
-			std::cout << "Row division (Row " << x + 1 << " / " << k.toString() << ")"
-			 << std::endl;
-			 result.print();
+			if (result.get(x, y).almostEquals(0))
+				result.set(x, y, 0);
+			else {
+				Complex<T> k = result.get(x, y);
+
+				std::cout << " - Numerator coeffs: ";
+				for (int i = 0; i < k.getNumCoeffs().size(); i++)
+					std::cout << k.getNumCoeffs()[i] << ", ";
+				std::cout << std::endl;
+				std::cout << " - Denominator coeffs: ";
+				for (int i = 0; i < k.getDenCoeffs().size(); i++)
+					std::cout << k.getDenCoeffs()[i] << ", ";
+				std::cout << std::endl;
+
+
+				for (int j = 0; j < _cols; j++)
+					result.set(x, j, result.get(x, j) / k);
+				std::cout << "Row division (Row " << x + 1 << " / "
+						<< k.toString() << ")" << std::endl;
+				result.print();
+			}
 		}
 		for (int i = 0; i < _rows; i++) {
 			if (i != x && result.get(i, y) != 0) {
@@ -138,7 +157,7 @@ ComplexMatrix<T> ComplexMatrix<T>::rref() {
 		x++;
 		y++;
 		std::cout << "Row elimination" << std::endl;
-		 result.print();
+		result.print();
 	}
 	return result;
 }

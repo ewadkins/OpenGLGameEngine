@@ -109,6 +109,15 @@ void Application::initialize() {
 	_logger->log("Testing polynomials...").endLine().increaseIndent();
 	start = clock();
 	{
+		{
+			float numArr[] = { 0.000001, 0.000001 }; // FIXME Doesnt get rid of all zero terms if given more than 1
+			//float numArr[] = { 5, 3, 2, -2, 1, 4, 2, 5, -2 };
+			std::vector<float> values(numArr,
+					numArr + sizeof(numArr) / sizeof(numArr[0]));
+			Complex<float> c = Complex<float>(values, 1);
+			c.print();
+			std::cout << (c.almostEquals(0) ? "almost 0" : "not almost 0") << std::endl;
+		}
 
 		//float numArr[] = { -5, 3, -3, 1 };
 		//float numArr[] = { -64, 48, -12, 1 };
@@ -148,18 +157,18 @@ void Application::initialize() {
 	start = clock();
 	{
 		{
-			PolynomialMatrix<double> pm = PolynomialMatrix<double>(3, 3);
+			PolynomialMatrix<float> pm = PolynomialMatrix<float>(3, 3);
 
-			double numArr[] = { 5, 3, 2, -2, 1, 4, 2, 5, -2 };
-			std::vector<double> values2(numArr,
+			float numArr[] = { 5, 3, 2, -2, 1, 4, 2, 5, -2 };
+			std::vector<float> values2(numArr,
 					numArr + sizeof(numArr) / sizeof(numArr[0]));
 			pm.setVector(values2);
 
-			double denArr[] = { 5, 1 };
-			std::vector<double> numCoeffs(denArr,
+			float denArr[] = { 5, 1 };
+			std::vector<float> numCoeffs(denArr,
 					denArr + sizeof(denArr) / sizeof(denArr[0]));
 
-			Polynomial<double> p = Polynomial<double>(numCoeffs, 1);
+			Polynomial<float> p = Polynomial<float>(numCoeffs, 1);
 			pm.set(0, 0, p);
 
 			pm.print();
@@ -172,18 +181,18 @@ void Application::initialize() {
 				<< std::endl;
 
 		{
-			ComplexMatrix<double> cm = ComplexMatrix<double>(3, 3);
+			ComplexMatrix<float> cm = ComplexMatrix<float>(3, 3);
 
-			double numArr[] = { 5, 3, 2, -2, 1, 4, 2, 5, -2 };
-			std::vector<double> values2(numArr,
+			float numArr[] = { 5, 3, 2, -2, 1, 4, 2, 5, -2 };
+			std::vector<float> values2(numArr,
 					numArr + sizeof(numArr) / sizeof(numArr[0]));
 			cm.setVector(values2);
 
-			double denArr[] = { 5, 1 };
-			std::vector<double> numCoeffs(denArr,
+			float denArr[] = { 5, 1 };
+			std::vector<float> numCoeffs(denArr,
 					denArr + sizeof(denArr) / sizeof(denArr[0]));
 
-			Complex<double> c = Complex<double>(numCoeffs, 1);
+			Complex<float> c = Complex<float>(numCoeffs, 1);
 			cm.set(0, 0, c);
 
 			cm.print();
@@ -194,19 +203,20 @@ void Application::initialize() {
 		std::cout << std::endl << "-------------------" << std::endl
 				<< std::endl;
 
-		Matrix<double> m1 = Matrix<double>(3, 3);
-		double arr[] = { 5, 3, 2, -2, 1, 4, 2, 5, -2 };
-		//double arr[] = { 5, 25, 2, -2, -10, 4, 2, 10, -2 };
-		//double arr[] = { 5, 0, 2, -2, 0, 4, 2, 0, -2 };
-		std::vector<double> values(arr, arr + sizeof(arr) / sizeof(arr[0]));
+		Matrix<float> m1 = Matrix<float>(3, 3);
+		float arr[] = { 5, 3, 2, -2, 1, 4, 2, 5, -2 };
+		//float arr[] = { 5, 25, 2, -2, -10, 4, 2, 10, -2 };
+		//float arr[] = { 5, 0, 2, -2, 0, 4, 2, 0, -2 };
+		std::vector<float> values(arr, arr + sizeof(arr) / sizeof(arr[0]));
 		m1.setVector(values);
 
 		m1.print();
-		std::vector<Complex<double> > eigenvalues = m1.eigenvalues();
+		m1.rref().print();
+		std::vector<Complex<float> > eigenvalues = m1.eigenvalues();
 		for (int i = 0; i < eigenvalues.size(); i++)
 			eigenvalues[i].print();
 
-		m1.eigenvectors();
+		//m1.eigenvectors();
 
 
 
@@ -214,9 +224,9 @@ void Application::initialize() {
 		std::cout << std::endl << "-------------------" << std::endl
 				<< std::endl;
 
-		double arr2[] = { 5, 25, 2, -2, -10, 4, 2, 10, -2 };
-		//double arr2[] = { 5, 0, 2, -2, 0, 4, 2, 0, -2 };
-		std::vector<double> values2(arr2, arr2 + sizeof(arr2) / sizeof(arr2[0]));
+		float arr2[] = { 5, 25, 2, -2, -10, 4, 2, 10, -2 };
+		//float arr2[] = { 5, 0, 2, -2, 0, 4, 2, 0, -2 };
+		std::vector<float> values2(arr2, arr2 + sizeof(arr2) / sizeof(arr2[0]));
 		m1.setVector(values2);
 
 		m1.print();
@@ -227,7 +237,7 @@ void Application::initialize() {
 		std::cout << std::endl << "-------------------" << std::endl
 				<< std::endl;
 
-		m1 = Matrix<double>::identity(3);
+		m1 = Matrix<float>::identity(3);
 
 		m1.print();
 		eigenvalues = m1.eigenvalues();

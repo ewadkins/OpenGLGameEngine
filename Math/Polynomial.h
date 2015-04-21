@@ -34,7 +34,7 @@ public:
 	Polynomial mul(T n);
 	Polynomial mul(Polynomial other);
 	std::vector<Complex<T> > roots();
-	Polynomial<T> reciprocal();
+	Polynomial reciprocal();
 	Polynomial clone();
 	bool isConstant();
 	bool equals(T rhs);

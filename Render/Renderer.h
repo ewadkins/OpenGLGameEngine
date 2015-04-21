@@ -13,14 +13,14 @@
 #include "../Drawables/Drawable.h"
 #include "../Drawables/Triangle.h"
 #include "../Drawables/Cube.h"
-#include <iostream>
-#include <fstream>
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
 #include "../Components/GLLine.h"
 #include "../Components/GLTriangle.h"
 #include "VBO.h"
 #include "../Components/Vertex.h"
+#include <iostream>
+#include <fstream>
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
 
 class Application;
 

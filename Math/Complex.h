@@ -31,12 +31,14 @@ public:
 	Complex add(Complex other);
 	Complex mul(T n);
 	Complex mul(Complex other);
-	Complex<T> reciprocal();
-	Complex<T> conjugate();
+	Complex reciprocal();
+	Complex conjugate();
 	Complex clone();
 	bool isConstant();
-	bool equals(T rhs);
-	bool equals(Complex rhs);
+	bool almostEquals(T rhs);
+	bool almostEquals(Complex rhs);
+	bool exactlyEquals(T rhs);
+	bool exactlyEquals(Complex rhs);
 	std::string toString();
 	void print();
 	std::vector<T> getNumCoeffs();
@@ -65,9 +67,20 @@ public:
 	//operator float();
 	//operator double();
 	//operator long double();
-private:
-	void set(Complex other);
 	void simplify();
+private:
+	void set(T rhs);
+	void set(Complex other);
+	static bool almostEqual(T lhs, T rhs);
+	void makeSmallNumbersZero();
+	void removeTrailingZeros();
+	void checkZeroDivision();
+	void simplifyImaginaryTerms();
+	void divideOutVariable();
+	void simplifyConstant();
+	void divideByConstant();
+	void complexDivision();
+	void simplifyIfNumeratorZero();
 	static std::string trimNumber(std::string str);
 	std::vector<T> _numCoeffs;
 	std::vector<T> _denCoeffs;
