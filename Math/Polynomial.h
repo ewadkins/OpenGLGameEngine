@@ -34,9 +34,11 @@ public:
 	Polynomial mul(T n);
 	Polynomial mul(Polynomial other);
 	std::vector<Complex<T> > roots();
-	Polynomial<T> reciprocal();
+	Polynomial reciprocal();
 	Polynomial clone();
 	bool isConstant();
+	bool almostEquals(T rhs);
+	bool almostEquals(Polynomial rhs);
 	bool equals(T rhs);
 	bool equals(Polynomial rhs);
 	std::string toString();
@@ -68,8 +70,18 @@ public:
 	//operator double();
 	//operator long double();
 private:
+	void set(T rhs);
 	void set(Polynomial other);
 	void simplify();
+	void makeSmallNumbersZero();
+	void removeTrailingZeros();
+	void checkZeroDivision();
+	void divideOutVariable();
+	void simplifyConstant();
+	void divideByConstant();
+	void polynomialDivision();
+	void simplifyIfNumeratorZero();
+	static bool almostEqual(T lhs, T rhs);
 	static std::string trimNumber(std::string str);
 	std::vector<T> _numCoeffs;
 	std::vector<T> _denCoeffs;

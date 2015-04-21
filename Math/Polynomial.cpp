@@ -259,6 +259,58 @@ bool Polynomial<T>::isConstant() {
 }
 
 template<typename T>
+bool Polynomial<T>::almostEquals(T rhs) {
+	if (isConstant() && almostEqual(value(), rhs))
+		return true;
+
+	Polynomial<T> temp = clone();
+	temp.makeSmallNumbersZero();
+	temp.removeTrailingZeros();
+
+	if (temp.isConstant() && almostEqual(temp.value(), rhs))
+		return true;
+
+	return false;
+}
+
+template<typename T>
+bool Polynomial<T>::almostEquals(Polynomial rhs) {
+	if (isConstant() && rhs.isConstant())
+		return almostEqual(value(), rhs.value());
+
+	Polynomial<T> temp = clone();
+	temp.makeSmallNumbersZero();
+	temp.removeTrailingZeros();
+	rhs.makeSmallNumbersZero();
+	rhs.removeTrailingZeros();
+
+	if (temp._numCoeffs.size() != rhs._numCoeffs.size()
+			|| temp._numCoeffs.size() != rhs._numCoeffs.size())
+		return false;
+	bool result = true;
+	for (int i = 0; i < temp._numCoeffs.size(); i++)
+		if (!almostEqual(temp._numCoeffs[i], rhs._numCoeffs[i]))
+			return false;
+	for (int i = 0; i < temp._denCoeffs.size(); i++)
+		if (!almostEqual(temp._denCoeffs[i], rhs._denCoeffs[i]))
+			return false;
+
+	return result;
+}
+
+template<typename T>
+bool Polynomial<T>::almostEqual(T lhs, T rhs) {
+	if (lhs == rhs)
+		return true;
+
+	T relativeError = std::abs((lhs - rhs) / std::max((T)1, rhs));
+	if (relativeError < 0.00001)
+		return true;
+
+	return false;
+}
+
+template<typename T>
 bool Polynomial<T>::equals(T rhs) {
 	if (isConstant() && value() == rhs)
 		return true;
@@ -372,6 +424,17 @@ std::vector<T> Polynomial<T>::getDenCoeffs() {
 }
 
 template<typename T>
+void Polynomial<T>::set(T rhs) {
+	std::vector<T> numCoeffs;
+	numCoeffs.push_back(rhs);
+	_numCoeffs = numCoeffs;
+	std::vector<T> denCoeffs;
+	denCoeffs.push_back(1);
+	_denCoeffs = denCoeffs;
+	simplify();
+}
+
+template<typename T>
 void Polynomial<T>::set(Polynomial other) {
 	/*std::vector<T> numCoeffs;
 	 for (int i = 0; i < other._numCoeffs.size(); i++)
@@ -386,37 +449,92 @@ void Polynomial<T>::set(Polynomial other) {
 template<typename T>
 void Polynomial<T>::simplify() {
 
-	// Check for 0 division
-	if (_denCoeffs.size() == 1 && _denCoeffs[0] == 0)
-		throw std::runtime_error("Polynomial division by zero");
+	//makeSmallNumbersZero();
 
+	removeTrailingZeros();
+	checkZeroDivision();
+	divideOutVariable();
+	simplifyConstant();
+	divideByConstant();
+	polynomialDivision();
+	simplifyIfNumeratorZero();
+
+}
+
+template<typename T>
+void Polynomial<T>::makeSmallNumbersZero() {
+	// Replace any extremely small coefficients with 0
+	for (int i = 0; i < _numCoeffs.size(); i++)
+		if (almostEqual(_numCoeffs[i], 0))
+			_numCoeffs[i] = 0;
+	for (int i = 0; i < _denCoeffs.size(); i++)
+		if (almostEqual(_denCoeffs[i], 0))
+			_denCoeffs[i] = 0;
+}
+
+template<typename T>
+void Polynomial<T>::removeTrailingZeros() {
 	// If any of the ending coefficients are 0, remove that term
-	while (_numCoeffs.size() > 1 && _numCoeffs[_numCoeffs.size() - 1] == 0)
+	while (_numCoeffs.size() > 1
+			&& _numCoeffs[_numCoeffs.size() - 1] == 0)
 		_numCoeffs.pop_back();
-	while (_denCoeffs.size() > 1 && _denCoeffs[_denCoeffs.size() - 1] == 0)
+	while (_denCoeffs.size() > 1
+			&& _denCoeffs[_denCoeffs.size() - 1] == 0)
 		_denCoeffs.pop_back();
+}
 
-	// If a variable can be factored out of all terms, do this until there is a constant that prevents it
+template<typename T>
+void Polynomial<T>::checkZeroDivision() {
+	// Check for 0 division
+	if (_denCoeffs.size() == 1 && _denCoeffs[0] == 0) {
+
+		std::cout << "Numerator coeffs: ";
+		for (int i = 0; i < _numCoeffs.size(); i++)
+			std::cout << _numCoeffs[i] << ", ";
+		std::cout << std::endl;
+		std::cout << "Denominator coeffs: ";
+		for (int i = 0; i < _denCoeffs.size(); i++)
+			std::cout << _denCoeffs[i] << ", ";
+		std::cout << std::endl;
+
+		std::cout << "ZERO DIVISION: " << toString() << std::endl;
+
+		throw std::runtime_error("Polynomial division by zero");
+	}
+}
+
+template<typename T>
+void Polynomial<T>::divideOutVariable() {
+	// If a variable can be divided out of all terms, do this until there is a constant that prevents it
 	while (_numCoeffs.size() > 1 && _denCoeffs.size() > 1 && _numCoeffs[0] == 0
 			&& _denCoeffs[0] == 0) {
 		_numCoeffs.erase(_numCoeffs.begin());
 		_denCoeffs.erase(_denCoeffs.begin());
 	}
+}
 
-	// If the numerator and denominator are both constants, set the polynomial to the value/1
+template<typename T>
+void Polynomial<T>::simplifyConstant() {
+	// If the numerator and denominator are both constants, set the Polynomial to the value/1
 	if (isConstant() && _denCoeffs[0] != 1) {
 		_numCoeffs[0] = value();
 		_denCoeffs[0] = 1;
 		return;
 	}
+}
 
+template<typename T>
+void Polynomial<T>::divideByConstant() {
 	// If the denominator is just a constant, divide the top by the constant and make the bottom 1
 	if (_denCoeffs.size() == 1) {
 		for (int i = 0; i < _numCoeffs.size(); i++)
 			_numCoeffs[i] *= (1.0 / _denCoeffs[0]);
 		_denCoeffs[0] = 1;
 	}
+}
 
+template<typename T>
+void Polynomial<T>::polynomialDivision() {
 	// Polynomial long division
 	if (_denCoeffs.size() > 1 && _numCoeffs.size() >= _denCoeffs.size()) {
 		Polynomial<T> dividend = Polynomial(_numCoeffs);
@@ -446,8 +564,11 @@ void Polynomial<T>::simplify() {
 			_denCoeffs = result._denCoeffs;
 		}
 	}
+}
 
-	// If the numerator is 0, regardless of the denominator, set the polynomial to 0/1
+template<typename T>
+void Polynomial<T>::simplifyIfNumeratorZero() {
+	// If the numerator is 0, regardless of the denominator, set the Polynomial to 0/1
 	if (_numCoeffs.size() == 1 && _numCoeffs[0] == 0) {
 		std::vector<T> denCoeffs;
 		denCoeffs.push_back(1);
@@ -563,12 +684,7 @@ bool Polynomial<T>::operator!=(Polynomial rhs) {
 
 template<typename T>
 void Polynomial<T>::operator=(T rhs) {
-	std::vector<T> numCoeffs;
-	numCoeffs.push_back(rhs);
-	_numCoeffs = numCoeffs;
-	std::vector<T> denCoeffs;
-	denCoeffs.push_back(1);
-	_denCoeffs = denCoeffs;
+	set(rhs);
 }
 
 template<typename T>
