@@ -227,14 +227,14 @@ std::vector<Complex<T> > Polynomial<T>::roots() {
 
 		bool finished = true;
 		for (int i = 0; i < c.size(); i++)
-			if (!(c[i].exactlyEquals(c0[i])))
+			if (c[i] != c0[i])
 				finished = false;
 		if (finished)
 			break;
 
 		/*std::cout << "Updated values:" << std::endl;
-		for (int i = 0; i < c.size(); i++)
-			c[i].print();*/
+		for (int i = 0; i < result.size(); i++)
+			result[i].print();*/
 
 	}
 	std::vector<Complex<T> > result;
@@ -386,15 +386,15 @@ void Polynomial<T>::set(Polynomial other) {
 template<typename T>
 void Polynomial<T>::simplify() {
 
+	// Check for 0 division
+	if (_denCoeffs.size() == 1 && _denCoeffs[0] == 0)
+		throw std::runtime_error("Polynomial division by zero");
+
 	// If any of the ending coefficients are 0, remove that term
 	while (_numCoeffs.size() > 1 && _numCoeffs[_numCoeffs.size() - 1] == 0)
 		_numCoeffs.pop_back();
 	while (_denCoeffs.size() > 1 && _denCoeffs[_denCoeffs.size() - 1] == 0)
 		_denCoeffs.pop_back();
-
-	// Check for 0 division
-	if (_denCoeffs.size() == 1 && _denCoeffs[0] == 0)
-		throw std::runtime_error("Polynomial division by zero");
 
 	// If a variable can be factored out of all terms, do this until there is a constant that prevents it
 	while (_numCoeffs.size() > 1 && _denCoeffs.size() > 1 && _numCoeffs[0] == 0
