@@ -99,7 +99,7 @@ PolynomialMatrix<T> PolynomialMatrix<T>::rref() {
 	PolynomialMatrix<T> result = clone();
 	int x = 0;
 	int y = 0;
-	while (x < _rows) {
+	while (x < _rows && y < _cols) {
 		if (result.get(x, y) == 0) {
 			int rowToExchange = 0;
 			for (int i = x; i < _rows; i++)
@@ -113,6 +113,8 @@ PolynomialMatrix<T> PolynomialMatrix<T>::rref() {
 				}
 			} else {
 				y++;
+				if (x == _rows -1)
+					break;
 				continue;
 			}
 			/*std::cout << "Row exchange (Row " << x + 1 << " <-> Row "
@@ -151,7 +153,7 @@ PolynomialMatrix<T> PolynomialMatrix<T>::upperTriangular() {
 	PolynomialMatrix<T> result = clone();
 	int x = 0;
 	int y = 0;
-	while (x < _rows) {
+	while (x < _rows && y < _cols) {
 		if (result.get(x, y) == 0) {
 			int rowToExchange = 0;
 			for (int i = x; i < _rows; i++)
@@ -165,6 +167,8 @@ PolynomialMatrix<T> PolynomialMatrix<T>::upperTriangular() {
 				}
 			} else {
 				y++;
+				if (x == _rows -1)
+					break;
 				continue;
 			}
 		}
@@ -191,7 +195,7 @@ Polynomial<T> PolynomialMatrix<T>::determinant() {
 	int rowChanges = 0;
 	int x = 0;
 	int y = 0;
-	while (x < _rows) {
+	while (x < _rows && y < _cols) {
 		if (result.get(x, y) == 0) {
 			int rowToExchange = 0;
 			for (int i = x; i < _rows; i++)
@@ -206,6 +210,8 @@ Polynomial<T> PolynomialMatrix<T>::determinant() {
 				}
 			} else {
 				y++;
+				if (x == _rows -1)
+					break;
 				continue;
 			}
 		}

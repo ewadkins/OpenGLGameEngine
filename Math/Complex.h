@@ -63,15 +63,11 @@ public:
 	bool operator!=(Complex rhs);
 	void operator=(T rhs);
 	void operator=(Complex rhs);
-	//operator int();
-	//operator float();
-	//operator double();
-	//operator long double();
+	void round();
 private:
 	void set(T rhs);
 	void set(Complex other);
 	void simplify();
-	void makeSmallNumbersZero();
 	void removeTrailingZeros();
 	void checkZeroDivision();
 	void simplifyImaginaryTerms();

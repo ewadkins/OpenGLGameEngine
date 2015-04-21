@@ -109,7 +109,6 @@ void Application::initialize() {
 	_logger->log("Testing polynomials...").endLine().increaseIndent();
 	start = clock();
 	{
-
 		//float numArr[] = { -5, 3, -3, 1 };
 		//float numArr[] = { -64, 48, -12, 1 };
 		//float numArr[] = { 1200, -140, -270, 0, 10 };
@@ -208,9 +207,6 @@ void Application::initialize() {
 
 		m1.eigenvectors();
 
-
-
-
 		std::cout << std::endl << "-------------------" << std::endl
 				<< std::endl;
 
@@ -224,6 +220,22 @@ void Application::initialize() {
 		for (int i = 0; i < eigenvalues.size(); i++)
 			eigenvalues[i].print();
 
+		m1.eigenvectors();
+
+		std::cout << std::endl << "-------------------" << std::endl
+				<< std::endl;
+
+		double arr3[] = { 5, 25, 10, -2, -10, -4, 2, 10, 4 };
+		std::vector<double> values3(arr3, arr3 + sizeof(arr3) / sizeof(arr3[0]));
+		m1.setVector(values3);
+
+		m1.print();
+		eigenvalues = m1.eigenvalues();
+		for (int i = 0; i < eigenvalues.size(); i++)
+			eigenvalues[i].print();
+
+		m1.eigenvectors();
+
 		std::cout << std::endl << "-------------------" << std::endl
 				<< std::endl;
 
@@ -233,6 +245,8 @@ void Application::initialize() {
 		eigenvalues = m1.eigenvalues();
 		for (int i = 0; i < eigenvalues.size(); i++)
 			eigenvalues[i].print();
+
+		m1.eigenvectors();
 
 	}
 	finish = clock();

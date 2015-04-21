@@ -65,15 +65,11 @@ public:
 	bool operator!=(Polynomial rhs);
 	void operator=(T rhs);
 	void operator=(Polynomial rhs);
-	//operator int();
-	//operator float();
-	//operator double();
-	//operator long double();
+	void round();
 private:
 	void set(T rhs);
 	void set(Polynomial other);
 	void simplify();
-	void makeSmallNumbersZero();
 	void removeTrailingZeros();
 	void checkZeroDivision();
 	void divideOutVariable();

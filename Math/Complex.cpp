@@ -81,15 +81,14 @@ template<typename S>
 Complex<T>::Complex(Complex<S> other) {
 	std::vector<T> numCoeffs;
 	for (int i = 0; i < other.getNumCoeffs().size(); i++)
-		numCoeffs.push_back((T)other.getNumCoeffs()[i]);
+		numCoeffs.push_back((T) other.getNumCoeffs()[i]);
 	std::vector<T> denCoeffs;
 	for (int i = 0; i < other.getDenCoeffs().size(); i++)
-		denCoeffs.push_back((T)other.getDenCoeffs()[i]);
+		denCoeffs.push_back((T) other.getDenCoeffs()[i]);
 	_numCoeffs = numCoeffs;
 	_denCoeffs = denCoeffs;
 	simplify();
 }
-
 
 template<typename T>
 T Complex<T>::value(T x) {
@@ -181,7 +180,8 @@ Complex<T> Complex<T>::reciprocal() {
 template<typename T>
 Complex<T> Complex<T>::conjugate() {
 	if (_numCoeffs.size() > 2 || _denCoeffs.size() > 1)
-		throw std::runtime_error("Must be simplified before the conjugate can be found");
+		throw std::runtime_error(
+				"Must be simplified before the conjugate can be found");
 	std::vector<T> numCoeffs = _numCoeffs;
 	numCoeffs[1] *= -1;
 	std::vector<T> denCoeffs = _denCoeffs;
@@ -207,8 +207,7 @@ bool Complex<T>::almostEquals(T rhs) {
 		return true;
 
 	Complex<T> temp = clone();
-	temp.makeSmallNumbersZero();
-	temp.removeTrailingZeros();
+	temp.round();
 
 	if (temp.isConstant() && almostEqual(temp.value(), rhs))
 		return true;
@@ -222,10 +221,8 @@ bool Complex<T>::almostEquals(Complex rhs) {
 		return almostEqual(value(), rhs.value());
 
 	Complex<T> temp = clone();
-	temp.makeSmallNumbersZero();
-	temp.removeTrailingZeros();
-	rhs.makeSmallNumbersZero();
-	rhs.removeTrailingZeros();
+	temp.round();
+	rhs.round();
 
 	if (temp._numCoeffs.size() != rhs._numCoeffs.size()
 			|| temp._numCoeffs.size() != rhs._numCoeffs.size())
@@ -243,27 +240,11 @@ bool Complex<T>::almostEquals(Complex rhs) {
 
 template<typename T>
 bool Complex<T>::almostEqual(T lhs, T rhs) {
-	if (lhs == rhs) {
-		/*std::cout << "Comparing relative equals (exactly equal):" << lhs
-		 << " and " << rhs << std::endl;*/
+	if (lhs == rhs)
 		return true;
-	}
-
-	// FIXME Causes errors, comment out to return to absolute equals
-	T relativeError = std::abs((lhs - rhs) / std::max((T)1, rhs));
-	if (relativeError < 0.00001) {
-		/*std::cout << "Comparing relative equals (almost equal):" << lhs
-				<< " and " << rhs << "   Relative error:" << relativeError
-				<< std::endl;*/
-		return true;
-	}
-
-	/*std::cout << "Comparing relative equals (not almost equal):" << lhs
-	 << " and " << rhs << std::endl;
-	 std::cout << "    Relative error:" << relativeError << std::endl;*/
-	return false;
+	T relativeError = std::abs((lhs - rhs) / std::max((T) 1, rhs));
+	return relativeError < 1e-6;
 }
-
 
 template<typename T>
 bool Complex<T>::equals(T rhs) {
@@ -405,7 +386,7 @@ void Complex<T>::set(Complex other) {
 template<typename T>
 void Complex<T>::simplify() {
 
-	//makeSmallNumbersZero();
+	//round();
 
 	removeTrailingZeros();
 	checkZeroDivision();
@@ -419,24 +400,44 @@ void Complex<T>::simplify() {
 }
 
 template<typename T>
-void Complex<T>::makeSmallNumbersZero() {
-	// Replace any extremely small coefficients with 0
-	for (int i = 0; i < _numCoeffs.size(); i++)
-		if (almostEqual(_numCoeffs[i], 0))
-			_numCoeffs[i] = 0;
-	for (int i = 0; i < _denCoeffs.size(); i++)
-		if (almostEqual(_denCoeffs[i], 0))
-			_denCoeffs[i] = 0;
+void Complex<T>::round() {
+	// Round numbers with very small errors
+	bool changed = false;
+	for (int i = 0; i < _numCoeffs.size(); i++) {
+		if (_numCoeffs[i] != (int) _numCoeffs[i]
+				&& almostEqual(_numCoeffs[i], (int) _numCoeffs[i])) {
+			_numCoeffs[i] = (int) _numCoeffs[i];
+			changed = true;
+		}
+		if (_numCoeffs[i] != (int) _numCoeffs[i] + 1
+				&& almostEqual(_numCoeffs[i], (int) _numCoeffs[i] + 1)) {
+			_numCoeffs[i] = (int) _numCoeffs[i] + 1;
+			changed = true;
+		}
+	}
+	for (int i = 0; i < _denCoeffs.size(); i++) {
+		if (_denCoeffs[i] != (int) _numCoeffs[i]
+				&& almostEqual(_denCoeffs[i], (int) _numCoeffs[i])) {
+			_denCoeffs[i] = (int) _numCoeffs[i];
+			changed = true;
+		}
+		if (_denCoeffs[i] != (int) _numCoeffs[i] + 1
+				&& almostEqual(_denCoeffs[i], (int) _numCoeffs[i] + 1)) {
+			_denCoeffs[i] = (int) _numCoeffs[i] + 1;
+			changed = true;
+		}
+	}
+
+	if (changed)
+		simplify();
 }
 
 template<typename T>
 void Complex<T>::removeTrailingZeros() {
 	// If any of the ending coefficients are 0, remove that term
-	while (_numCoeffs.size() > 1
-			&& _numCoeffs[_numCoeffs.size() - 1] == 0)
+	while (_numCoeffs.size() > 1 && _numCoeffs[_numCoeffs.size() - 1] == 0)
 		_numCoeffs.pop_back();
-	while (_denCoeffs.size() > 1
-			&& _denCoeffs[_denCoeffs.size() - 1] == 0)
+	while (_denCoeffs.size() > 1 && _denCoeffs[_denCoeffs.size() - 1] == 0)
 		_denCoeffs.pop_back();
 }
 
@@ -641,7 +642,6 @@ template<typename T>
 void Complex<T>::operator=(Complex rhs) {
 	set(rhs);
 }
-
 
 template<typename T>
 std::string Complex<T>::trimNumber(std::string str) {

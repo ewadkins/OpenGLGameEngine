@@ -99,7 +99,18 @@ ComplexMatrix<T> ComplexMatrix<T>::rref() {
 	ComplexMatrix<T> result = clone();
 	int x = 0;
 	int y = 0;
-	while (x < _rows) {
+	while (x < _rows && y < _cols) {
+
+		// FIXME Decide whether to always check for near-zero numbers
+		// Replaces near-zero values caused by errors with actual zeros
+		for (int i = 0; i < _rows; i++)
+			for (int j = 0; j < _cols; j++)
+				if (result.get(i, j) != 0) {
+					Complex<T> temp = result.get(i, j);
+					temp.round();
+					result.set(i, j, temp);
+				}
+
 		if (result.get(x, y) == 0) {
 			int rowToExchange = 0;
 			for (int i = x; i < _rows; i++)
@@ -113,19 +124,21 @@ ComplexMatrix<T> ComplexMatrix<T>::rref() {
 				}
 			} else {
 				y++;
+				if (x == _rows - 1)
+					break;
 				continue;
 			}
-			std::cout << "Row exchange (Row " << x + 1 << " <-> Row "
+			/*std::cout << "Row exchange (Row " << x + 1 << " <-> Row "
 			 << rowToExchange + 1 << ")" << std::endl;
-			 result.print();
+			 result.print();*/
 		}
 		if (result.get(x, y) != 1 && result.get(x, y) != 0) {
 			Complex<T> k = result.get(x, y);
 			for (int j = 0; j < _cols; j++)
 				result.set(x, j, result.get(x, j) / k);
-			std::cout << "Row division (Row " << x + 1 << " / " << k.toString() << ")"
-			 << std::endl;
-			 result.print();
+			/*std::cout << "Row division (Row " << x + 1 << " / " << k.toString()
+			 << ")" << std::endl;
+			 result.print();*/
 		}
 		for (int i = 0; i < _rows; i++) {
 			if (i != x && result.get(i, y) != 0) {
@@ -137,8 +150,9 @@ ComplexMatrix<T> ComplexMatrix<T>::rref() {
 		}
 		x++;
 		y++;
-		std::cout << "Row elimination" << std::endl;
+		/*std::cout << "Row elimination" << std::endl;
 		 result.print();
+		 std::cout << "Done with this iteration" << std::endl;*/
 	}
 	return result;
 }
@@ -151,7 +165,7 @@ ComplexMatrix<T> ComplexMatrix<T>::upperTriangular() {
 	ComplexMatrix<T> result = clone();
 	int x = 0;
 	int y = 0;
-	while (x < _rows) {
+	while (x < _rows && y < _cols) {
 		if (result.get(x, y) == 0) {
 			int rowToExchange = 0;
 			for (int i = x; i < _rows; i++)
@@ -165,6 +179,8 @@ ComplexMatrix<T> ComplexMatrix<T>::upperTriangular() {
 				}
 			} else {
 				y++;
+				if (x == _rows - 1)
+					break;
 				continue;
 			}
 		}
@@ -191,7 +207,7 @@ Complex<T> ComplexMatrix<T>::determinant() {
 	int rowChanges = 0;
 	int x = 0;
 	int y = 0;
-	while (x < _rows) {
+	while (x < _rows && y < _cols) {
 		if (result.get(x, y) == 0) {
 			int rowToExchange = 0;
 			for (int i = x; i < _rows; i++)
@@ -206,6 +222,8 @@ Complex<T> ComplexMatrix<T>::determinant() {
 				}
 			} else {
 				y++;
+				if (x == _rows - 1)
+					break;
 				continue;
 			}
 		}

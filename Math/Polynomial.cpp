@@ -81,10 +81,10 @@ template<typename S>
 Polynomial<T>::Polynomial(Polynomial<S> other) {
 	std::vector<T> numCoeffs;
 	for (int i = 0; i < other.getNumCoeffs().size(); i++)
-		numCoeffs.push_back((T)other.getNumCoeffs()[i]);
+		numCoeffs.push_back((T) other.getNumCoeffs()[i]);
 	std::vector<T> denCoeffs;
 	for (int i = 0; i < other.getDenCoeffs().size(); i++)
-		denCoeffs.push_back((T)other.getDenCoeffs()[i]);
+		denCoeffs.push_back((T) other.getDenCoeffs()[i]);
 	_numCoeffs = numCoeffs;
 	_denCoeffs = denCoeffs;
 	simplify();
@@ -106,10 +106,10 @@ template<typename T>
 Complex<T> Polynomial<T>::value(Complex<T> x) {
 	Complex<T> num = 0;
 	for (int i = 0; i < _numCoeffs.size(); i++)
-		num += (x^i) * _numCoeffs[i];
+		num += (x ^ i) * _numCoeffs[i];
 	Complex<T> den = 0;
 	for (int i = 0; i < _denCoeffs.size(); i++)
-		den += (x^i) * _denCoeffs[i];
+		den += (x ^ i) * _denCoeffs[i];
 
 	return num / den;
 }
@@ -122,20 +122,15 @@ T Polynomial<T>::value() {
 template<typename T>
 Polynomial<T> Polynomial<T>::add(Polynomial other) {
 	if (_denCoeffs != other._denCoeffs) {
-		Polynomial<T> cd =
-				Polynomial<T>(
-						(Polynomial<T>(_denCoeffs, 1)
-								* Polynomial<T>(other._denCoeffs, 1))._numCoeffs,
-						1);
-		Polynomial<T> p1 =
-				Polynomial<T>(
-						(Polynomial<T>(_numCoeffs, 1)
-								* Polynomial<T>(other._denCoeffs, 1))._numCoeffs,
-						1);
-		Polynomial<T> p2 =
-				Polynomial<T>(
-						(Polynomial<T>(other._numCoeffs, 1)
-								* Polynomial<T>(_denCoeffs, 1))._numCoeffs, 1);
+		Polynomial<T> cd = Polynomial<T>(
+				(Polynomial<T>(_denCoeffs, 1)
+						* Polynomial<T>(other._denCoeffs, 1))._numCoeffs, 1);
+		Polynomial<T> p1 = Polynomial<T>(
+				(Polynomial<T>(_numCoeffs, 1)
+						* Polynomial<T>(other._denCoeffs, 1))._numCoeffs, 1);
+		Polynomial<T> p2 = Polynomial<T>(
+				(Polynomial<T>(other._numCoeffs, 1)
+						* Polynomial<T>(_denCoeffs, 1))._numCoeffs, 1);
 
 		std::vector<T> numCoeffs(
 				std::max(p1._numCoeffs.size(), p2._numCoeffs.size()));
@@ -199,7 +194,7 @@ std::vector<Complex<T> > Polynomial<T>::roots() {
 
 	std::vector<Complex<long double> > c;
 	for (int i = 0; i < _numCoeffs.size() - 1; i++) {
-		c.push_back(init^i);
+		c.push_back(init ^ i);
 	}
 
 	std::vector<Complex<long double> > c0;
@@ -233,13 +228,16 @@ std::vector<Complex<T> > Polynomial<T>::roots() {
 			break;
 
 		/*std::cout << "Updated values:" << std::endl;
-		for (int i = 0; i < result.size(); i++)
-			result[i].print();*/
+		 for (int i = 0; i < result.size(); i++)
+		 result[i].print();*/
 
 	}
 	std::vector<Complex<T> > result;
-	for (int i = 0; i < c.size(); i++)
-		result.push_back(Complex<T>(c[i]));
+	for (int i = 0; i < c.size(); i++) {
+		Complex<T> temp = Complex<T>(c[i]);
+		temp.round();
+		result.push_back(temp);
+	}
 	return result;
 }
 
@@ -264,8 +262,7 @@ bool Polynomial<T>::almostEquals(T rhs) {
 		return true;
 
 	Polynomial<T> temp = clone();
-	temp.makeSmallNumbersZero();
-	temp.removeTrailingZeros();
+	temp.round();
 
 	if (temp.isConstant() && almostEqual(temp.value(), rhs))
 		return true;
@@ -279,10 +276,8 @@ bool Polynomial<T>::almostEquals(Polynomial rhs) {
 		return almostEqual(value(), rhs.value());
 
 	Polynomial<T> temp = clone();
-	temp.makeSmallNumbersZero();
-	temp.removeTrailingZeros();
-	rhs.makeSmallNumbersZero();
-	rhs.removeTrailingZeros();
+	temp.round();
+	rhs.round();
 
 	if (temp._numCoeffs.size() != rhs._numCoeffs.size()
 			|| temp._numCoeffs.size() != rhs._numCoeffs.size())
@@ -302,12 +297,8 @@ template<typename T>
 bool Polynomial<T>::almostEqual(T lhs, T rhs) {
 	if (lhs == rhs)
 		return true;
-
-	T relativeError = std::abs((lhs - rhs) / std::max((T)1, rhs));
-	if (relativeError < 0.00001)
-		return true;
-
-	return false;
+	T relativeError = std::abs((lhs - rhs) / std::max((T) 1, rhs));
+	return relativeError < 1e-6;
 }
 
 template<typename T>
@@ -449,7 +440,7 @@ void Polynomial<T>::set(Polynomial other) {
 template<typename T>
 void Polynomial<T>::simplify() {
 
-	//makeSmallNumbersZero();
+	//round();
 
 	removeTrailingZeros();
 	checkZeroDivision();
@@ -462,24 +453,44 @@ void Polynomial<T>::simplify() {
 }
 
 template<typename T>
-void Polynomial<T>::makeSmallNumbersZero() {
-	// Replace any extremely small coefficients with 0
-	for (int i = 0; i < _numCoeffs.size(); i++)
-		if (almostEqual(_numCoeffs[i], 0))
-			_numCoeffs[i] = 0;
-	for (int i = 0; i < _denCoeffs.size(); i++)
-		if (almostEqual(_denCoeffs[i], 0))
-			_denCoeffs[i] = 0;
+void Polynomial<T>::round() {
+	// Round numbers with very small errors
+	bool changed = false;
+	for (int i = 0; i < _numCoeffs.size(); i++) {
+		if (_numCoeffs[i] != (int) _numCoeffs[i]
+				&& almostEqual(_numCoeffs[i], (int) _numCoeffs[i])) {
+			_numCoeffs[i] = (int) _numCoeffs[i];
+			changed = true;
+		}
+		if (_numCoeffs[i] != (int) _numCoeffs[i] + 1
+				&& almostEqual(_numCoeffs[i], (int) _numCoeffs[i] + 1)) {
+			_numCoeffs[i] = (int) _numCoeffs[i] + 1;
+			changed = true;
+		}
+	}
+	for (int i = 0; i < _denCoeffs.size(); i++) {
+		if (_denCoeffs[i] != (int) _numCoeffs[i]
+				&& almostEqual(_denCoeffs[i], (int) _numCoeffs[i])) {
+			_denCoeffs[i] = (int) _numCoeffs[i];
+			changed = true;
+		}
+		if (_denCoeffs[i] != (int) _numCoeffs[i] + 1
+				&& almostEqual(_denCoeffs[i], (int) _numCoeffs[i] + 1)) {
+			_denCoeffs[i] = (int) _numCoeffs[i] + 1;
+			changed = true;
+		}
+	}
+
+	if (changed)
+		simplify();
 }
 
 template<typename T>
 void Polynomial<T>::removeTrailingZeros() {
 	// If any of the ending coefficients are 0, remove that term
-	while (_numCoeffs.size() > 1
-			&& _numCoeffs[_numCoeffs.size() - 1] == 0)
+	while (_numCoeffs.size() > 1 && _numCoeffs[_numCoeffs.size() - 1] == 0)
 		_numCoeffs.pop_back();
-	while (_denCoeffs.size() > 1
-			&& _denCoeffs[_denCoeffs.size() - 1] == 0)
+	while (_denCoeffs.size() > 1 && _denCoeffs[_denCoeffs.size() - 1] == 0)
 		_denCoeffs.pop_back();
 }
 

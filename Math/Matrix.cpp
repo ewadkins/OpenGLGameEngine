@@ -99,7 +99,7 @@ Matrix<T> Matrix<T>::rref() {
 	Matrix<T> result = clone();
 	int x = 0;
 	int y = 0;
-	while (x < _rows) {
+	while (x < _rows && y < _cols) {
 		if (result.get(x, y) == 0) {
 			int rowToExchange = 0;
 			for (int i = x; i < _rows; i++)
@@ -113,6 +113,8 @@ Matrix<T> Matrix<T>::rref() {
 				}
 			} else {
 				y++;
+				if (x == _rows -1)
+					break;
 				continue;
 			}
 			/*std::cout << "Row exchange (Row " << x + 1 << " <-> Row "
@@ -151,7 +153,7 @@ Matrix<T> Matrix<T>::upperTriangular() {
 	Matrix<T> result = clone();
 	int x = 0;
 	int y = 0;
-	while (x < _rows) {
+	while (x < _rows && y < _cols) {
 		if (result.get(x, y) == 0) {
 			int rowToExchange = 0;
 			for (int i = x; i < _rows; i++)
@@ -165,6 +167,8 @@ Matrix<T> Matrix<T>::upperTriangular() {
 				}
 			} else {
 				y++;
+				if (x == _rows -1)
+					break;
 				continue;
 			}
 		}
@@ -191,7 +195,7 @@ T Matrix<T>::determinant() {
 	int rowChanges = 0;
 	int x = 0;
 	int y = 0;
-	while (x < _rows) {
+	while (x < _rows && y < _cols) {
 		if (result.get(x, y) == 0) {
 			int rowToExchange = 0;
 			for (int i = x; i < _rows; i++)
@@ -206,6 +210,8 @@ T Matrix<T>::determinant() {
 				}
 			} else {
 				y++;
+				if (x == _rows -1)
+					break;
 				continue;
 			}
 		}
@@ -264,7 +270,7 @@ std::vector<Complex<T> > Matrix<T>::eigenvalues() {
 		lambdaI.set(n, n, Polynomial<T>(coeffs, 1));
 
 	m = m - lambdaI;
-	std::vector<Complex<T> > result = m.determinant().roots();
+	std::vector<Complex<T> > result = m.determinant().roots(); // FIXME Should return only unique eigenvalues
 
 	return result;
 }
@@ -280,8 +286,8 @@ std::vector<Matrix<T> > Matrix<T>::eigenvectors() {
 		for (int n = 0; n < _rows; n ++)
 			lambdaI.set(n, n, evalues[i]);
 		m = m - lambdaI;
-		m.print();
-		m.determinant().print();
+		//m.print();
+		//m.determinant().print();
 		m.rref().print();
 	}
 
