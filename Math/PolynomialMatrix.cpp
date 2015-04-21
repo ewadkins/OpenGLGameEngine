@@ -103,7 +103,7 @@ PolynomialMatrix<T> PolynomialMatrix<T>::rref() {
 		if (result.get(x, y) == 0) {
 			int rowToExchange = 0;
 			for (int i = x; i < _rows; i++)
-				if (result.get(i, y) == 0)
+				if (result.get(i, y) != 0)
 					rowToExchange = i;
 			if (rowToExchange != 0) {
 				for (int j = 0; j < _cols; j++) {
