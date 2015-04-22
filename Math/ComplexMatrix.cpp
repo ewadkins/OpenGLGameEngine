@@ -166,6 +166,17 @@ ComplexMatrix<T> ComplexMatrix<T>::upperTriangular() {
 	int x = 0;
 	int y = 0;
 	while (x < _rows && y < _cols) {
+
+		// FIXME Decide whether to always round numbers
+		// Rounds numbers with very small errors
+		for (int i = 0; i < _rows; i++)
+			for (int j = 0; j < _cols; j++)
+				if (result.get(i, j) != 0) {
+					Complex<T> temp = result.get(i, j);
+					temp.round();
+					result.set(i, j, temp);
+				}
+
 		if (result.get(x, y) == 0) {
 			int rowToExchange = 0;
 			for (int i = x; i < _rows; i++)
@@ -208,6 +219,17 @@ Complex<T> ComplexMatrix<T>::determinant() {
 	int x = 0;
 	int y = 0;
 	while (x < _rows && y < _cols) {
+
+		// FIXME Decide whether to always round numbers
+		// Rounds numbers with very small errors
+		for (int i = 0; i < _rows; i++)
+			for (int j = 0; j < _cols; j++)
+				if (result.get(i, j) != 0) {
+					Complex<T> temp = result.get(i, j);
+					temp.round();
+					result.set(i, j, temp);
+				}
+
 		if (result.get(x, y) == 0) {
 			int rowToExchange = 0;
 			for (int i = x; i < _rows; i++)
@@ -243,6 +265,7 @@ Complex<T> ComplexMatrix<T>::determinant() {
 		determinant *= result.get(n, n);
 	if (rowChanges % 2 == 1)
 		determinant *= -1;
+	determinant.round();
 	return determinant;
 }
 

@@ -243,7 +243,7 @@ bool Complex<T>::almostEqual(T lhs, T rhs) {
 	if (lhs == rhs)
 		return true;
 	T relativeError = std::abs((lhs - rhs) / std::max((T) 1, rhs));
-	return relativeError < 1e-6;
+	return relativeError < 1e-5;
 }
 
 template<typename T>
@@ -409,9 +409,14 @@ void Complex<T>::round() {
 			_numCoeffs[i] = (int) _numCoeffs[i];
 			changed = true;
 		}
-		if (_numCoeffs[i] != (int) _numCoeffs[i] + 1
-				&& almostEqual(_numCoeffs[i], (int) _numCoeffs[i] + 1)) {
-			_numCoeffs[i] = (int) _numCoeffs[i] + 1;
+		if (_numCoeffs[i] != ((int) _numCoeffs[i]) + 0.5
+				&& almostEqual(_numCoeffs[i], ((int) _numCoeffs[i]) + 0.5)) {
+			_numCoeffs[i] = ((int) _numCoeffs[i]) + 0.5;
+			changed = true;
+		}
+		if (_numCoeffs[i] != ((int) _numCoeffs[i]) + 1
+				&& almostEqual(_numCoeffs[i], ((int) _numCoeffs[i]) + 1)) {
+			_numCoeffs[i] = ((int) _numCoeffs[i]) + 1;
 			changed = true;
 		}
 	}
@@ -421,9 +426,14 @@ void Complex<T>::round() {
 			_denCoeffs[i] = (int) _numCoeffs[i];
 			changed = true;
 		}
-		if (_denCoeffs[i] != (int) _numCoeffs[i] + 1
-				&& almostEqual(_denCoeffs[i], (int) _numCoeffs[i] + 1)) {
-			_denCoeffs[i] = (int) _numCoeffs[i] + 1;
+		if (_denCoeffs[i] != ((int) _numCoeffs[i]) + 0.5
+				&& almostEqual(_denCoeffs[i], ((int) _numCoeffs[i]) + 0.5)) {
+			_denCoeffs[i] = ((int) _numCoeffs[i]) + 0.5;
+			changed = true;
+		}
+		if (_denCoeffs[i] != ((int) _numCoeffs[i]) + 1
+				&& almostEqual(_denCoeffs[i], ((int) _numCoeffs[i]) + 1)) {
+			_denCoeffs[i] = ((int) _numCoeffs[i]) + 1;
 			changed = true;
 		}
 	}
