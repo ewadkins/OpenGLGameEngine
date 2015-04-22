@@ -257,6 +257,54 @@ Matrix<T> Matrix<T>::inverse() {
 	return result;
 }
 
+// Returns a vector of vectors representing the special solutions of this matrix
+template<typename T>
+std::vector<std::vector<T> > Matrix<T>::specialSolutions() {
+	std::vector<std::vector<T> > result;
+	Matrix<T> r = rref();
+	std::vector<int> pivotColumns;
+	for (int i = 0; i < r._rows; i++) {
+		std::vector<T> pivotColumn;
+		for (int n = 0; n < r._rows; n++) {
+			if (n == i)
+				pivotColumn.push_back(1);
+			else
+				pivotColumn.push_back(0);
+		}
+		bool foundPivotColumn = false;
+		for (int j = 0; j < r._cols; j++)
+			if (r.getColumn(j) == pivotColumn) {
+				pivotColumns.push_back(j);
+				foundPivotColumn = true;
+			}
+		if (!foundPivotColumn)
+			break;
+	}
+	for (int j = 0; j < r._cols; j++) {
+		bool isPivotColumn = false;
+		for (int n = 0; n < pivotColumns.size(); n++)
+			if (j == pivotColumns[n])
+				isPivotColumn = true;
+		if (isPivotColumn)
+			continue;
+
+		std::vector<T> specialSolution;
+		for (int n = 0; n < r._cols; n++)
+			specialSolution.push_back(0);
+		specialSolution[j] = 1;
+		for (int i = 0; i < r._rows; i++) {
+			for (int n = 0; n < r._cols; n++)
+				if (n != j)
+					if (r._matrix[i][n] != 0) {
+						specialSolution[n] = -r._matrix[i][j];
+						break;
+					}
+		}
+		result.push_back(specialSolution);
+	}
+	return result;
+}
+
 // Returns a vector of the eigenvalues of this matrix
 template<typename T>
 std::vector<Complex<T> > Matrix<T>::eigenvalues() {
@@ -270,29 +318,36 @@ std::vector<Complex<T> > Matrix<T>::eigenvalues() {
 		lambdaI.set(n, n, Polynomial<T>(coeffs, 1));
 
 	m = m - lambdaI;
-	std::vector<Complex<T> > result = m.determinant().roots(); // FIXME Should return only unique eigenvalues
+	std::vector<Complex<T> > result = m.determinant().roots();
 
 	return result;
 }
 
 // Returns a vector of the eigenvectors of this matrix
 template<typename T>
-std::vector<Matrix<T> > Matrix<T>::eigenvectors() {
-
-	std::vector<Complex<T> > evalues = eigenvalues();
+std::vector<std::vector<Complex<T> > > Matrix<T>::eigenvectors() {
+	std::vector<std::vector<Complex<T> > > result;
+	std::vector<Complex<T> > evalues;
+	std::vector<Complex<T> > temp = eigenvalues();
+	for (int i = 0; i < temp.size(); i++) {
+		bool duplicate = false;
+		for (int j = 0; j < evalues.size(); j++)
+			if (evalues[j] == temp[i])
+				duplicate = true;
+		if (!duplicate)
+			evalues.push_back(temp[i]);
+	}
 	for (int i = 0; i < evalues.size(); i++) {
 		ComplexMatrix<T> m = toComplexMatrix();
 		ComplexMatrix<T> lambdaI = ComplexMatrix<T>(_rows);
 		for (int n = 0; n < _rows; n ++)
 			lambdaI.set(n, n, evalues[i]);
 		m = m - lambdaI;
-		//m.print();
-		//m.determinant().print();
-		m.rref().print();
+
+		std::vector<std::vector<Complex<T> > > specials = m.specialSolutions();
+		for (int n = 0; n < specials.size(); n++)
+			result.push_back(specials[n]);
 	}
-
-	std::vector<Matrix<T> > result;
-
 	return result;
 }
 
@@ -306,6 +361,24 @@ int Matrix<T>::rows() {
 template<typename T>
 int Matrix<T>::cols() {
 	return _cols;
+}
+
+// Returns a vector representing the specified row of this matrix
+template<typename T>
+std::vector<T> Matrix<T>::getRow(int m) {
+	std::vector<T> result;
+	for (int i = 0; i < _cols; i++)
+		result.push_back(_matrix[m][i]);
+	return result;
+}
+
+// Returns a vector representing the specified column of this matrix
+template<typename T>
+std::vector<T> Matrix<T>::getColumn(int n) {
+	std::vector<T> result;
+	for (int i = 0; i < _rows; i++)
+		result.push_back(_matrix[i][n]);
+	return result;
 }
 
 // Fills this entire matrix with a given value

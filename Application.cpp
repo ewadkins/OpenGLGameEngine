@@ -149,7 +149,8 @@ void Application::initialize() {
 		{
 			PolynomialMatrix<double> pm = PolynomialMatrix<double>(3, 3);
 
-			double numArr[] = { 5, 3, 2, -2, 1, 4, 2, 5, -2 };
+			//double numArr[] = { 5, 3, 2, -2, 1, 4, 2, 5, -2 };
+			double numArr[] = { 5, 3, 9, -2, 1, 3, 2, 5, 15 };
 			std::vector<double> values2(numArr,
 					numArr + sizeof(numArr) / sizeof(numArr[0]));
 			pm.setVector(values2);
@@ -163,7 +164,14 @@ void Application::initialize() {
 
 			pm.print();
 			pm.upperTriangular().print();
-			pm.determinant().print();
+			pm.rref().print();
+			std::vector<std::vector<Polynomial<double> > > specialSolutions = pm.specialSolutions();
+			for (int i = 0; i < specialSolutions.size(); i++) {
+				std::cout << "Special solution " << i + 1 << ": ";
+				for (int j = 0; j < specialSolutions[i].size(); j++)
+					std::cout << specialSolutions[i][j].toString() << ", ";
+				std::cout << std::endl;
+			}
 
 		}
 
@@ -194,6 +202,7 @@ void Application::initialize() {
 				<< std::endl;
 
 		Matrix<double> m1 = Matrix<double>(3, 3);
+		//double arr[] = { 4, -4, 8, -4, 4, -8, 8, -8, 16 };
 		double arr[] = { 5, 3, 2, -2, 1, 4, 2, 5, -2 };
 		//double arr[] = { 5, 25, 2, -2, -10, 4, 2, 10, -2 };
 		//double arr[] = { 5, 0, 2, -2, 0, 4, 2, 0, -2 };
@@ -201,15 +210,25 @@ void Application::initialize() {
 		m1.setVector(values);
 
 		m1.print();
-		std::vector<Complex<double> > eigenvalues = m1.eigenvalues();
-		for (int i = 0; i < eigenvalues.size(); i++)
+		std::vector<Complex<double> > eigenvalues;
+		eigenvalues = m1.eigenvalues();
+		for (int i = 0; i < eigenvalues.size(); i++) {
+			std::cout << "Eigenvalue " << i + 1 << ": ";
 			eigenvalues[i].print();
+		}
 
-		m1.eigenvectors();
+		std::vector<std::vector<Complex<double> > > evectors = m1.eigenvectors();
+		for (int i = 0; i < evectors.size(); i++) {
+			std::cout << "Eigenvector " << i + 1 << ": ";
+			for (int j = 0; j < evectors[i].size(); j++)
+				std::cout << evectors[i][j].toString() << ", ";
+			std::cout << std::endl;
+		}
 
 		std::cout << std::endl << "-------------------" << std::endl
 				<< std::endl;
 
+		m1 = Matrix<double>(3, 3);
 		double arr2[] = { 5, 25, 2, -2, -10, 4, 2, 10, -2 };
 		//double arr2[] = { 5, 0, 2, -2, 0, 4, 2, 0, -2 };
 		std::vector<double> values2(arr2, arr2 + sizeof(arr2) / sizeof(arr2[0]));
@@ -217,10 +236,18 @@ void Application::initialize() {
 
 		m1.print();
 		eigenvalues = m1.eigenvalues();
-		for (int i = 0; i < eigenvalues.size(); i++)
+		for (int i = 0; i < eigenvalues.size(); i++) {
+			std::cout << "Eigenvalue " << i + 1 << ": ";
 			eigenvalues[i].print();
+		}
 
-		m1.eigenvectors();
+		evectors = m1.eigenvectors();
+		for (int i = 0; i < evectors.size(); i++) {
+			std::cout << "Eigenvector " << i + 1 << ": ";
+			for (int j = 0; j < evectors[i].size(); j++)
+				std::cout << evectors[i][j].toString() << ", ";
+			std::cout << std::endl;
+		}
 
 		std::cout << std::endl << "-------------------" << std::endl
 				<< std::endl;
@@ -231,10 +258,18 @@ void Application::initialize() {
 
 		m1.print();
 		eigenvalues = m1.eigenvalues();
-		for (int i = 0; i < eigenvalues.size(); i++)
+		for (int i = 0; i < eigenvalues.size(); i++) {
+			std::cout << "Eigenvalue " << i + 1 << ": ";
 			eigenvalues[i].print();
+		}
 
-		m1.eigenvectors();
+		evectors = m1.eigenvectors();
+		for (int i = 0; i < evectors.size(); i++) {
+			std::cout << "Eigenvector " << i + 1 << ": ";
+			for (int j = 0; j < evectors[i].size(); j++)
+				std::cout << evectors[i][j].toString() << ", ";
+			std::cout << std::endl;
+		}
 
 		std::cout << std::endl << "-------------------" << std::endl
 				<< std::endl;
@@ -246,7 +281,13 @@ void Application::initialize() {
 		for (int i = 0; i < eigenvalues.size(); i++)
 			eigenvalues[i].print();
 
-		m1.eigenvectors();
+		evectors = m1.eigenvectors();
+		for (int i = 0; i < evectors.size(); i++) {
+			std::cout << "Eigenvector " << i + 1 << ": ";
+			for (int j = 0; j < evectors[i].size(); j++)
+				std::cout << evectors[i][j].toString() << ", ";
+			std::cout << std::endl;
+		}
 
 	}
 	finish = clock();

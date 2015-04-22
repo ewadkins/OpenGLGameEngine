@@ -255,6 +255,62 @@ PolynomialMatrix<T> PolynomialMatrix<T>::inverse() {
 	return result;
 }
 
+// Returns a vector of vectors representing the special solutions of this matrix
+template<typename T>
+std::vector<std::vector<Polynomial<T> > > PolynomialMatrix<T>::specialSolutions() {
+	std::vector<std::vector<Polynomial<T> > > result;
+	PolynomialMatrix<T> r = rref();
+	std::vector<int> pivotColumns;
+	for (int i = 0; i < r._rows; i++) {
+		std::vector<Polynomial<T> > pivotColumn;
+		for (int n = 0; n < r._rows; n++) {
+			if (n == i)
+				pivotColumn.push_back(Polynomial<T>(1));
+			else
+				pivotColumn.push_back(Polynomial<T>());
+		}
+		bool foundPivotColumn = false;
+		for (int j = 0; j < r._cols; j++) {
+			bool equal = true;
+			std::vector<Polynomial<T> > column = r.getColumn(j);
+			if (column.size() != pivotColumn.size())
+				equal = false;
+			for (int n = 0; n < column.size(); n++)
+				if (column[n] != pivotColumn[n])
+					equal = false;
+			if (equal) {
+				pivotColumns.push_back(j);
+				foundPivotColumn = true;
+			}
+		}
+		if (!foundPivotColumn)
+			break;
+	}
+	for (int j = 0; j < r._cols; j++) {
+		bool isPivotColumn = false;
+		for (int n = 0; n < pivotColumns.size(); n++)
+			if (j == pivotColumns[n])
+				isPivotColumn = true;
+		if (isPivotColumn)
+			continue;
+
+		std::vector<Polynomial<T> > specialSolution;
+		for (int n = 0; n < r._cols; n++)
+			specialSolution.push_back(Polynomial<T>());
+		specialSolution[j] = 1;
+		for (int i = 0; i < r._rows; i++) {
+			for (int n = 0; n < r._cols; n++)
+				if (n != j)
+					if (r._matrix[i][n] != 0) {
+						specialSolution[n] = -r._matrix[i][j];
+						break;
+					}
+		}
+		result.push_back(specialSolution);
+	}
+	return result;
+}
+
 // Returns the number of rows in this matrix
 template<typename T>
 int PolynomialMatrix<T>::rows() {
@@ -265,6 +321,24 @@ int PolynomialMatrix<T>::rows() {
 template<typename T>
 int PolynomialMatrix<T>::cols() {
 	return _cols;
+}
+
+// Returns a vector representing the specified row of this matrix
+template<typename T>
+std::vector<Polynomial<T> > PolynomialMatrix<T>::getRow(int m) {
+	std::vector<Polynomial<T> > result;
+	for (int i = 0; i < _cols; i++)
+		result.push_back(_matrix[m][i]);
+	return result;
+}
+
+// Returns a vector representing the specified column of this matrix
+template<typename T>
+std::vector<Polynomial<T> > PolynomialMatrix<T>::getColumn(int n) {
+	std::vector<Polynomial<T> > result;
+	for (int i = 0; i < _rows; i++)
+		result.push_back(_matrix[i][n]);
+	return result;
 }
 
 // Fills this entire matrix with a given value

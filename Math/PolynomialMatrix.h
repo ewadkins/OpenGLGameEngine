@@ -32,8 +32,11 @@ public:
 	PolynomialMatrix upperTriangular();
 	Polynomial<T> determinant();
 	PolynomialMatrix inverse();
+	std::vector<std::vector<Polynomial<T> > > specialSolutions();
 	int rows();
 	int cols();
+	std::vector<Polynomial<T> > getRow(int m);
+	std::vector<Polynomial<T> > getColumn(int n);
 	void fill(T value);
 	void setMatrix(T** matrix);
 	void setVector(std::vector<T> values);

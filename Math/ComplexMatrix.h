@@ -32,8 +32,11 @@ public:
 	ComplexMatrix upperTriangular();
 	Complex<T> determinant();
 	ComplexMatrix inverse();
+	std::vector<std::vector<Complex<T> > > specialSolutions();
 	int rows();
 	int cols();
+	std::vector<Complex<T> > getRow(int m);
+	std::vector<Complex<T> > getColumn(int n);
 	void fill(T value);
 	void setMatrix(T** matrix);
 	void setVector(std::vector<T> values);

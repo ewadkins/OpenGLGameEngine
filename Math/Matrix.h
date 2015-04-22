@@ -35,10 +35,13 @@ public:
 	Matrix upperTriangular();
 	T determinant();
 	Matrix inverse();
+	std::vector<std::vector<T> > specialSolutions();
 	std::vector<Complex<T> > eigenvalues();
-	std::vector<Matrix<T> > eigenvectors();
+	std::vector<std::vector<Complex<T> > > eigenvectors();
 	int rows();
 	int cols();
+	std::vector<T> getRow(int m);
+	std::vector<T> getColumn(int n);
 	void fill(T value);
 	void setMatrix(T** matrix);
 	void setVector(std::vector<T> values);
