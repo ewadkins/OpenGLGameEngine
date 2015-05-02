@@ -24,42 +24,48 @@ Drawable::Drawable() {
 
 // Returns a transformed version of this drawable
 void Drawable::applyTransformations() {
+
 	_transformed = clone();
 
 	std::vector<GLComponent*> originalComponents = getComponents();
 	std::vector<GLComponent*> transformedComponents =
 			_transformed->getComponents();
 
-	for (int i = 0; i < originalComponents.size(); i++) {
+	Matrix<float> scalarMatrix = GLMatrix::scalarMatrix(getScaleX(),
+			getScaleY(), getScaleZ());
+	Matrix<float> rotationMatrix = GLMatrix::rotationMatrixXYZ(getRotationX(),
+			getRotationY(), getRotationZ());
+	Matrix<float> translationMatrix = GLMatrix::translationMatrix(getX(),
+			getY(), getZ());
+	Matrix<float> originalMatrix = Matrix<float>(4, 1);
 
-		std::vector<Vertex*> originalVertices =
-				originalComponents[i]->getVertices();
-		std::vector<Vertex*> transformedVertices;
+	std::vector<Vertex*> originalVertices;
+	std::vector<Vertex*> transformedVertices;
+
+	Vertex* transformedVertex;
+	Matrix<float> transformedMatrix(4);
+	std::vector<float> pos;
+	std::vector<float> norm;
+
+	for (int i = 0; i < originalComponents.size(); i++) {
+		originalVertices = originalComponents[i]->getVertices();
+		transformedVertices.clear();
 
 		for (int j = 0; j < originalVertices.size(); j++) {
-
-			Vertex* transformedVertex = originalVertices[j]->clone();
-
-			Matrix<float> originalMatrix = Matrix<float>(4, 1);
-			Matrix<float> scalarMatrix = GLMatrix::scalarMatrix(getScaleX(),
-					getScaleY(), getScaleZ());
-			Matrix<float> rotationMatrix = GLMatrix::rotationMatrixXYZ(
-					getRotationX(), getRotationY(), getRotationZ());
-			Matrix<float> translationMatrix = GLMatrix::translationMatrix(
-					getX(), getY(), getZ());
+			transformedVertex = originalVertices[j]->clone();
 
 			// Applies transformations to the vertex's position
-			std::vector<float> pos = transformedVertex->getPosition();
+			pos = transformedVertex->getPosition();
 			pos.push_back(1);
 			originalMatrix.setVector(pos);
 
-			Matrix<float> transformedMatrix = originalMatrix << scalarMatrix
+			transformedMatrix = originalMatrix << scalarMatrix
 					<< rotationMatrix << translationMatrix;
 			transformedVertex->setPosition(transformedMatrix.get(0, 0),
 					transformedMatrix.get(1, 0), transformedMatrix.get(2, 0));
 
 			// Applies rotation to the vertex's normal, other transformations are irrelevant
-			std::vector<float> norm = transformedVertex->getNormal();
+			norm = transformedVertex->getNormal();
 			norm.push_back(1);
 			originalMatrix.setVector(norm);
 			transformedMatrix = originalMatrix << rotationMatrix;
@@ -67,7 +73,6 @@ void Drawable::applyTransformations() {
 					transformedMatrix.get(1, 0), transformedMatrix.get(2, 0));
 
 			transformedVertices.push_back(transformedVertex);
-
 		}
 		transformedComponents[i]->setVertices(transformedVertices);
 	}

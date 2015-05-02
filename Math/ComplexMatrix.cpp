@@ -40,7 +40,7 @@ ComplexMatrix<T>::ComplexMatrix(ComplexMatrix<S> other) {
 		_matrix[i] = new Complex<T> [_cols];
 	for (int i = 0; i < _rows; i++)
 		for (int j = 0; j < _cols; j++) {
-			set(i, j, other.getMatrix()[i][j]);
+			_matrix[i][j] = other.get(i, j);
 		}
 }
 
@@ -52,7 +52,7 @@ ComplexMatrix<T> ComplexMatrix<T>::add(ComplexMatrix other) {
 	ComplexMatrix<T> result = ComplexMatrix<T>(_rows, _cols);
 	for (int i = 0; i < _rows; i++)
 		for (int j = 0; j < _cols; j++)
-			result.set(i, j, get(i, j) + other.get(i, j));
+			result.set(i, j, _matrix[i][j] + other.get(i, j));
 	return result;
 }
 
@@ -62,7 +62,7 @@ ComplexMatrix<T> ComplexMatrix<T>::scale(T k) {
 	ComplexMatrix<T> result = ComplexMatrix<T>(_rows, _cols);
 	for (int i = 0; i < _rows; i++)
 		for (int j = 0; j < _cols; j++)
-			result.set(i, j, get(i, j) * k);
+			result.set(i, j, _matrix[i][j] * k);
 	return result;
 }
 
@@ -72,7 +72,7 @@ ComplexMatrix<T> ComplexMatrix<T>::transpose() {
 	ComplexMatrix<T> result = ComplexMatrix<T>(_cols, _rows);
 	for (int i = 0; i < _rows; i++)
 		for (int j = 0; j < _cols; j++) {
-			result.set(j, i, get(i, j));
+			result.set(j, i, _matrix[i][j]);
 		}
 	return result;
 }
@@ -87,7 +87,7 @@ ComplexMatrix<T> ComplexMatrix<T>::mul(ComplexMatrix other) {
 		for (int j = 0; j < other.cols(); j++) {
 			Complex<T> sum = Complex<T>(0, 1);
 			for (int k = 0; k < _cols; k++)
-				sum += get(i, k) * other.get(k, j);
+				sum += _matrix[i][k] * other.get(k, j);
 			result.set(i, j, sum);
 		}
 	return result;
@@ -381,7 +381,7 @@ template<typename T>
 void ComplexMatrix<T>::fill(T value) {
 	for (int i = 0; i < _rows; i++)
 		for (int j = 0; j < _cols; j++)
-			set(i, j, value);
+			_matrix[i][j] = value;
 }
 
 // sets the values of the matrix given a two dimensional array of values
@@ -389,7 +389,7 @@ template<typename T>
 void ComplexMatrix<T>::setMatrix(T** matrix) {
 	for (int i = 0; i < _rows; i++)
 		for (int j = 0; j < _cols; j++) {
-			set(i, j, Complex<T>(matrix[i][j]));
+			_matrix[i][j] = Complex<T>(matrix[i][j]);
 		}
 }
 
@@ -399,7 +399,7 @@ void ComplexMatrix<T>::setVector(std::vector<T> values) {
 	if (values.size() != _rows * _cols)
 		throw std::runtime_error("Incorrect number of values to fill matrix");
 	for (int i = 0; i < _rows * _cols; i++) {
-		set(i / _cols, i % _cols, Complex<T>(values[i]));
+		_matrix[i / _cols][i % _cols] = Complex<T>(values[i]);
 	}
 }
 
@@ -413,9 +413,8 @@ void ComplexMatrix<T>::set(int i, int j, T value) {
 template<typename T>
 void ComplexMatrix<T>::setMatrix(Complex<T>** matrix) {
 	for (int i = 0; i < _rows; i++)
-		for (int j = 0; j < _cols; j++) {
-			set(i, j, matrix[i][j]);
-		}
+		for (int j = 0; j < _cols; j++)
+			_matrix[i][j] = matrix[i][j];
 }
 
 // sets the values of this matrix given a vector of values
@@ -423,9 +422,8 @@ template<typename T>
 void ComplexMatrix<T>::setVector(std::vector<Complex<T> > values) {
 	if (values.size() != _rows * _cols)
 		throw std::runtime_error("Incorrect number of values to fill matrix");
-	for (int i = 0; i < _rows * _cols; i++) {
-		set(i / _cols, i % _cols, values[i]);
-	}
+	for (int i = 0; i < _rows * _cols; i++)
+		_matrix[i / _cols][i % _cols] = values[i];
 }
 
 // sets the specified element of this matrix to a given value
@@ -507,9 +505,7 @@ T ComplexMatrix<T>::getConstant(int i, int j) {
 // Returns a copy of this object (another matrix with the same values)
 template<typename T>
 ComplexMatrix<T> ComplexMatrix<T>::clone() {
-	ComplexMatrix<T> result = ComplexMatrix<T>(_rows, _cols);
-	result.setMatrix(_matrix);
-	return result;
+	return ComplexMatrix<T>(*this);
 }
 
 // Returns a vector of strings representing this matrix

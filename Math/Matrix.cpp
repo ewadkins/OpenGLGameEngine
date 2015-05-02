@@ -40,7 +40,7 @@ Matrix<T>::Matrix(Matrix<S> other) {
 		_matrix[i] = new T[_cols];
 	for (int i = 0; i < _rows; i++)
 		for (int j = 0; j < _cols; j++) {
-			set(i, j, other.getMatrix()[i][j]);
+			_matrix[i][j] = other.get(i, j);
 		}
 }
 
@@ -52,7 +52,7 @@ Matrix<T> Matrix<T>::add(Matrix other) {
 	Matrix<T> result = Matrix<T>(_rows, _cols);
 	for (int i = 0; i < _rows; i++)
 		for (int j = 0; j < _cols; j++)
-			result.set(i, j, get(i, j) + other.get(i, j));
+			result.set(i, j, _matrix[i][j] + other.get(i, j));
 	return result;
 }
 
@@ -62,7 +62,7 @@ Matrix<T> Matrix<T>::scale(T k) {
 	Matrix<T> result = Matrix<T>(_rows, _cols);
 	for (int i = 0; i < _rows; i++)
 		for (int j = 0; j < _cols; j++)
-			result.set(i, j, get(i, j) * k);
+			result.set(i, j, _matrix[i][j] * k);
 	return result;
 }
 
@@ -72,7 +72,7 @@ Matrix<T> Matrix<T>::transpose() {
 	Matrix<T> result = Matrix<T>(_cols, _rows);
 	for (int i = 0; i < _rows; i++)
 		for (int j = 0; j < _cols; j++) {
-			result.set(j, i, get(i, j));
+			result.set(j, i, _matrix[i][j]);
 		}
 	return result;
 }
@@ -87,7 +87,7 @@ Matrix<T> Matrix<T>::mul(Matrix other) {
 		for (int j = 0; j < other.cols(); j++) {
 			T sum = 0;
 			for (int k = 0; k < _cols; k++)
-				sum += get(i, k) * other.get(k, j);
+				sum += _matrix[i][k] * other.get(k, j);
 			result.set(i, j, sum);
 		}
 	return result;
@@ -386,16 +386,15 @@ template<typename T>
 void Matrix<T>::fill(T value) {
 	for (int i = 0; i < _rows; i++)
 		for (int j = 0; j < _cols; j++)
-			set(i, j, value);
+			_matrix[i][j] = value;
 }
 
 // sets the values of the matrix given a two dimensional array of values
 template<typename T>
 void Matrix<T>::setMatrix(T** matrix) {
 	for (int i = 0; i < _rows; i++)
-		for (int j = 0; j < _cols; j++) {
-			set(i, j, matrix[i][j]);
-		}
+		for (int j = 0; j < _cols; j++)
+			_matrix[i][j] = matrix[i][j];
 }
 
 // sets the values of this matrix given a vector of values
@@ -403,9 +402,8 @@ template<typename T>
 void Matrix<T>::setVector(std::vector<T> values) {
 	if (values.size() != _rows * _cols)
 		throw std::runtime_error("Incorrect number of values to fill matrix");
-	for (int i = 0; i < _rows * _cols; i++) {
-		set(i / _cols, i % _cols, values[i]);
-	}
+	for (int i = 0; i < _rows * _cols; i++)
+		_matrix[i / _cols][i % _cols] = values[i];
 }
 
 // sets the specified element of this matrix to a given value
@@ -455,9 +453,7 @@ T Matrix<T>::get(int i, int j) {
 // Returns a copy of this object (another matrix with the same values)
 template<typename T>
 Matrix<T> Matrix<T>::clone() {
-	Matrix<T> result = Matrix<T>(_rows, _cols);
-	result.setMatrix(_matrix);
-	return result;
+	return Matrix<T>(*this);
 }
 
 // Returns a polynomial version of this matrix

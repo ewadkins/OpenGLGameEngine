@@ -52,11 +52,7 @@ std::vector<GLComponent*> Triangle::getComponents() {
 std::vector<GLTriangle*> Triangle::getTransformedTriangles() {
 	if (_needsUpdating)
 		applyTransformations();
-	std::vector<GLTriangle*> triangles;
-	Triangle* transformed = (Triangle*) _transformed;
-	for (int i = 0; i < transformed->_triangles.size(); i++)
-		triangles.push_back(transformed->_triangles[i]);
-	return triangles;
+	return ((Triangle*) _transformed)->_triangles;
 }
 
 std::vector<GLTriangle*> Triangle::getTriangles() {
@@ -66,13 +62,7 @@ std::vector<GLTriangle*> Triangle::getTriangles() {
 std::vector<GLLine*> Triangle::getTransformedLines() {
 	if(_needsUpdating)
 		applyTransformations();
-	std::vector<GLLine*> lines;
-	if (_drawOutline) {
-		Triangle* transformed = (Triangle*) _transformed;
-		for (int i = 0; i < transformed->_lines.size(); i++)
-			lines.push_back(transformed->_lines[i]);
-	}
-	return lines;
+	return ((Triangle*) _transformed)->_lines;
 }
 
 std::vector<GLLine*> Triangle::getLines() {

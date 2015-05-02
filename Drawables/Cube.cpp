@@ -128,11 +128,7 @@ std::vector<GLComponent*> Cube::getComponents() {
 std::vector<GLTriangle*> Cube::getTransformedTriangles() {
 	if(_needsUpdating)
 		applyTransformations();
-	std::vector<GLTriangle*> triangles;
-	Cube* transformed = (Cube*) _transformed;
-	for (int i = 0; i < transformed->_triangles.size(); i++)
-		triangles.push_back(transformed->_triangles[i]);
-	return triangles;
+	return ((Cube*) _transformed)->_triangles;
 }
 
 std::vector<GLTriangle*> Cube::getTriangles() {
@@ -142,13 +138,7 @@ std::vector<GLTriangle*> Cube::getTriangles() {
 std::vector<GLLine*> Cube::getTransformedLines() {
 	if(_needsUpdating)
 		applyTransformations();
-	std::vector<GLLine*> lines;
-	if (_drawOutline) {
-		Cube* transformed = (Cube*) _transformed;
-		for (int i = 0; i < transformed->_lines.size(); i++)
-			lines.push_back(transformed->_lines[i]);
-	}
-	return lines;
+	return ((Cube*) _transformed)->_lines;
 }
 
 std::vector<GLLine*> Cube::getLines() {

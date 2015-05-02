@@ -422,8 +422,6 @@ void Application::gameLoop() {
 
 		_keyboard->update();
 
-		//_camera->translateXYZ(0, 0, -0.01);
-		//_camera->rotateXYZ(0, -1, 0);
 		_camera->useView();
 
 		_renderer->update();

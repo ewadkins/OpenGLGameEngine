@@ -196,6 +196,7 @@ void Renderer::updateDynamicVBOs() {
 }
 
 void Renderer::updateStreamVBOs() {
+
 	_streamTriangleVBO->clear();
 	for (int i = 0; i < _streamDrawables.size(); i++) {
 		std::vector<GLTriangle*> triangles =
