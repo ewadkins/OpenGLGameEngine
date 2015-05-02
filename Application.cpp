@@ -11,7 +11,7 @@
 #include "Main.h"
 
 void error_callback(int error, const char* description) {
-	fputs(description, stderr);
+	throw description;
 }
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action,
@@ -61,8 +61,8 @@ void Application::setupWindow() {
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, VERSION_MAJOR);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, VERSION_MINOR);
 
-	// Make the window non-resizable
-	glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
+	// Make the window resizable or non-resizable
+	glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);
 
 	// Create the window
 	if (!_fullScreen)
@@ -131,6 +131,8 @@ void Application::initialize() {
 				numArr2 + sizeof(numArr2) / sizeof(numArr2[0]));
 		Polynomial<float> p2 = Polynomial<float>(values2, 1);
 		p2.print();
+
+		(p/p2).print();
 
 		std::vector<Complex<float> > roots2 = p2.roots();
 		std::cout << "Roots: " << std::endl;
@@ -201,9 +203,10 @@ void Application::initialize() {
 		std::cout << std::endl << "-------------------" << std::endl
 				<< std::endl;
 
-		Matrix<float> m1 = Matrix<float>(3, 3);
+		Matrix<float> m1 = Matrix<float>(2, 2);
+		float arr[] = { 2, 1, 1, 1 };
 		//float arr[] = { 4, -4, 8, -4, 4, -8, 8, -8, 16 };
-		float arr[] = { 5, 3, 2, -2, 1, 4, 2, 5, -2 };
+		//float arr[] = { 5, 3, 2, -2, 1, 4, 2, 5, -2 };
 		//float arr[] = { 5, 25, 2, -2, -10, 4, 2, 10, -2 };
 		//float arr[] = { 5, 0, 2, -2, 0, 4, 2, 0, -2 };
 		std::vector<float> values(arr, arr + sizeof(arr) / sizeof(arr[0]));
@@ -423,6 +426,7 @@ void Application::gameLoop() {
 		//_camera->rotateXYZ(0, -1, 0);
 		_camera->useView();
 
+		_renderer->update();
 		_renderer->render();
 		_renderer->display();
 
@@ -436,7 +440,7 @@ int Application::start() {
 		try {
 			try {
 				// Initialization
-				_logger->log("*** Starting OpenGLApplication ***").endLine().endLine();
+				_logger->log("*** Starting Application ***").endLine().endLine();
 				initialize();
 
 				// Start the game loop
@@ -450,7 +454,7 @@ int Application::start() {
 			} catch (const char* str) {
 				// Fatal error purposely thrown from within the application
 				_logger->endLine().setIndent(0).log(
-						"*** Stopping OpenGLApplication (").log(str).log(
+						"*** Stopping Application (").log(str).log(
 						") ***").endLine();
 
 			}
@@ -458,7 +462,7 @@ int Application::start() {
 			// Error thrown to signify the end of the application
 			if (e == 0) {
 				_logger->endLine().setIndent(0).log(
-						"*** Stopping OpenGLApplication ***").endLine();
+						"*** Stopping Application ***").endLine();
 				result = 0;
 			} else
 				throw;
@@ -466,7 +470,7 @@ int Application::start() {
 	} catch (...) {
 		// Fatal error caused the application to crash
 		_logger->endLine().setIndent(0).log(
-				"*** Stopping OpenGLApplication (Unknown reason) ***").endLine();
+				"*** Stopping Application (Unknown reason) ***").endLine();
 		throw;
 	}
 

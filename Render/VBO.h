@@ -18,22 +18,33 @@
 
 class VBOBase {
 public:
-	enum Type {STATIC, DYNAMIC};
+	enum Type {
+		STATIC, DYNAMIC, STREAM
+	};
 	virtual ~VBOBase() {
 	}
-	virtual void updateData() {};
-	virtual void create() {};
-	virtual void draw() {};
+	virtual void clear() {
+	}
+	virtual void updateData() {
+	}
+	virtual void pushToBuffer() {
+	}
+	virtual void create() {
+	}
+	virtual void draw() {
+	}
 };
 
 template<typename T>
-class VBO : public VBOBase {
+class VBO: public VBOBase {
 public:
 	VBO(Type type);
 	virtual ~VBO() {
 	}
 	void add(T* d);
+	virtual void clear();
 	virtual void updateData();
+	virtual void pushToBuffer();
 	virtual void create();
 	virtual void draw();
 private:

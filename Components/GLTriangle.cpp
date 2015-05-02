@@ -29,3 +29,7 @@ GLComponent* GLTriangle::clone() {
 			_vertices[2]->clone());
 }
 
+void GLTriangle::useFaceNormal() { // FIXME Finish
+
+}
+

@@ -2,6 +2,8 @@
 
 in vec3 inPosition;
 in vec3 inColor;
+in vec3 inNormal;
+in vec2 inTexCoords;
 out vec3 passColor;
 
 uniform mat4 viewMatrix;

@@ -53,20 +53,10 @@ void Drawable::applyTransformations() {
 			pos.push_back(1);
 			originalMatrix.setVector(pos);
 
-			/*std::vector<std::string> strings = originalMatrix.toStringVector();
-			 std::cout << "Original pos: " << std::endl;
-			 for (int i = 0; i < strings.size(); i++)
-			 std::cout << strings[i] << std::endl;*/
-
 			Matrix<float> transformedMatrix = originalMatrix << scalarMatrix
 					<< rotationMatrix << translationMatrix;
 			transformedVertex->setPosition(transformedMatrix.get(0, 0),
 					transformedMatrix.get(1, 0), transformedMatrix.get(2, 0));
-
-			/*strings = transformedMatrix.toStringVector();
-			 std::cout << "Transformed pos: " << std::endl;
-			 for (int i = 0; i < strings.size(); i++)
-			 std::cout << strings[i] << std::endl;*/
 
 			// Applies rotation to the vertex's normal, other transformations are irrelevant
 			std::vector<float> norm = transformedVertex->getNormal();

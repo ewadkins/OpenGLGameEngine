@@ -9,7 +9,8 @@ CPP_SRCS += \
 ../Math/GLMatrix.cpp \
 ../Math/Matrix.cpp \
 ../Math/Polynomial.cpp \
-../Math/PolynomialMatrix.cpp 
+../Math/PolynomialMatrix.cpp \
+../Math/Vector.cpp 
 
 OBJS += \
 ./Math/Complex.o \
@@ -17,7 +18,8 @@ OBJS += \
 ./Math/GLMatrix.o \
 ./Math/Matrix.o \
 ./Math/Polynomial.o \
-./Math/PolynomialMatrix.o 
+./Math/PolynomialMatrix.o \
+./Math/Vector.o 
 
 CPP_DEPS += \
 ./Math/Complex.d \
@@ -25,7 +27,8 @@ CPP_DEPS += \
 ./Math/GLMatrix.d \
 ./Math/Matrix.d \
 ./Math/Polynomial.d \
-./Math/PolynomialMatrix.d 
+./Math/PolynomialMatrix.d \
+./Math/Vector.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes

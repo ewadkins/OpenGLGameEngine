@@ -161,6 +161,8 @@ GLuint ShaderProgram::create() {
 		// Links attribute variables
 		glBindAttribLocation(_program, 0, "inPosition");
 		glBindAttribLocation(_program, 1, "inColor");
+		glBindAttribLocation(_program, 2, "inNormal");
+		glBindAttribLocation(_program, 3, "inTexCoords");
 
 		// Links shader program
 		glLinkProgram(_program);

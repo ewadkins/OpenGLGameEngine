@@ -31,7 +31,11 @@ public:
 	}
 	void initialize();
 	void initializeVBOs();
-	void createStaticVBOs();
+	void createVBOs();
+	void updateStaticVBOs();
+	void updateDynamicVBOs();
+	void updateStreamVBOs();
+	void update();
 	void render();
 	void display();
 	void useProgram(ShaderProgram*);
@@ -42,9 +46,23 @@ private:
 	void setupShaders();
 	void updateUniforms();
 	Application* _application;
-	std::vector<VBOBase*> _vbos;
+
+	VBO<GLTriangle>* _staticTriangleVBO;
+	VBO<GLLine>* _staticLineVBO;
+	VBO<GLTriangle>* _dynamicTriangleVBO;
+	VBO<GLLine>* _dynamicLineVBO;
+	VBO<GLTriangle>* _streamTriangleVBO;
+	VBO<GLLine>* _streamLineVBO;
+
+	std::vector<VBOBase*> _staticVBOs;
+	std::vector<VBOBase*> _dynamicVBOs;
+	std::vector<VBOBase*> _streamVBOs;
+
+	std::vector<Drawable*> _staticDrawables;
+	std::vector<Drawable*> _dynamicDrawables;
+	std::vector<Drawable*> _streamDrawables;
+
 	Matrix<float> _projectionMatrix;
-	std::vector<Drawable*> staticDrawables;
 };
 
 #endif /* RENDERER_H_ */

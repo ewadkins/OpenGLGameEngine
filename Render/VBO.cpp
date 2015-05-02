@@ -20,6 +20,11 @@ void VBO<T>::add(T* drawable) {
 }
 
 template<typename T>
+void VBO<T>::clear() {
+	_drawables.clear();
+}
+
+template<typename T>
 void VBO<T>::updateData() {
 	_data.clear();
 	for (int i = 0; i < _drawables.size(); i++) {
@@ -30,8 +35,6 @@ void VBO<T>::updateData() {
 			std::vector<float> color = v->getColor();
 			std::vector<float> norm = v->getNormal();
 			std::vector<float> tex = v->getTexCoords();
-
-			//std::cout << pos[0] << ", " << pos[1] << ", " << pos[2] << std::endl;
 
 			_data.push_back(pos[0]);
 			_data.push_back(pos[1]);
@@ -49,63 +52,75 @@ void VBO<T>::updateData() {
 }
 
 template<typename T>
-void VBO<T>::create() {
+void VBO<T>::pushToBuffer() {
+	glBindBuffer(GL_ARRAY_BUFFER, _vbo);
 
-	if (_type == STATIC) {
-		// Make and bind the VAO
-		glGenVertexArrays(1, &_vao);
-		glBindVertexArray(_vao);
-
-		// Make and bind the VBO
-		glGenBuffers(1, &_vbo);
-
-		glBindBuffer(GL_ARRAY_BUFFER, _vbo);
+	if (_type == STREAM)
+		glBufferData(GL_ARRAY_BUFFER, _data.size() * sizeof(GLfloat), &_data[0],
+		GL_STREAM_DRAW);
+	else if (_type == DYNAMIC)
+		glBufferData(GL_ARRAY_BUFFER, _data.size() * sizeof(GLfloat), &_data[0],
+		GL_DYNAMIC_DRAW);
+	else if (_type == STATIC)
 		glBufferData(GL_ARRAY_BUFFER, _data.size() * sizeof(GLfloat), &_data[0],
 		GL_STATIC_DRAW);
 
-		// Add position attribute
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 11 * sizeof(GLfloat), 0);
-		// Add color attribute
-		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 11 * sizeof(GLfloat),
-				reinterpret_cast<GLvoid*>(3 * sizeof(GLfloat)));
-		// Add normal attribute
-		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 11 * sizeof(GLfloat),
-				reinterpret_cast<GLvoid*>(6 * sizeof(GLfloat)));
-		// Add tex coord attribute
-		// XXX Not sure about the 6 * sizeof(GLfloat) for the tex coord attribute
-		glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, 11 * sizeof(GLfloat),
-				reinterpret_cast<GLvoid*>(9 * sizeof(GLfloat)));
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
 
-		// Enable the attributes
-		glEnableVertexAttribArray(0);
-		glEnableVertexAttribArray(1);
-		glEnableVertexAttribArray(2);
-		glEnableVertexAttribArray(3);
+template<typename T>
+void VBO<T>::create() {
 
-		// Unbind the VBO and VAO
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		glBindVertexArray(0);
-	}
-	else
-		throw "Non-static VBO not supported yet";
+	// Make and bind the VAO
+	glGenVertexArrays(1, &_vao);
+	glBindVertexArray(_vao);
+
+	// Make and bind the VBO
+	glGenBuffers(1, &_vbo);
+
+	glBindBuffer(GL_ARRAY_BUFFER, _vbo);
+
+	// Add position attribute
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 11 * sizeof(GLfloat), 0);
+	// Add color attribute
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 11 * sizeof(GLfloat),
+			reinterpret_cast<GLvoid*>(3 * sizeof(GLfloat)));
+	// Add normal attribute
+	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 11 * sizeof(GLfloat),
+			reinterpret_cast<GLvoid*>(6 * sizeof(GLfloat)));
+	// Add tex coord attribute
+	glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, 11 * sizeof(GLfloat),
+			reinterpret_cast<GLvoid*>(9 * sizeof(GLfloat)));
+
+	// Enable the attributes
+	glEnableVertexAttribArray(0);
+	glEnableVertexAttribArray(1);
+	glEnableVertexAttribArray(2);
+	glEnableVertexAttribArray(3);
+
+	// Unbind the VBO and VAO
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindVertexArray(0);
 
 }
 
 template<typename T>
 void VBO<T>::draw() {
 
-	int vertexCount = 0;
-	for (int i = 0; i < _drawables.size(); i++)
-		vertexCount += _drawables[i]->getVertices().size();
+	if (_data.size() > 0) {
+		int vertexCount = 0;
+		for (int i = 0; i < _drawables.size(); i++)
+			vertexCount += _drawables[i]->getVertices().size();
 
-	// Bind the VAO
-	glBindVertexArray(_vao);
+		// Bind the VAO
+		glBindVertexArray(_vao);
 
-	// Draw the VAO
-	glDrawArrays(T::_type, 0, vertexCount);
+		// Draw the VAO
+		glDrawArrays(T::_type, 0, vertexCount);
 
-	// Unbind the VAO
-	glBindVertexArray(0);
+		// Unbind the VAO
+		glBindVertexArray(0);
+	}
 
 }
 

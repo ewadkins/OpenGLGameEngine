@@ -20,6 +20,7 @@ public:
 	virtual std::vector<Vertex*> getVertices();
 	virtual void setVertices(std::vector<Vertex*> vertices);
 	virtual GLComponent* clone();
+	void useFaceNormal();
 	static int _type;
 private:
 	std::vector<Vertex*> _vertices;

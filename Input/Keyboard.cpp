@@ -17,8 +17,8 @@ Keyboard::Keyboard(Application* application) {
 
 void Keyboard::update() {
 
-	float translationSpeed = .05;
-	float rotationSpeed = 1;
+	float translationSpeed = .1;
+	float rotationSpeed = 1.5;
 
 	Camera* camera = _application->_camera;
 
@@ -62,12 +62,13 @@ void Keyboard::update() {
 void Keyboard::dispatchEvent(int key, int scancode, int action, int mods) {
 
 	// Handle key events
-	if (action == GLFW_PRESS)
+	/*if (action == GLFW_PRESS)
 		_application->_logger->log("Key pressed ").log(char(key)).endLine();
 	if (action == GLFW_RELEASE)
 		_application->_logger->log("Key released ").log(char(key)).endLine();
 	if (action == GLFW_REPEAT)
-		_application->_logger->log("Key repeated ").log(char(key)).endLine();
+		_application->_logger->log("Key repeated ").log(char(key)).endLine();*/
+
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 		glfwSetWindowShouldClose(_application->_window, GL_TRUE);
 

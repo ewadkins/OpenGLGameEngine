@@ -27,7 +27,6 @@ public:
 	virtual ~Application() {
 	}
 	int start();
-	void log(const char*);
 	void warn(const char*);
 	void stop(const char*);
 	void stop();

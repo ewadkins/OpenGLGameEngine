@@ -113,7 +113,7 @@ Matrix<T> Matrix<T>::rref() {
 				}
 			} else {
 				y++;
-				if (x == _rows -1)
+				if (x == _rows - 1)
 					break;
 				continue;
 			}
@@ -167,7 +167,7 @@ Matrix<T> Matrix<T>::upperTriangular() {
 				}
 			} else {
 				y++;
-				if (x == _rows -1)
+				if (x == _rows - 1)
 					break;
 				continue;
 			}
@@ -210,7 +210,7 @@ T Matrix<T>::determinant() {
 				}
 			} else {
 				y++;
-				if (x == _rows -1)
+				if (x == _rows - 1)
 					break;
 				continue;
 			}
@@ -314,7 +314,7 @@ std::vector<Complex<T> > Matrix<T>::eigenvalues() {
 	PolynomialMatrix<T> lambdaI = PolynomialMatrix<T>(_rows);
 	T arr[] = { 0, 1 };
 	std::vector<T> coeffs(arr, arr + sizeof(arr) / sizeof(arr[0]));
-	for (int n = 0; n < _rows; n ++)
+	for (int n = 0; n < _rows; n++)
 		lambdaI.set(n, n, Polynomial<T>(coeffs, 1));
 
 	m = m - lambdaI;
@@ -340,7 +340,7 @@ std::vector<std::vector<Complex<T> > > Matrix<T>::eigenvectors() {
 	for (int i = 0; i < evalues.size(); i++) {
 		ComplexMatrix<T> m = toComplexMatrix();
 		ComplexMatrix<T> lambdaI = ComplexMatrix<T>(_rows);
-		for (int n = 0; n < _rows; n ++)
+		for (int n = 0; n < _rows; n++)
 			lambdaI.set(n, n, evalues[i]);
 		m = m - lambdaI;
 

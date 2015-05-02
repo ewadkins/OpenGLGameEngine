@@ -20,49 +20,56 @@ Matrix<float> GLMatrix::translationMatrix(float deltaX, float deltaY, float delt
 
 // Returns the scalar matrix given the desired scale in the x, y, and z directions
 Matrix<float> GLMatrix::scalarMatrix(float scaleX, float scaleY, float scaleZ) {
-	Matrix<float> result = Matrix<float>::identity(4);
+	Matrix<float> result = Matrix<float>(4);
 	result.set(0, 0, scaleX);
 	result.set(1, 1, scaleY);
 	result.set(2, 2, scaleZ);
+	result.set(3, 3, 1);
 	return result;
 }
 
 // Returns the rotation matrix given the desired change in angle about the x axis
 Matrix<float> GLMatrix::rotationMatrixX(float theta) {
-	Matrix<float> result = Matrix<float>::identity(4);
+	Matrix<float> result = Matrix<float>(4);
 	float rads = theta * PI / 180;
+	result.set(0, 0, 1);
 	result.set(1, 1, std::cos(rads));
 	result.set(1, 2, -std::sin(rads));
 	result.set(2, 1, std::sin(rads));
 	result.set(2, 2, std::cos(rads));
+	result.set(3, 3, 1);
 	return result;
 }
 
 // Returns the rotation matrix given the desired change in angle about the y axis
 Matrix<float> GLMatrix::rotationMatrixY(float theta) {
-	Matrix<float> result = Matrix<float>::identity(4);
+	Matrix<float> result = Matrix<float>(4);
 	float rads = theta * PI / 180;
 	result.set(0, 0, std::cos(rads));
 	result.set(0, 2, std::sin(rads));
+	result.set(1, 1, 1);
 	result.set(2, 0, -std::sin(rads));
 	result.set(2, 2, std::cos(rads));
+	result.set(3, 3, 1);
 	return result;
 }
 
 // Returns the rotation matrix given the desired change in angle about the z axis
 Matrix<float> GLMatrix::rotationMatrixZ(float theta) {
-	Matrix<float> result = Matrix<float>::identity(4);
+	Matrix<float> result = Matrix<float>(4);
 	float rads = theta * PI / 180;
 	result.set(0, 0, std::cos(rads));
 	result.set(0, 1, -std::sin(rads));
 	result.set(1, 0, std::sin(rads));
 	result.set(1, 1, std::cos(rads));
+	result.set(2, 2, 1);
+	result.set(3, 3, 1);
 	return result;
 }
 
 // Returns the rotation matrix given the desired change in angle about the x, y, and z axes
 Matrix<float> GLMatrix::rotationMatrixXYZ(float thetaX, float thetaY, float thetaZ) {
-	Matrix<float> result = Matrix<float>::identity(4);
+	Matrix<float> result = Matrix<float>(4);
 	float radsX = thetaX * PI / 180;
 	float radsY = thetaY * PI / 180;
 	float radsZ = thetaZ * PI / 180;
@@ -79,12 +86,13 @@ Matrix<float> GLMatrix::rotationMatrixXYZ(float thetaX, float thetaY, float thet
 	result.set(2, 0, -sin(radsY));
 	result.set(2, 1, std::cos(radsY) * std::sin(radsX));
 	result.set(2, 2, std::cos(radsX) * std::cos(radsY));
+	result.set(3, 3, 1);
 	return result;
 }
 
 // Returns the rotation matrix given the desired change in angle about the line through (x, y, z) with the direction (u, v, w)
 Matrix<float> GLMatrix::rotationMatrixLine(float x, float y, float z, float u, float v, float w, float theta) {
-	Matrix<float> result = Matrix<float>::identity(4);
+	Matrix<float> result = Matrix<float>(4);
 	float rads = theta * PI / 180;
 	result.set(0, 0,
 			(u * u + (v * v + w * w) * std::cos(rads)) / (u * u + v * v + w * w));
@@ -128,6 +136,7 @@ Matrix<float> GLMatrix::rotationMatrixLine(float x, float y, float z, float u, f
 			((z * (u * u + v * v) - w * (x * u + y * v)) * (-cos(rads) + 1)
 					+ (x * v - y * u) * std::sqrt(u * u + v * v + w * w) * std::sin(rads))
 					/ (u * u + v * v + w * w));
+	result.set(3, 3, 1);
 	return result;
 }
 
