@@ -28,13 +28,13 @@ template<typename T>
 void VBO<T>::updateData() {
 	_data.clear();
 	for (int i = 0; i < _drawables.size(); i++) {
-		std::vector<Vertex> vertices = _drawables[i]->getVertices();
+		std::vector<Vertex*> vertices = _drawables[i]->getVertices();
 		for (int j = 0; j < vertices.size(); j++) {
-			Vertex v = vertices[j];
-			std::vector<float> pos = v.getPosition();
-			std::vector<float> color = v.getColor();
-			std::vector<float> norm = v.getNormal();
-			std::vector<float> tex = v.getTexCoords();
+			Vertex* v = vertices[j];
+			std::vector<float> pos = v->getPosition();
+			std::vector<float> color = v->getColor();
+			std::vector<float> norm = v->getNormal();
+			std::vector<float> tex = v->getTexCoords();
 
 			_data.push_back(pos[0]);
 			_data.push_back(pos[1]);

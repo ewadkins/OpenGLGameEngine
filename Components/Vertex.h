@@ -9,7 +9,6 @@
 #define COMPONENTS_VERTEX_H_
 
 #include <vector>
-#include <string>
 
 class Vertex {
 public:
@@ -35,7 +34,6 @@ public:
 	std::vector<float> getNormal();
 	std::vector<float> getTexCoords();
 	Vertex* clone();
-	std::string toString();
 private:
 	float _x, _y, _z, _r, _g, _b, _normX, _normY, _normZ, _texX, _texY;
 };

@@ -12,7 +12,6 @@
 
 class Cube: public Drawable {
 public:
-	Cube(Cube* other);
 	Cube();
 	virtual ~Cube() {
 	}
@@ -46,12 +45,9 @@ public:
 	GLLine* _l10;
 	GLLine* _l11;
 	GLLine* _l12;
-protected:
-	virtual void setTransformed(Drawable* transformed);
 private:
 	std::vector<GLTriangle*> _triangles;
 	std::vector<GLLine*> _lines;
-	Cube* _transformed;
 };
 
 #endif /* CUBE_H_ */

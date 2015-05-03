@@ -16,10 +16,13 @@ public:
 	GLComponent();
 	virtual ~GLComponent() {
 	}
-	virtual std::vector<Vertex> getVertices() {
-		return std::vector<Vertex>();
+	virtual std::vector<Vertex*> getVertices() {
+		return std::vector<Vertex*>();
 	}
-	virtual void setVertices(std::vector<Vertex> vertices) {
+	virtual void setVertices(std::vector<Vertex*> vertices) {
+	}
+	virtual GLComponent* clone() {
+		return new GLComponent();
 	}
 	void setColor(float r, float g, float b);
 };

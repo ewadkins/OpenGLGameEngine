@@ -52,6 +52,7 @@ public:
 	std::vector<T> getVectorConstants();
 	T* getArrayConstants();
 	T getConstant(int i, int j);
+	ComplexMatrix clone();
 	std::vector<std::string> toStringVector();
 	void print();
 	ComplexMatrix operator+(ComplexMatrix rhs);

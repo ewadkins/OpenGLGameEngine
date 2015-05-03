@@ -96,7 +96,7 @@ Matrix<T> Matrix<T>::mul(Matrix other) {
 // Returns the reduced row echelon form of this matrix
 template<typename T>
 Matrix<T> Matrix<T>::rref() {
-	Matrix<T> result = *this;
+	Matrix<T> result = clone();
 	int x = 0;
 	int y = 0;
 	while (x < _rows && y < _cols) {
@@ -150,7 +150,7 @@ template<typename T>
 Matrix<T> Matrix<T>::upperTriangular() {
 	if (_rows != _cols)
 		throw std::runtime_error("Matrix must be a square matrix");
-	Matrix<T> result = *this;
+	Matrix<T> result = clone();
 	int x = 0;
 	int y = 0;
 	while (x < _rows && y < _cols) {
@@ -191,7 +191,7 @@ template<typename T>
 T Matrix<T>::determinant() {
 	if (_rows != _cols)
 		throw std::runtime_error("Matrix must be a square matrix");
-	Matrix<T> result = *this;
+	Matrix<T> result = clone();
 	int rowChanges = 0;
 	int x = 0;
 	int y = 0;
@@ -450,6 +450,12 @@ T Matrix<T>::get(int i, int j) {
 	return _matrix[i][j];
 }
 
+// Returns a copy of this object (another matrix with the same values)
+template<typename T>
+Matrix<T> Matrix<T>::clone() {
+	return Matrix<T>(*this);
+}
+
 // Returns a polynomial version of this matrix
 template<typename T>
 PolynomialMatrix<T> Matrix<T>::toPolynomialMatrix() {
@@ -570,7 +576,7 @@ Matrix<T> Matrix<T>::operator/(T rhs) {
 // Allows for the exponentiation of two matrices with the ^ operator
 template<typename T>
 Matrix<T> Matrix<T>::operator^(int rhs) {
-	Matrix<T> result = *this;
+	Matrix<T> result = clone();
 	for (int i = 0; i < rhs; i++)
 		result = result.mul(result);
 	return result;
@@ -579,7 +585,7 @@ Matrix<T> Matrix<T>::operator^(int rhs) {
 // Allows for the left multiplication of two matrices with the << operator
 template<typename T>
 Matrix<T> Matrix<T>::operator<<(Matrix<T> rhs) {
-	return rhs.mul(*this);
+	return rhs.mul(clone());
 }
 
 // Returns a matrix of the specified size filled with zeros

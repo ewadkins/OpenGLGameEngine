@@ -9,7 +9,6 @@
 #define VECTOR_H_
 
 #include <vector>
-#include <cmath>
 #include <exception>
 
 template<typename T>
@@ -22,19 +21,15 @@ public:
 	template<typename S> Vector(Vector<S> other);
 	virtual ~Vector() {
 	}
-	Vector scale(T k);
 	Vector add(Vector other);
 	T dot(Vector other);
-	Vector cross(Vector other);
-	T magnitude();
-	Vector normalize();
-	int size();
 	void set(int i, T value);
 	void setVector(std::vector<T> values);
 	T get(int i);
 	std::vector<T> getVector();
+	T* operator[](int i);
 private:
-	std::vector<T> _vector;
+	std::vector<T*> _vector;
 };
 
 #endif /* VECTOR_H_ */

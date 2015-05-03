@@ -50,6 +50,7 @@ public:
 	std::vector<T> getVector();
 	T* getArray();
 	T get(int i, int j);
+	Matrix clone();
 	PolynomialMatrix<T> toPolynomialMatrix();
 	ComplexMatrix<T> toComplexMatrix();
 	std::vector<std::string> toStringVector();

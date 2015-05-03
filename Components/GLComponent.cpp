@@ -12,8 +12,8 @@ GLComponent::GLComponent() {
 }
 
 void GLComponent::setColor(float r, float g, float b) {
-	std::vector<Vertex> vertices = getVertices();
+	std::vector<Vertex*> vertices = getVertices();
 	for (int i = 0; i < vertices.size(); i++)
-		vertices[i].setColor(r, g, b);
+		vertices[i]->setColor(r, g, b);
 }
 
