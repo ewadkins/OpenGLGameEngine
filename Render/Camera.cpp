@@ -36,30 +36,12 @@ void Camera::initialize() {
 // Creates and sets a view matrix representing the view of the camera
 void Camera::useView() {
 
-	// FIXME You have to transpose the translation matrix for some reason
-	Matrix<float> viewMatrix = GLMatrix::rotationMatrixXYZ(getRotationX(),
-			getRotationY(), getRotationZ())
-			<< GLMatrix::translationMatrix(-getX(), -getY(), -getZ()).transpose();
+	Matrix<float> viewMatrix = GLMatrix::cameraTransformationMatrix(getX(),
+			getY(), getZ(), getRotationX(), getRotationY(), getRotationZ());
 
-	/*_application->_logger->log("View matrix:").endLine().log(viewMatrix);
-
-	 Matrix<float> projectionMatrix = Matrix<float>::identity(4);
-	 if (_projectionType == ORTHOGRAPHIC)
-	 projectionMatrix = _orthographic;
-	 else if (_projectionType == PERSPECTIVE)
-	 projectionMatrix = _perspective;
-	 //_application->_logger->log("Projection matrix:").endLine().log(projectionMatrix);
-
-	 Matrix<float> pos = Matrix<float>(4, 1);
-	 float arr[] = { 0, 0, 0, 1 };
-	 std::vector<float> values(arr, arr + sizeof(arr) / sizeof(arr[0]));
-	 pos.setVector(values);
-
-	 _application->_logger->log("Model Position: ").endLine().log(pos);
-
-	 _application->_logger->log("ModelView Position: ").endLine().log(viewMatrix * pos);
-	 _application->_logger->log("ModelViewProjection Position: ").endLine().log(projectionMatrix * viewMatrix * pos);
-	 */
+	/*GLMatrix::rotationMatrixXYZ(getRotationX(),
+	 getRotationY(), getRotationZ())
+	 << GLMatrix::translationMatrix(-getX(), -getY(), -getZ()).transpose();*/
 
 	_application->_renderer->_currentProgram->setUniformMatrix4x4f("viewMatrix",
 			viewMatrix.getArray());

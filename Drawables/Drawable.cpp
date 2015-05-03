@@ -31,12 +31,14 @@ void Drawable::applyTransformations() {
 	std::vector<GLComponent*> transformedComponents =
 			_transformed->getComponents();
 
-	Matrix<float> scalarMatrix = GLMatrix::scalarMatrix(getScaleX(),
-			getScaleY(), getScaleZ());
+	//Matrix<float> scalarMatrix = GLMatrix::scalarMatrix(getScaleX(),
+	//		getScaleY(), getScaleZ());
 	Matrix<float> rotationMatrix = GLMatrix::rotationMatrixXYZ(getRotationX(),
 			getRotationY(), getRotationZ());
-	Matrix<float> translationMatrix = GLMatrix::translationMatrix(getX(),
-			getY(), getZ());
+	//Matrix<float> translationMatrix = GLMatrix::translationMatrix(getX(),
+	//		getY(), getZ());
+
+	Matrix<float> modelTransformationMatrix = GLMatrix::modelTransformationMatrix(getX(), getY(), getZ(), getRotationX(), getRotationY(), getRotationZ(), getScaleX(), getScaleY(), getScaleZ());
 	Matrix<float> originalMatrix = Matrix<float>(4, 1);
 
 	std::vector<Vertex*> originalVertices;
@@ -59,8 +61,7 @@ void Drawable::applyTransformations() {
 			pos.push_back(1);
 			originalMatrix.setVector(pos);
 
-			transformedMatrix = originalMatrix << scalarMatrix
-					<< rotationMatrix << translationMatrix;
+			transformedMatrix = originalMatrix << modelTransformationMatrix;
 			transformedVertex->setPosition(transformedMatrix.get(0, 0),
 					transformedMatrix.get(1, 0), transformedMatrix.get(2, 0));
 

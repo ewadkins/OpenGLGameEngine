@@ -96,7 +96,7 @@ PolynomialMatrix<T> PolynomialMatrix<T>::mul(PolynomialMatrix other) {
 // Returns the reduced row echelon form of this matrix
 template<typename T>
 PolynomialMatrix<T> PolynomialMatrix<T>::rref() {
-	PolynomialMatrix<T> result = clone();
+	PolynomialMatrix<T> result = *this;
 	int x = 0;
 	int y = 0;
 	while (x < _rows && y < _cols) {
@@ -161,7 +161,7 @@ template<typename T>
 PolynomialMatrix<T> PolynomialMatrix<T>::upperTriangular() {
 	if (_rows != _cols)
 		throw std::runtime_error("Matrix must be a square matrix");
-	PolynomialMatrix<T> result = clone();
+	PolynomialMatrix<T> result = *this;
 	int x = 0;
 	int y = 0;
 	while (x < _rows && y < _cols) {
@@ -213,7 +213,7 @@ template<typename T>
 Polynomial<T> PolynomialMatrix<T>::determinant() {
 	if (_rows != _cols)
 		throw std::runtime_error("Matrix must be a square matrix");
-	PolynomialMatrix<T> result = clone();
+	PolynomialMatrix<T> result = *this;
 	int rowChanges = 0;
 	int x = 0;
 	int y = 0;
@@ -411,9 +411,7 @@ void PolynomialMatrix<T>::set(int i, int j, T value) {
 // sets the values of the matrix given a two dimensional array of values
 template<typename T>
 void PolynomialMatrix<T>::setMatrix(Polynomial<T>** matrix) {
-	for (int i = 0; i < _rows; i++)
-		for (int j = 0; j < _cols; j++)
-			_matrix[i][j] = matrix[i][j];
+	_matrix = matrix;
 }
 
 // sets the values of this matrix given a vector of values
@@ -499,12 +497,6 @@ T* PolynomialMatrix<T>::getArrayConstants() {
 template<typename T>
 T PolynomialMatrix<T>::getConstant(int i, int j) {
 	return _matrix[i][j].value();
-}
-
-// Returns a copy of this object (another matrix with the same values)
-template<typename T>
-PolynomialMatrix<T> PolynomialMatrix<T>::clone() {
-	return PolynomialMatrix<T>(*this);
 }
 
 // Returns a vector of strings representing this matrix
@@ -595,7 +587,7 @@ PolynomialMatrix<T> PolynomialMatrix<T>::operator/(T rhs) {
 // Allows for the exponentiation of two matrices with the ^ operator
 template<typename T>
 PolynomialMatrix<T> PolynomialMatrix<T>::operator^(int rhs) {
-	PolynomialMatrix<T> result = clone();
+	PolynomialMatrix<T> result = *this;
 	for (int i = 0; i < rhs; i++)
 		result = result.mul(result);
 	return result;
@@ -604,7 +596,7 @@ PolynomialMatrix<T> PolynomialMatrix<T>::operator^(int rhs) {
 // Allows for the left multiplication of two matrices with the << operator
 template<typename T>
 PolynomialMatrix<T> PolynomialMatrix<T>::operator<<(PolynomialMatrix<T> rhs) {
-	return rhs.mul(clone());
+	return rhs.mul(*this);
 }
 
 // Returns a matrix of the specified size filled with zeros

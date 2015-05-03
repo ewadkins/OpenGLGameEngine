@@ -52,7 +52,6 @@ public:
 	std::vector<T> getVectorConstants();
 	T* getArrayConstants();
 	T getConstant(int i, int j);
-	PolynomialMatrix clone();
 	std::vector<std::string> toStringVector();
 	void print();
 	PolynomialMatrix operator+(PolynomialMatrix rhs);
