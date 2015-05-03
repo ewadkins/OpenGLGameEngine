@@ -184,3 +184,13 @@ Vertex* Vertex::clone() {
 	return new Vertex(getPosition(), getColor(), getNormal(), getTexCoords());
 }
 
+std::string Vertex::toString() {
+	std::string str = "Vertex{";
+	str += "Position(" + std::to_string(_x) + ", " + std::to_string(_y) + ", " + std::to_string(_z) + "), ";
+	str += "Color(" + std::to_string(_r) + ", " + std::to_string(_g) + ", " + std::to_string(_b) + "), ";
+	str += "Normal(" + std::to_string(_normX) + ", " + std::to_string(_normY) + ", " + std::to_string(_normZ) + "), ";
+	str += "TexCoords(" + std::to_string(_texX) + ", " + std::to_string(_texY) + ")";
+	str += "}";
+	return str;
+}
+

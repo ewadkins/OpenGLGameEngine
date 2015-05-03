@@ -19,17 +19,15 @@ Drawable::Drawable() {
 	_rotationZ = 0;
 	_needsUpdating = true;
 	_drawOutline = true;
-	_transformed = nullptr;
 }
 
 // Returns a transformed version of this drawable
 void Drawable::applyTransformations() {
 
-	_transformed = clone();
+	Drawable* transformed = clone();
 
 	std::vector<GLComponent*> originalComponents = getComponents();
-	std::vector<GLComponent*> transformedComponents =
-			_transformed->getComponents();
+	std::vector<GLComponent*> transformedComponents = transformed->getComponents();
 
 	Matrix<float> scalarMatrix = GLMatrix::scalarMatrix(getScaleX(),
 			getScaleY(), getScaleZ());
@@ -39,10 +37,10 @@ void Drawable::applyTransformations() {
 			getY(), getZ());
 	Matrix<float> originalMatrix = Matrix<float>(4, 1);
 
-	std::vector<Vertex*> originalVertices;
-	std::vector<Vertex*> transformedVertices;
+	std::vector<Vertex> originalVertices;
+	std::vector<Vertex> transformedVertices;
 
-	Vertex* transformedVertex;
+	Vertex transformedVertex;
 	Matrix<float> transformedMatrix(4);
 	std::vector<float> pos;
 	std::vector<float> norm;
@@ -52,30 +50,31 @@ void Drawable::applyTransformations() {
 		transformedVertices.clear();
 
 		for (int j = 0; j < originalVertices.size(); j++) {
-			transformedVertex = originalVertices[j]->clone();
+			transformedVertex = originalVertices[j];
 
 			// Applies transformations to the vertex's position
-			pos = transformedVertex->getPosition();
+			pos = transformedVertex.getPosition();
 			pos.push_back(1);
 			originalMatrix.setVector(pos);
 
 			transformedMatrix = originalMatrix << scalarMatrix
 					<< rotationMatrix << translationMatrix;
-			transformedVertex->setPosition(transformedMatrix.get(0, 0),
+			transformedVertex.setPosition(transformedMatrix.get(0, 0),
 					transformedMatrix.get(1, 0), transformedMatrix.get(2, 0));
 
 			// Applies rotation to the vertex's normal, other transformations are irrelevant
-			norm = transformedVertex->getNormal();
+			norm = transformedVertex.getNormal();
 			norm.push_back(1);
 			originalMatrix.setVector(norm);
 			transformedMatrix = originalMatrix << rotationMatrix;
-			transformedVertex->setNormal(transformedMatrix.get(0, 0),
+			transformedVertex.setNormal(transformedMatrix.get(0, 0),
 					transformedMatrix.get(1, 0), transformedMatrix.get(2, 0));
 
 			transformedVertices.push_back(transformedVertex);
 		}
 		transformedComponents[i]->setVertices(transformedVertices);
 	}
+	setTransformed(transformed);
 	_needsUpdating = false;
 }
 

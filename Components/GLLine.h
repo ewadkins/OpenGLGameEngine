@@ -14,15 +14,15 @@
 
 class GLLine : public GLComponent {
 public:
-	GLLine(Vertex* v1, Vertex* v2);
+	GLLine(Vertex v1, Vertex v2);
 	virtual ~GLLine() {
 	}
-	virtual std::vector<Vertex*> getVertices();
-	virtual void setVertices(std::vector<Vertex*> vertices);
-	virtual GLComponent* clone();
+	virtual std::vector<Vertex> getVertices();
+	virtual void setVertices(std::vector<Vertex> vertices);
+	GLLine* clone();
 	static int _type;
 private:
-	std::vector<Vertex*> _vertices;
+	std::vector<Vertex> _vertices;
 };
 
 #endif /* COMPONENTS_GLLINE_H_ */

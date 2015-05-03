@@ -96,7 +96,7 @@ ComplexMatrix<T> ComplexMatrix<T>::mul(ComplexMatrix other) {
 // Returns the reduced row echelon form of this matrix
 template<typename T>
 ComplexMatrix<T> ComplexMatrix<T>::rref() {
-	ComplexMatrix<T> result = clone();
+	ComplexMatrix<T> result = *this;
 	int x = 0;
 	int y = 0;
 	while (x < _rows && y < _cols) {
@@ -162,7 +162,7 @@ template<typename T>
 ComplexMatrix<T> ComplexMatrix<T>::upperTriangular() {
 	if (_rows != _cols)
 		throw std::runtime_error("Matrix must be a square matrix");
-	ComplexMatrix<T> result = clone();
+	ComplexMatrix<T> result = *this;
 	int x = 0;
 	int y = 0;
 	while (x < _rows && y < _cols) {
@@ -214,7 +214,7 @@ template<typename T>
 Complex<T> ComplexMatrix<T>::determinant() {
 	if (_rows != _cols)
 		throw std::runtime_error("Matrix must be a square matrix");
-	ComplexMatrix<T> result = clone();
+	ComplexMatrix<T> result = *this;
 	int rowChanges = 0;
 	int x = 0;
 	int y = 0;
@@ -502,12 +502,6 @@ T ComplexMatrix<T>::getConstant(int i, int j) {
 	return _matrix[i][j].value();
 }
 
-// Returns a copy of this object (another matrix with the same values)
-template<typename T>
-ComplexMatrix<T> ComplexMatrix<T>::clone() {
-	return ComplexMatrix<T>(*this);
-}
-
 // Returns a vector of strings representing this matrix
 template<typename T>
 std::vector<std::string> ComplexMatrix<T>::toStringVector() {
@@ -596,7 +590,7 @@ ComplexMatrix<T> ComplexMatrix<T>::operator/(T rhs) {
 // Allows for the exponentiation of two matrices with the ^ operator
 template<typename T>
 ComplexMatrix<T> ComplexMatrix<T>::operator^(int rhs) {
-	ComplexMatrix<T> result = clone();
+	ComplexMatrix<T> result = *this;
 	for (int i = 0; i < rhs; i++)
 		result = result.mul(result);
 	return result;
@@ -605,7 +599,7 @@ ComplexMatrix<T> ComplexMatrix<T>::operator^(int rhs) {
 // Allows for the left multiplication of two matrices with the << operator
 template<typename T>
 ComplexMatrix<T> ComplexMatrix<T>::operator<<(ComplexMatrix<T> rhs) {
-	return rhs.mul(clone());
+	return rhs.mul(*this);
 }
 
 // Returns a matrix of the specified size filled with zeros

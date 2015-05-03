@@ -36,7 +36,7 @@ public:
 		return std::vector<GLLine*>();
 	}
 	virtual Drawable* clone() {
-		return new Drawable();
+		return new Drawable(*this);
 	}
 	void translateX(float x);
 	void translateY(float y);
@@ -75,8 +75,9 @@ public:
 	void setOutlineColor(float r, float g, float b);
 	void drawOutline(bool drawOutline);
 protected:
+	virtual void setTransformed(Drawable* transformed) {
+	}
 	void applyTransformations();
-	Drawable* _transformed;
 	bool _needsUpdating;
 	bool _drawOutline;
 private:

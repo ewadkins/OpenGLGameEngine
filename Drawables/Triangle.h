@@ -12,7 +12,8 @@
 
 class Triangle: public Drawable {
 public:
-	Triangle(Vertex* v1, Vertex* v2, Vertex* v3);
+	Triangle(Vertex v1, Vertex v2, Vertex v3);
+	Triangle(Triangle* other);
 	Triangle();
 	virtual ~Triangle() {
 	}
@@ -26,9 +27,12 @@ public:
 	GLLine* _l1;
 	GLLine* _l2;
 	GLLine* _l3;
+protected:
+	virtual void setTransformed(Drawable* transformed);
 private:
 	std::vector<GLTriangle*> _triangles;
 	std::vector<GLLine*> _lines;
+	Triangle* _transformed;
 };
 
 #endif /* TRIANGLE_H_ */

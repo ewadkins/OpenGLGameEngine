@@ -14,16 +14,16 @@
 
 class GLTriangle : public GLComponent {
 public:
-	GLTriangle(Vertex* v1, Vertex* v2, Vertex* v3);
+	GLTriangle(Vertex v1, Vertex v2, Vertex v3);
 	virtual ~GLTriangle() {
 	}
-	virtual std::vector<Vertex*> getVertices();
-	virtual void setVertices(std::vector<Vertex*> vertices);
-	virtual GLComponent* clone();
+	virtual std::vector<Vertex> getVertices();
+	virtual void setVertices(std::vector<Vertex> vertices);
+	GLTriangle* clone();
 	void useFaceNormal();
 	static int _type;
 private:
-	std::vector<Vertex*> _vertices;
+	std::vector<Vertex> _vertices;
 };
 
 #endif /* COMPONENTS_GLTRIANGLE_H_ */
