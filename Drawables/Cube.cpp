@@ -106,6 +106,60 @@ Cube::Cube() {
 	setColor(1.0, 0.0, 0.0);
 }
 
+Cube::Cube(Cube* other) {
+
+	_f1t1 = other->_f1t1->clone();
+	_f1t2 = other->_f1t2->clone();
+	_f2t1 = other->_f2t1->clone();
+	_f2t2 = other->_f2t2->clone();
+	_f3t1 = other->_f3t1->clone();
+	_f3t2 = other->_f3t2->clone();
+	_f4t1 = other->_f4t1->clone();
+	_f4t2 = other->_f4t2->clone();
+	_f5t1 = other->_f5t1->clone();
+	_f5t2 = other->_f5t2->clone();
+	_f6t1 = other->_f6t1->clone();
+	_f6t2 = other->_f6t2->clone();
+	_l1 = other->_l1->clone();
+	_l2 = other->_l2->clone();
+	_l3 = other->_l3->clone();
+	_l4 = other->_l4->clone();
+	_l5 = other->_l5->clone();
+	_l6 = other->_l6->clone();
+	_l7 = other->_l7->clone();
+	_l8 = other->_l8->clone();
+	_l9 = other->_l9->clone();
+	_l10 = other->_l10->clone();
+	_l11 = other->_l11->clone();
+	_l12 = other->_l12->clone();
+
+	_triangles.push_back(_f1t1);
+	_triangles.push_back(_f1t2);
+	_triangles.push_back(_f2t1);
+	_triangles.push_back(_f2t2);
+	_triangles.push_back(_f3t1);
+	_triangles.push_back(_f3t2);
+	_triangles.push_back(_f4t1);
+	_triangles.push_back(_f4t2);
+	_triangles.push_back(_f5t1);
+	_triangles.push_back(_f5t2);
+	_triangles.push_back(_f6t1);
+	_triangles.push_back(_f6t2);
+
+	_lines.push_back(_l1);
+	_lines.push_back(_l2);
+	_lines.push_back(_l3);
+	_lines.push_back(_l4);
+	_lines.push_back(_l5);
+	_lines.push_back(_l6);
+	_lines.push_back(_l7);
+	_lines.push_back(_l8);
+	_lines.push_back(_l9);
+	_lines.push_back(_l10);
+	_lines.push_back(_l11);
+	_lines.push_back(_l12);
+}
+
 std::vector<GLComponent*> Cube::getComponents() {
 	std::vector<GLComponent*> components;
 	for (int i = 0; i < _triangles.size(); i++)
@@ -136,31 +190,6 @@ std::vector<GLLine*> Cube::getLines() {
 }
 
 Drawable* Cube::clone() {
-	Cube* d = new Cube();
-	d->_f1t1 = (GLTriangle*) _f1t1->clone();
-	d->_f1t2 = (GLTriangle*) _f1t2->clone();
-	d->_f2t1 = (GLTriangle*) _f2t1->clone();
-	d->_f2t2 = (GLTriangle*) _f2t2->clone();
-	d->_f3t1 = (GLTriangle*) _f3t1->clone();
-	d->_f3t2 = (GLTriangle*) _f3t2->clone();
-	d->_f4t1 = (GLTriangle*) _f4t1->clone();
-	d->_f4t2 = (GLTriangle*) _f4t2->clone();
-	d->_f5t1 = (GLTriangle*) _f5t1->clone();
-	d->_f5t2 = (GLTriangle*) _f5t2->clone();
-	d->_f6t1 = (GLTriangle*) _f6t1->clone();
-	d->_f6t2 = (GLTriangle*) _f6t2->clone();
-	d->_l1 = (GLLine*) _l1->clone();
-	d->_l2 = (GLLine*) _l2->clone();
-	d->_l3 = (GLLine*) _l3->clone();
-	d->_l4 = (GLLine*) _l4->clone();
-	d->_l5 = (GLLine*) _l5->clone();
-	d->_l6 = (GLLine*) _l6->clone();
-	d->_l7 = (GLLine*) _l7->clone();
-	d->_l8 = (GLLine*) _l8->clone();
-	d->_l9 = (GLLine*) _l9->clone();
-	d->_l10 = (GLLine*) _l10->clone();
-	d->_l11 = (GLLine*) _l11->clone();
-	d->_l12 = (GLLine*) _l12->clone();
-	return d;
+	return new Cube(this);
 }
 

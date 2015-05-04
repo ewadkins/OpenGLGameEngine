@@ -19,7 +19,7 @@ public:
 	}
 	virtual std::vector<Vertex> getVertices();
 	virtual void setVertices(std::vector<Vertex> vertices);
-	virtual GLComponent* clone();
+	GLLine* clone();
 	static int _type;
 private:
 	std::vector<Vertex> _vertices;

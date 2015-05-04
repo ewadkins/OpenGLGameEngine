@@ -21,9 +21,6 @@ public:
 	}
 	virtual void setVertices(std::vector<Vertex> vertices) {
 	}
-	virtual GLComponent* clone() {
-		return new GLComponent();
-	}
 	void setColor(float r, float g, float b);
 };
 

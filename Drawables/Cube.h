@@ -13,6 +13,7 @@
 class Cube: public Drawable {
 public:
 	Cube();
+	Cube(Cube* other);
 	virtual ~Cube() {
 	}
 	virtual std::vector<GLComponent*> getComponents();

@@ -21,6 +21,18 @@ Triangle::Triangle(Vertex v1, Vertex v2, Vertex v3) {
 	setColor(0.0, 1.0, 0.0);
 }
 
+Triangle::Triangle(Triangle* other) {
+	_triangle = other->_triangle->clone();
+	_l1 = other->_l1->clone();
+	_l2 = other->_l2->clone();
+	_l3 = other->_l3->clone();
+
+	_triangles.push_back(_triangle);
+	_lines.push_back(_l1);
+	_lines.push_back(_l2);
+	_lines.push_back(_l3);
+}
+
 Triangle::Triangle() {
 	Vertex v1 = Vertex(0.0, 0.5, 0.0);
 	Vertex v2 = Vertex(-0.5, -0.5, 0.0);
@@ -68,11 +80,6 @@ std::vector<GLLine*> Triangle::getLines() {
 }
 
 Drawable* Triangle::clone() {
-	Triangle* d = new Triangle();
-	d->_triangle = (GLTriangle*) _triangle->clone();
-	d->_l1 = (GLLine*) _l1->clone();
-	d->_l2 = (GLLine*) _l2->clone();
-	d->_l3 = (GLLine*) _l3->clone();
-	return d;
+	return new Triangle(this);
 }
 

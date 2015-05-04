@@ -23,7 +23,7 @@ void GLTriangle::setVertices(std::vector<Vertex> vertices) {
 	_vertices = vertices;
 }
 
-GLComponent* GLTriangle::clone() {
+GLTriangle* GLTriangle::clone() {
 	return new GLTriangle(_vertices[0], _vertices[1], _vertices[2]);
 }
 
