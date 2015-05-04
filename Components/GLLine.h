@@ -15,6 +15,7 @@
 class GLLine : public GLComponent {
 public:
 	GLLine(Vertex v1, Vertex v2);
+	GLLine();
 	virtual ~GLLine() {
 	}
 	virtual std::vector<Vertex> getVertices();

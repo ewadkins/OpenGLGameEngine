@@ -41,7 +41,7 @@ public:
 	VBO(Type type);
 	virtual ~VBO() {
 	}
-	void add(T* d);
+	void add(T component);
 	virtual void clear();
 	virtual void updateData();
 	virtual void pushToBuffer();
@@ -49,7 +49,7 @@ public:
 	virtual void draw();
 private:
 	Type _type;
-	std::vector<T*> _drawables;
+	std::vector<T> _components;
 	std::vector<GLfloat> _data;
 	GLuint _vao, _vbo;
 };

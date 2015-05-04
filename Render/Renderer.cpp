@@ -155,7 +155,7 @@ void Renderer::createVBOs() {
 void Renderer::updateStaticVBOs() {
 	_staticTriangleVBO->clear();
 	for (int i = 0; i < _staticDrawables.size(); i++) {
-		std::vector<GLTriangle*> triangles =
+		std::vector<GLTriangle> triangles =
 				_staticDrawables[i]->getTransformedTriangles();
 		for (int j = 0; j < triangles.size(); j++)
 			_staticTriangleVBO->add(triangles[j]);
@@ -165,7 +165,7 @@ void Renderer::updateStaticVBOs() {
 
 	_staticLineVBO->clear();
 	for (int i = 0; i < _staticDrawables.size(); i++) {
-		std::vector<GLLine*> lines = _staticDrawables[i]->getTransformedLines();
+		std::vector<GLLine> lines = _staticDrawables[i]->getTransformedLines();
 		for (int j = 0; j < lines.size(); j++)
 			_staticLineVBO->add(lines[j]);
 	}
@@ -176,7 +176,7 @@ void Renderer::updateStaticVBOs() {
 void Renderer::updateDynamicVBOs() {
 	_dynamicTriangleVBO->clear();
 	for (int i = 0; i < _dynamicDrawables.size(); i++) {
-		std::vector<GLTriangle*> triangles =
+		std::vector<GLTriangle> triangles =
 				_dynamicDrawables[i]->getTransformedTriangles();
 		for (int j = 0; j < triangles.size(); j++)
 			_dynamicTriangleVBO->add(triangles[j]);
@@ -186,7 +186,7 @@ void Renderer::updateDynamicVBOs() {
 
 	_dynamicLineVBO->clear();
 	for (int i = 0; i < _dynamicDrawables.size(); i++) {
-		std::vector<GLLine*> lines =
+		std::vector<GLLine> lines =
 				_dynamicDrawables[i]->getTransformedLines();
 		for (int j = 0; j < lines.size(); j++)
 			_dynamicLineVBO->add(lines[j]);
@@ -199,7 +199,7 @@ void Renderer::updateStreamVBOs() {
 
 	_streamTriangleVBO->clear();
 	for (int i = 0; i < _streamDrawables.size(); i++) {
-		std::vector<GLTriangle*> triangles =
+		std::vector<GLTriangle> triangles =
 				_streamDrawables[i]->getTransformedTriangles();
 		for (int j = 0; j < triangles.size(); j++)
 			_streamTriangleVBO->add(triangles[j]);
@@ -209,7 +209,7 @@ void Renderer::updateStreamVBOs() {
 
 	_streamLineVBO->clear();
 	for (int i = 0; i < _streamDrawables.size(); i++) {
-		std::vector<GLLine*> lines = _streamDrawables[i]->getTransformedLines();
+		std::vector<GLLine> lines = _streamDrawables[i]->getTransformedLines();
 		for (int j = 0; j < lines.size(); j++)
 			_streamLineVBO->add(lines[j]);
 	}

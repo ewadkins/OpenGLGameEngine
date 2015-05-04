@@ -14,6 +14,9 @@ GLLine::GLLine(Vertex v1, Vertex v2) {
 	_vertices.push_back(v2);
 }
 
+GLLine::GLLine() {
+}
+
 std::vector<Vertex> GLLine::getVertices() {
 	return _vertices;
 }

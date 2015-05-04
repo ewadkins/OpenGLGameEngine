@@ -27,8 +27,8 @@ void Drawable::applyTransformations() {
 
 	_transformed = clone();
 
-	std::vector<GLComponent*> originalComponents = getComponents();
-	std::vector<GLComponent*> transformedComponents =
+	std::vector<GLComponent> originalComponents = getComponents();
+	std::vector<GLComponent> transformedComponents =
 			_transformed->getComponents();
 
 	//Matrix<float> scalarMatrix = GLMatrix::scalarMatrix(getScaleX(),
@@ -50,7 +50,7 @@ void Drawable::applyTransformations() {
 	std::vector<float> norm;
 
 	for (int i = 0; i < originalComponents.size(); i++) {
-		originalVertices = originalComponents[i]->getVertices();
+		originalVertices = originalComponents[i].getVertices();
 		transformedVertices.clear();
 
 		for (int j = 0; j < originalVertices.size(); j++) {
@@ -75,7 +75,7 @@ void Drawable::applyTransformations() {
 
 			transformedVertices.push_back(transformedVertex);
 		}
-		transformedComponents[i]->setVertices(transformedVertices);
+		transformedComponents[i].setVertices(transformedVertices);
 	}
 	_needsUpdating = false;
 }
@@ -268,18 +268,6 @@ void Drawable::setRotationXYZ(float rotationX, float rotationY,
 	_rotationY = rotationY;
 	_rotationZ = rotationZ;
 	_needsUpdating = true;
-}
-
-void Drawable::setColor(float r, float g, float b) {
-	std::vector<GLTriangle*> triangles = getTriangles();
-	for (int i = 0; i < triangles.size(); i++)
-		triangles[i]->setColor(r, g, b);
-}
-
-void Drawable::setOutlineColor(float r, float g, float b) {
-	std::vector<GLLine*> lines = getLines();
-	for (int i = 0; i < lines.size(); i++)
-		lines[i]->setColor(r, g, b);
 }
 
 void Drawable::drawOutline(bool drawOutline) {

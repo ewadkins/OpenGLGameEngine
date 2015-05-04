@@ -17,19 +17,21 @@ public:
 	Triangle();
 	virtual ~Triangle() {
 	}
-	virtual std::vector<GLComponent*> getComponents();
-	virtual std::vector<GLTriangle*> getTransformedTriangles();
-	virtual std::vector<GLTriangle*> getTriangles();
-	virtual std::vector<GLLine*> getTransformedLines();
-	virtual std::vector<GLLine*> getLines();
+	virtual std::vector<GLComponent> getComponents();
+	virtual std::vector<GLTriangle> getTransformedTriangles();
+	virtual std::vector<GLTriangle> getTriangles();
+	virtual std::vector<GLLine> getTransformedLines();
+	virtual std::vector<GLLine> getLines();
+	virtual void setColor(float r, float g, float b);
+	virtual void setOutlineColor(float r, float g, float b);
 	virtual Drawable* clone();
-	GLTriangle* _triangle;
-	GLLine* _l1;
-	GLLine* _l2;
-	GLLine* _l3;
+	GLTriangle _triangle;
+	GLLine _l1;
+	GLLine _l2;
+	GLLine _l3;
 private:
-	std::vector<GLTriangle*> _triangles;
-	std::vector<GLLine*> _lines;
+	std::vector<GLTriangle> _triangles;
+	std::vector<GLLine> _lines;
 };
 
 #endif /* TRIANGLE_H_ */

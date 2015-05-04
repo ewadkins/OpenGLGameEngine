@@ -15,20 +15,20 @@ VBO<T>::VBO(Type type) {
 }
 
 template<typename T>
-void VBO<T>::add(T* drawable) {
-	_drawables.push_back(drawable);
+void VBO<T>::add(T component) {
+	_components.push_back(component);
 }
 
 template<typename T>
 void VBO<T>::clear() {
-	_drawables.clear();
+	_components.clear();
 }
 
 template<typename T>
 void VBO<T>::updateData() {
 	_data.clear();
-	for (int i = 0; i < _drawables.size(); i++) {
-		std::vector<Vertex> vertices = _drawables[i]->getVertices();
+	for (int i = 0; i < _components.size(); i++) {
+		std::vector<Vertex> vertices = _components[i].getVertices();
 		for (int j = 0; j < vertices.size(); j++) {
 			Vertex v = vertices[j];
 			std::vector<float> pos = v.getPosition();
@@ -109,8 +109,8 @@ void VBO<T>::draw() {
 
 	if (_data.size() > 0) {
 		int vertexCount = 0;
-		for (int i = 0; i < _drawables.size(); i++)
-			vertexCount += _drawables[i]->getVertices().size();
+		for (int i = 0; i < _components.size(); i++)
+			vertexCount += _components[i].getVertices().size();
 
 		// Bind the VAO
 		glBindVertexArray(_vao);

@@ -15,6 +15,7 @@
 class GLTriangle : public GLComponent {
 public:
 	GLTriangle(Vertex v1, Vertex v2, Vertex v3);
+	GLTriangle();
 	virtual ~GLTriangle() {
 	}
 	virtual std::vector<Vertex> getVertices();

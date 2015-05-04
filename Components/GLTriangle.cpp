@@ -15,6 +15,9 @@ GLTriangle::GLTriangle(Vertex v1, Vertex v2, Vertex v3) {
 	_vertices.push_back(v3);
 }
 
+GLTriangle::GLTriangle() {
+}
+
 std::vector<Vertex> GLTriangle::getVertices() {
 	return _vertices;
 }

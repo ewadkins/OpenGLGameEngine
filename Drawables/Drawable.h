@@ -20,20 +20,24 @@ public:
 	Drawable();
 	virtual ~Drawable() {
 	}
-	virtual std::vector<GLComponent*> getComponents() {
-		return std::vector<GLComponent*>();
+	virtual std::vector<GLComponent> getComponents() {
+		return std::vector<GLComponent>();
 	}
-	virtual std::vector<GLTriangle*> getTransformedTriangles() {
-		return std::vector<GLTriangle*>();
+	virtual std::vector<GLTriangle> getTransformedTriangles() {
+		return std::vector<GLTriangle>();
 	}
-	virtual std::vector<GLTriangle*> getTriangles() {
-		return std::vector<GLTriangle*>();
+	virtual std::vector<GLTriangle> getTriangles() {
+		return std::vector<GLTriangle>();
 	}
-	virtual std::vector<GLLine*> getTransformedLines() {
-		return std::vector<GLLine*>();
+	virtual std::vector<GLLine> getTransformedLines() {
+		return std::vector<GLLine>();
 	}
-	virtual std::vector<GLLine*> getLines() {
-		return std::vector<GLLine*>();
+	virtual std::vector<GLLine> getLines() {
+		return std::vector<GLLine>();
+	}
+	virtual void setColor(float r, float g, float b) {
+	}
+	virtual void setOutlineColor(float r, float g, float b) {
 	}
 	virtual Drawable* clone() {
 		return new Drawable();
@@ -71,8 +75,6 @@ public:
 	void setRotationY(float rotationY);
 	void setRotationZ(float rotationZ);
 	void setRotationXYZ(float rotationX, float rotationY, float rotationZ);
-	void setColor(float r, float g, float b);
-	void setOutlineColor(float r, float g, float b);
 	void drawOutline(bool drawOutline);
 protected:
 	void applyTransformations();
