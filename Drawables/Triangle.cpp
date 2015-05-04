@@ -7,37 +7,35 @@
 
 #include "Triangle.h"
 
-Triangle::Triangle(Vertex* v1, Vertex* v2, Vertex* v3) {
+Triangle::Triangle(Vertex v1, Vertex v2, Vertex v3) {
 	_triangle = new GLTriangle(v1, v2, v3);
-	_l1 = new GLLine(new Vertex(v1->getPosition()),
-			new Vertex(v2->getPosition()));
-	_l2 = new GLLine(new Vertex(v2->getPosition()),
-			new Vertex(v3->getPosition()));
-	_l3 = new GLLine(new Vertex(v3->getPosition()),
-			new Vertex(v1->getPosition()));
+	_l1 = new GLLine(Vertex(v1.getPosition()), Vertex(v2.getPosition()));
+	_l2 = new GLLine(Vertex(v2.getPosition()), Vertex(v3.getPosition()));
+	_l3 = new GLLine(Vertex(v3.getPosition()), Vertex(v1.getPosition()));
 
 	_triangles.push_back(_triangle);
 	_lines.push_back(_l1);
 	_lines.push_back(_l2);
 	_lines.push_back(_l3);
+
+	setColor(0.0, 1.0, 0.0);
 }
 
 Triangle::Triangle() {
-	Vertex* v1 = new Vertex(0.0, 0.5, 0.0, 0.0, 1.0, 0.0);
-	Vertex* v2 = new Vertex(-0.5, -0.5, 0.0, 0.0, 1.0, 0.0);
-	Vertex* v3 = new Vertex(0.5, -0.5, 0.0, 0.0, 1.0, 0.0);
+	Vertex v1 = Vertex(0.0, 0.5, 0.0);
+	Vertex v2 = Vertex(-0.5, -0.5, 0.0);
+	Vertex v3 = Vertex(0.5, -0.5, 0.0);
 	_triangle = new GLTriangle(v1, v2, v3);
-	_l1 = new GLLine(new Vertex(v1->getPosition()),
-			new Vertex(v2->getPosition()));
-	_l2 = new GLLine(new Vertex(v2->getPosition()),
-			new Vertex(v3->getPosition()));
-	_l3 = new GLLine(new Vertex(v3->getPosition()),
-			new Vertex(v1->getPosition()));
+	_l1 = new GLLine(v1, v2);
+	_l2 = new GLLine(v2, v3);
+	_l3 = new GLLine(v3, v1);
 
 	_triangles.push_back(_triangle);
 	_lines.push_back(_l1);
 	_lines.push_back(_l2);
 	_lines.push_back(_l3);
+
+	setColor(0.0, 1.0, 0.0);
 }
 
 std::vector<GLComponent*> Triangle::getComponents() {

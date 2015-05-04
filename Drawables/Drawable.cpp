@@ -41,10 +41,10 @@ void Drawable::applyTransformations() {
 	Matrix<float> modelTransformationMatrix = GLMatrix::modelTransformationMatrix(getX(), getY(), getZ(), getRotationX(), getRotationY(), getRotationZ(), getScaleX(), getScaleY(), getScaleZ());
 	Matrix<float> originalMatrix = Matrix<float>(4, 1);
 
-	std::vector<Vertex*> originalVertices;
-	std::vector<Vertex*> transformedVertices;
+	std::vector<Vertex> originalVertices;
+	std::vector<Vertex> transformedVertices;
 
-	Vertex* transformedVertex;
+	Vertex transformedVertex;
 	Matrix<float> transformedMatrix(4);
 	std::vector<float> pos;
 	std::vector<float> norm;
@@ -54,23 +54,23 @@ void Drawable::applyTransformations() {
 		transformedVertices.clear();
 
 		for (int j = 0; j < originalVertices.size(); j++) {
-			transformedVertex = originalVertices[j]->clone();
+			transformedVertex = originalVertices[j];
 
 			// Applies transformations to the vertex's position
-			pos = transformedVertex->getPosition();
+			pos = transformedVertex.getPosition();
 			pos.push_back(1);
 			originalMatrix.setVector(pos);
 
 			transformedMatrix = originalMatrix << modelTransformationMatrix;
-			transformedVertex->setPosition(transformedMatrix.get(0, 0),
+			transformedVertex.setPosition(transformedMatrix.get(0, 0),
 					transformedMatrix.get(1, 0), transformedMatrix.get(2, 0));
 
 			// Applies rotation to the vertex's normal, other transformations are irrelevant
-			norm = transformedVertex->getNormal();
+			norm = transformedVertex.getNormal();
 			norm.push_back(1);
 			originalMatrix.setVector(norm);
 			transformedMatrix = originalMatrix << rotationMatrix;
-			transformedVertex->setNormal(transformedMatrix.get(0, 0),
+			transformedVertex.setNormal(transformedMatrix.get(0, 0),
 					transformedMatrix.get(1, 0), transformedMatrix.get(2, 0));
 
 			transformedVertices.push_back(transformedVertex);

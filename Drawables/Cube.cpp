@@ -9,47 +9,47 @@
 
 Cube::Cube() {
 	// Left
-	Vertex* f1t1v1 = new Vertex(-0.5, -0.5, -0.5, 1.0, 0.0, 0.0);
-	Vertex* f1t1v2 = new Vertex(-0.5, -0.5, 0.5, 1.0, 0.0, 0.0);
-	Vertex* f1t1v3 = new Vertex(-0.5, 0.5, 0.5, 1.0, 0.0, 0.0);
-	Vertex* f1t2v1 = new Vertex(-0.5, -0.5, -0.5, 1.0, 0.0, 0.0);
-	Vertex* f1t2v2 = new Vertex(-0.5, 0.5, -0.5, 1.0, 0.0, 0.0);
-	Vertex* f1t2v3 = new Vertex(-0.5, 0.5, 0.5, 1.0, 0.0, 0.0);
+	Vertex f1t1v1 = Vertex(-0.5, -0.5, -0.5);
+	Vertex f1t1v2 = Vertex(-0.5, -0.5, 0.5);
+	Vertex f1t1v3 = Vertex(-0.5, 0.5, 0.5);
+	Vertex f1t2v1 = Vertex(-0.5, -0.5, -0.5);
+	Vertex f1t2v2 = Vertex(-0.5, 0.5, -0.5);
+	Vertex f1t2v3 = Vertex(-0.5, 0.5, 0.5);
 	// Right
-	Vertex* f2t1v1 = new Vertex(0.5, -0.5, -0.5, 1.0, 0.0, 0.0);
-	Vertex* f2t1v2 = new Vertex(0.5, -0.5, 0.5, 1.0, 0.0, 0.0);
-	Vertex* f2t1v3 = new Vertex(0.5, 0.5, 0.5, 1.0, 0.0, 0.0);
-	Vertex* f2t2v1 = new Vertex(0.5, -0.5, -0.5, 1.0, 0.0, 0.0);
-	Vertex* f2t2v2 = new Vertex(0.5, 0.5, -0.5, 1.0, 0.0, 0.0);
-	Vertex* f2t2v3 = new Vertex(0.5, 0.5, 0.5, 1.0, 0.0, 0.0);
+	Vertex f2t1v1 = Vertex(0.5, -0.5, -0.5);
+	Vertex f2t1v2 = Vertex(0.5, -0.5, 0.5);
+	Vertex f2t1v3 = Vertex(0.5, 0.5, 0.5);
+	Vertex f2t2v1 = Vertex(0.5, -0.5, -0.5);
+	Vertex f2t2v2 = Vertex(0.5, 0.5, -0.5);
+	Vertex f2t2v3 = Vertex(0.5, 0.5, 0.5);
 	// Back
-	Vertex* f3t1v1 = new Vertex(-0.5, -0.5, -0.5, 1.0, 0.0, 0.0);
-	Vertex* f3t1v2 = new Vertex(0.5, -0.5, -0.5, 1.0, 0.0, 0.0);
-	Vertex* f3t1v3 = new Vertex(0.5, 0.5, -0.5, 1.0, 0.0, 0.0);
-	Vertex* f3t2v1 = new Vertex(-0.5, -0.5, -0.5, 1.0, 0.0, 0.0);
-	Vertex* f3t2v2 = new Vertex(-0.5, 0.5, -0.5, 1.0, 0.0, 0.0);
-	Vertex* f3t2v3 = new Vertex(0.5, 0.5, -0.5, 1.0, 0.0, 0.0);
+	Vertex f3t1v1 = Vertex(-0.5, -0.5, -0.5);
+	Vertex f3t1v2 = Vertex(0.5, -0.5, -0.5);
+	Vertex f3t1v3 = Vertex(0.5, 0.5, -0.5);
+	Vertex f3t2v1 = Vertex(-0.5, -0.5, -0.5);
+	Vertex f3t2v2 = Vertex(-0.5, 0.5, -0.5);
+	Vertex f3t2v3 = Vertex(0.5, 0.5, -0.5);
 	// Front
-	Vertex* f4t1v1 = new Vertex(-0.5, -0.5, 0.5, 1.0, 0.0, 0.0);
-	Vertex* f4t1v2 = new Vertex(0.5, -0.5, 0.5, 1.0, 0.0, 0.0);
-	Vertex* f4t1v3 = new Vertex(0.5, 0.5, 0.5, 1.0, 0.0, 0.0);
-	Vertex* f4t2v1 = new Vertex(-0.5, -0.5, 0.5, 1.0, 0.0, 0.0);
-	Vertex* f4t2v2 = new Vertex(-0.5, 0.5, 0.5, 1.0, 0.0, 0.0);
-	Vertex* f4t2v3 = new Vertex(0.5, 0.5, 0.5, 1.0, 0.0, 0.0);
+	Vertex f4t1v1 = Vertex(-0.5, -0.5, 0.5);
+	Vertex f4t1v2 = Vertex(0.5, -0.5, 0.5);
+	Vertex f4t1v3 = Vertex(0.5, 0.5, 0.5);
+	Vertex f4t2v1 = Vertex(-0.5, -0.5, 0.5);
+	Vertex f4t2v2 = Vertex(-0.5, 0.5, 0.5);
+	Vertex f4t2v3 = Vertex(0.5, 0.5, 0.5);
 	// Bottom
-	Vertex* f5t1v1 = new Vertex(-0.5, -0.5, -0.5, 1.0, 0.0, 0.0);
-	Vertex* f5t1v2 = new Vertex(-0.5, -0.5, 0.5, 1.0, 0.0, 0.0);
-	Vertex* f5t1v3 = new Vertex(0.5, -0.5, 0.5, 1.0, 0.0, 0.0);
-	Vertex* f5t2v1 = new Vertex(-0.5, -0.5, -0.5, 1.0, 0.0, 0.0);
-	Vertex* f5t2v2 = new Vertex(0.5, -0.5, -0.5, 1.0, 0.0, 0.0);
-	Vertex* f5t2v3 = new Vertex(0.5, -0.5, 0.5, 1.0, 0.0, 0.0);
+	Vertex f5t1v1 = Vertex(-0.5, -0.5, -0.5);
+	Vertex f5t1v2 = Vertex(-0.5, -0.5, 0.5);
+	Vertex f5t1v3 = Vertex(0.5, -0.5, 0.5);
+	Vertex f5t2v1 = Vertex(-0.5, -0.5, -0.5);
+	Vertex f5t2v2 = Vertex(0.5, -0.5, -0.5);
+	Vertex f5t2v3 = Vertex(0.5, -0.5, 0.5);
 	// Top
-	Vertex* f6t1v1 = new Vertex(-0.5, 0.5, -0.5, 1.0, 0.0, 0.0);
-	Vertex* f6t1v2 = new Vertex(-0.5, 0.5, 0.5, 1.0, 0.0, 0.0);
-	Vertex* f6t1v3 = new Vertex(0.5, 0.5, 0.5, 1.0, 0.0, 0.0);
-	Vertex* f6t2v1 = new Vertex(-0.5, 0.5, -0.5, 1.0, 0.0, 0.0);
-	Vertex* f6t2v2 = new Vertex(0.5, 0.5, -0.5, 1.0, 0.0, 0.0);
-	Vertex* f6t2v3 = new Vertex(0.5, 0.5, 0.5, 1.0, 0.0, 0.0);
+	Vertex f6t1v1 = Vertex(-0.5, 0.5, -0.5);
+	Vertex f6t1v2 = Vertex(-0.5, 0.5, 0.5);
+	Vertex f6t1v3 = Vertex(0.5, 0.5, 0.5);
+	Vertex f6t2v1 = Vertex(-0.5, 0.5, -0.5);
+	Vertex f6t2v2 = Vertex(0.5, 0.5, -0.5);
+	Vertex f6t2v3 = Vertex(0.5, 0.5, 0.5);
 
 	_f1t1 = new GLTriangle(f1t1v1, f1t1v2, f1t1v3);
 	_f1t2 = new GLTriangle(f1t2v1, f1t2v2, f1t2v3);
@@ -64,30 +64,18 @@ Cube::Cube() {
 	_f6t1 = new GLTriangle(f6t1v1, f6t1v2, f6t1v3);
 	_f6t2 = new GLTriangle(f6t2v1, f6t2v2, f6t2v3);
 
-	_l1 = new GLLine(new Vertex(f1t1v1->getPosition()),
-			new Vertex(f1t1v2->getPosition()));
-	_l2 = new GLLine(new Vertex(f1t1v2->getPosition()),
-			new Vertex(f1t1v3->getPosition()));
-	_l3 = new GLLine(new Vertex(f1t2v1->getPosition()),
-			new Vertex(f1t2v2->getPosition()));
-	_l4 = new GLLine(new Vertex(f1t2v2->getPosition()),
-			new Vertex(f1t2v3->getPosition()));
-	_l5 = new GLLine(new Vertex(f2t1v1->getPosition()),
-			new Vertex(f2t1v2->getPosition()));
-	_l6 = new GLLine(new Vertex(f2t1v2->getPosition()),
-			new Vertex(f2t1v3->getPosition()));
-	_l7 = new GLLine(new Vertex(f2t2v1->getPosition()),
-			new Vertex(f2t2v2->getPosition()));
-	_l8 = new GLLine(new Vertex(f2t2v2->getPosition()),
-			new Vertex(f2t2v3->getPosition()));
-	_l9 = new GLLine(new Vertex(f1t1v1->getPosition()),
-			new Vertex(f2t1v1->getPosition()));
-	_l10 = new GLLine(new Vertex(f1t1v2->getPosition()),
-			new Vertex(f2t1v2->getPosition()));
-	_l11 = new GLLine(new Vertex(f1t2v2->getPosition()),
-			new Vertex(f2t2v2->getPosition()));
-	_l12 = new GLLine(new Vertex(f1t2v3->getPosition()),
-			new Vertex(f2t2v3->getPosition()));
+	_l1 = new GLLine(f1t1v1, f1t1v2);
+	_l2 = new GLLine(f1t1v2, f1t1v3);
+	_l3 = new GLLine(f1t2v1, f1t2v2);
+	_l4 = new GLLine(f1t2v2, f1t2v3);
+	_l5 = new GLLine(f2t1v1, f2t1v2);
+	_l6 = new GLLine(f2t1v2, f2t1v3);
+	_l7 = new GLLine(f2t2v1, f2t2v2);
+	_l8 = new GLLine(f2t2v2, f2t2v3);
+	_l9 = new GLLine(f1t1v1, f2t1v1);
+	_l10 = new GLLine(f1t1v2, f2t1v2);
+	_l11 = new GLLine(f1t2v2, f2t2v2);
+	_l12 = new GLLine(f1t2v3, f2t2v3);
 
 	_triangles.push_back(_f1t1);
 	_triangles.push_back(_f1t2);
@@ -114,6 +102,8 @@ Cube::Cube() {
 	_lines.push_back(_l10);
 	_lines.push_back(_l11);
 	_lines.push_back(_l12);
+
+	setColor(1.0, 0.0, 0.0);
 }
 
 std::vector<GLComponent*> Cube::getComponents() {
@@ -126,7 +116,7 @@ std::vector<GLComponent*> Cube::getComponents() {
 }
 
 std::vector<GLTriangle*> Cube::getTransformedTriangles() {
-	if(_needsUpdating)
+	if (_needsUpdating)
 		applyTransformations();
 	return ((Cube*) _transformed)->_triangles;
 }
@@ -136,7 +126,7 @@ std::vector<GLTriangle*> Cube::getTriangles() {
 }
 
 std::vector<GLLine*> Cube::getTransformedLines() {
-	if(_needsUpdating)
+	if (_needsUpdating)
 		applyTransformations();
 	return ((Cube*) _transformed)->_lines;
 }

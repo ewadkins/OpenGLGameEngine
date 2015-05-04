@@ -12,7 +12,7 @@
 
 class Triangle: public Drawable {
 public:
-	Triangle(Vertex* v1, Vertex* v2, Vertex* v3);
+	Triangle(Vertex v1, Vertex v2, Vertex v3);
 	Triangle();
 	virtual ~Triangle() {
 	}
