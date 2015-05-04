@@ -9,7 +9,7 @@
 
 int GLTriangle::_type = GL_TRIANGLES;
 
-GLTriangle::GLTriangle(Vertex v1, Vertex v2, Vertex v3) {
+GLTriangle::GLTriangle(GLVertex v1, GLVertex v2, GLVertex v3) {
 	_vertices.push_back(v1);
 	_vertices.push_back(v2);
 	_vertices.push_back(v3);
@@ -18,11 +18,11 @@ GLTriangle::GLTriangle(Vertex v1, Vertex v2, Vertex v3) {
 GLTriangle::GLTriangle() {
 }
 
-std::vector<Vertex> GLTriangle::getVertices() {
+std::vector<GLVertex> GLTriangle::getVertices() {
 	return _vertices;
 }
 
-void GLTriangle::setVertices(std::vector<Vertex> vertices) {
+void GLTriangle::setVertices(std::vector<GLVertex> vertices) {
 	_vertices = vertices;
 }
 

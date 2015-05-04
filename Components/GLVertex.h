@@ -9,21 +9,22 @@
 #define COMPONENTS_VERTEX_H_
 
 #include <vector>
+#include <string>
 
-class Vertex {
+class GLVertex {
 public:
-	Vertex();
-	Vertex(float x, float y, float z);
-	Vertex(float x, float y, float z, float r, float g, float b);
-	Vertex(float x, float y, float z, float r, float g, float b, float normX,
+	GLVertex();
+	GLVertex(float x, float y, float z);
+	GLVertex(float x, float y, float z, float r, float g, float b);
+	GLVertex(float x, float y, float z, float r, float g, float b, float normX,
 			float normY, float normZ);
-	Vertex(float x, float y, float z, float r, float g, float b, float normX,
+	GLVertex(float x, float y, float z, float r, float g, float b, float normX,
 			float normY, float normZ, float texX, float texY);
-	Vertex(std::vector<float> pos);
-	Vertex(std::vector<float> pos, std::vector<float> color);
-	Vertex(std::vector<float> pos, std::vector<float> color, std::vector<float> norm);
-	Vertex(std::vector<float> pos, std::vector<float> color, std::vector<float> norm, std::vector<float> tex);
-	virtual ~Vertex() {
+	GLVertex(std::vector<float> pos);
+	GLVertex(std::vector<float> pos, std::vector<float> color);
+	GLVertex(std::vector<float> pos, std::vector<float> color, std::vector<float> norm);
+	GLVertex(std::vector<float> pos, std::vector<float> color, std::vector<float> norm, std::vector<float> tex);
+	virtual ~GLVertex() {
 	}
 	void setPosition(float x, float y, float z);
 	void setColor(float r, float g, float b);
@@ -33,7 +34,8 @@ public:
 	std::vector<float> getColor();
 	std::vector<float> getNormal();
 	std::vector<float> getTexCoords();
-	Vertex* clone();
+	GLVertex* clone();
+	std::string toString();
 private:
 	float _x, _y, _z, _r, _g, _b, _normX, _normY, _normZ, _texX, _texY;
 };

@@ -7,7 +7,9 @@
 
 #include "Drawable.h"
 
-Drawable::Drawable() {
+Drawable::Drawable() :
+		_modelTransformationMatrix(Matrix<float>(4)), _rotationMatrix(
+				Matrix<float>(4)) {
 	_x = 0;
 	_y = 0;
 	_z = 0;
@@ -27,57 +29,79 @@ void Drawable::applyTransformations() {
 
 	_transformed = clone();
 
-	std::vector<GLComponent> originalComponents = getComponents();
-	std::vector<GLComponent> transformedComponents =
-			_transformed->getComponents();
-
-	//Matrix<float> scalarMatrix = GLMatrix::scalarMatrix(getScaleX(),
-	//		getScaleY(), getScaleZ());
-	Matrix<float> rotationMatrix = GLMatrix::rotationMatrixXYZ(getRotationX(),
+	_rotationMatrix = GLMatrix::rotationMatrixXYZ(getRotationX(),
 			getRotationY(), getRotationZ());
-	//Matrix<float> translationMatrix = GLMatrix::translationMatrix(getX(),
-	//		getY(), getZ());
 
-	Matrix<float> modelTransformationMatrix = GLMatrix::modelTransformationMatrix(getX(), getY(), getZ(), getRotationX(), getRotationY(), getRotationZ(), getScaleX(), getScaleY(), getScaleZ());
+	_modelTransformationMatrix = GLMatrix::modelTransformationMatrix(getX(),
+			getY(), getZ(), getRotationX(), getRotationY(), getRotationZ(),
+			getScaleX(), getScaleY(), getScaleZ());
+
+	std::vector<GLVertex> originalVertices;
+	std::vector<GLVertex> transformedVertices;
+
+	for (int i = 0; i < _transformed->_triangles.size(); i++) {
+		originalVertices = _transformed->_triangles[i].getVertices();
+		transformedVertices.clear();
+		for (int j = 0; j < originalVertices.size(); j++)
+			transformedVertices.push_back(transform(originalVertices[j]));
+		_transformed->_triangles[i].setVertices(transformedVertices);
+	}
+
+	for (int i = 0; i < _transformed->_lines.size(); i++) {
+		originalVertices = _transformed->_lines[i].getVertices();
+		transformedVertices.clear();
+		for (int j = 0; j < originalVertices.size(); j++)
+			transformedVertices.push_back(transform(originalVertices[j]));
+		_transformed->_lines[i].setVertices(transformedVertices);
+	}
+
+	_needsUpdating = false;
+}
+
+GLVertex Drawable::transform(GLVertex vertex) {
 	Matrix<float> originalMatrix = Matrix<float>(4, 1);
 
-	std::vector<Vertex> originalVertices;
-	std::vector<Vertex> transformedVertices;
+	// Applies transformations to the vertex's position
+	std::vector<float> pos = vertex.getPosition();
+	pos.push_back(1);
+	originalMatrix.setVector(pos);
 
-	Vertex transformedVertex;
-	Matrix<float> transformedMatrix(4);
-	std::vector<float> pos;
-	std::vector<float> norm;
+	Matrix<float> transformedMatrix = originalMatrix
+			<< _modelTransformationMatrix;
+	vertex.setPosition(transformedMatrix.get(0, 0),
+			transformedMatrix.get(1, 0), transformedMatrix.get(2, 0));
 
-	for (int i = 0; i < originalComponents.size(); i++) {
-		originalVertices = originalComponents[i].getVertices();
-		transformedVertices.clear();
+	// Applies rotation to the vertex's normal, other transformations are irrelevant
+	std::vector<float> norm = vertex.getNormal();
+	norm.push_back(1);
+	originalMatrix.setVector(norm);
+	transformedMatrix = originalMatrix << _rotationMatrix;
+	vertex.setNormal(transformedMatrix.get(0, 0),
+			transformedMatrix.get(1, 0), transformedMatrix.get(2, 0));
 
-		for (int j = 0; j < originalVertices.size(); j++) {
-			transformedVertex = originalVertices[j];
+	return vertex;
+}
 
-			// Applies transformations to the vertex's position
-			pos = transformedVertex.getPosition();
-			pos.push_back(1);
-			originalMatrix.setVector(pos);
+std::vector<GLTriangle> Drawable::getTransformedTriangles() {
+	if (_needsUpdating)
+		applyTransformations();
+	return _transformed->_triangles;
+}
 
-			transformedMatrix = originalMatrix << modelTransformationMatrix;
-			transformedVertex.setPosition(transformedMatrix.get(0, 0),
-					transformedMatrix.get(1, 0), transformedMatrix.get(2, 0));
+std::vector<GLLine> Drawable::getTransformedLines() {
+	if (_needsUpdating)
+		applyTransformations();
+	return _transformed->_lines;
+}
 
-			// Applies rotation to the vertex's normal, other transformations are irrelevant
-			norm = transformedVertex.getNormal();
-			norm.push_back(1);
-			originalMatrix.setVector(norm);
-			transformedMatrix = originalMatrix << rotationMatrix;
-			transformedVertex.setNormal(transformedMatrix.get(0, 0),
-					transformedMatrix.get(1, 0), transformedMatrix.get(2, 0));
+void Drawable::setColor(float r, float g, float b) {
+	for (int i = 0; i < _triangles.size(); i++)
+		_triangles[i].setColor(r, g, b);
+}
 
-			transformedVertices.push_back(transformedVertex);
-		}
-		transformedComponents[i].setVertices(transformedVertices);
-	}
-	_needsUpdating = false;
+void Drawable::setOutlineColor(float r, float g, float b) {
+	for (int i = 0; i < _lines.size(); i++)
+		_lines[i].setColor(r, g, b);
 }
 
 // Moves the drawable in the x direction by the specified distance
@@ -268,9 +292,5 @@ void Drawable::setRotationXYZ(float rotationX, float rotationY,
 	_rotationY = rotationY;
 	_rotationZ = rotationZ;
 	_needsUpdating = true;
-}
-
-void Drawable::drawOutline(bool drawOutline) {
-	_drawOutline = drawOutline;
 }
 

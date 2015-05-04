@@ -5,9 +5,9 @@
  *      Author: ericwadkins
  */
 
-#include "../Components/Vertex.h"
+#include "GLVertex.h"
 
-Vertex::Vertex() {
+GLVertex::GLVertex() {
 	_x = 0;
 	_y = 0;
 	_z = 0;
@@ -21,7 +21,7 @@ Vertex::Vertex() {
 	_texY = 0;
 }
 
-Vertex::Vertex(float x, float y, float z) {
+GLVertex::GLVertex(float x, float y, float z) {
 	_x = x;
 	_y = y;
 	_z = z;
@@ -35,7 +35,7 @@ Vertex::Vertex(float x, float y, float z) {
 	_texY = 0;
 }
 
-Vertex::Vertex(float x, float y, float z, float r, float g, float b) {
+GLVertex::GLVertex(float x, float y, float z, float r, float g, float b) {
 	_x = x;
 	_y = y;
 	_z = z;
@@ -49,7 +49,7 @@ Vertex::Vertex(float x, float y, float z, float r, float g, float b) {
 	_texY = 0;
 }
 
-Vertex::Vertex(float x, float y, float z, float r, float g, float b, float normX, float normY, float normZ) {
+GLVertex::GLVertex(float x, float y, float z, float r, float g, float b, float normX, float normY, float normZ) {
 	_x = x;
 	_y = y;
 	_z = z;
@@ -63,7 +63,7 @@ Vertex::Vertex(float x, float y, float z, float r, float g, float b, float normX
 	_texY = 0;
 }
 
-Vertex::Vertex(float x, float y, float z, float r, float g, float b, float normX, float normY, float normZ, float texX, float texY) {
+GLVertex::GLVertex(float x, float y, float z, float r, float g, float b, float normX, float normY, float normZ, float texX, float texY) {
 	_x = x;
 	_y = y;
 	_z = z;
@@ -77,7 +77,7 @@ Vertex::Vertex(float x, float y, float z, float r, float g, float b, float normX
 	_texY = texY;
 }
 
-Vertex::Vertex(std::vector<float> pos) {
+GLVertex::GLVertex(std::vector<float> pos) {
 	_x = pos[0];
 	_y = pos[1];
 	_z = pos[2];
@@ -91,7 +91,7 @@ Vertex::Vertex(std::vector<float> pos) {
 	_texY = 0;
 }
 
-Vertex::Vertex(std::vector<float> pos, std::vector<float> color) {
+GLVertex::GLVertex(std::vector<float> pos, std::vector<float> color) {
 	_x = pos[0];
 	_y = pos[1];
 	_z = pos[2];
@@ -105,7 +105,7 @@ Vertex::Vertex(std::vector<float> pos, std::vector<float> color) {
 	_texY = 0;
 }
 
-Vertex::Vertex(std::vector<float> pos, std::vector<float> color, std::vector<float> norm) {
+GLVertex::GLVertex(std::vector<float> pos, std::vector<float> color, std::vector<float> norm) {
 	_x = pos[0];
 	_y = pos[1];
 	_z = pos[2];
@@ -119,7 +119,7 @@ Vertex::Vertex(std::vector<float> pos, std::vector<float> color, std::vector<flo
 	_texY = 0;
 }
 
-Vertex::Vertex(std::vector<float> pos, std::vector<float> color, std::vector<float> norm, std::vector<float> tex) {
+GLVertex::GLVertex(std::vector<float> pos, std::vector<float> color, std::vector<float> norm, std::vector<float> tex) {
 	_x = pos[0];
 	_y = pos[1];
 	_z = pos[2];
@@ -133,54 +133,64 @@ Vertex::Vertex(std::vector<float> pos, std::vector<float> color, std::vector<flo
 	_texY = tex[1];
 }
 
-void Vertex::setPosition(float x, float y, float z) {
+void GLVertex::setPosition(float x, float y, float z) {
 	_x = x;
 	_y = y;
 	_z = z;
 }
 
-void Vertex::setColor(float r, float g, float b) {
+void GLVertex::setColor(float r, float g, float b) {
 	_r = r;
 	_g = g;
 	_b = b;
 }
 
-void Vertex::setNormal(float normX, float normY, float normZ) {
+void GLVertex::setNormal(float normX, float normY, float normZ) {
 	_normX = normX;
 	_normY = normY;
 	_normZ = normZ;
 }
 
-void Vertex::setTexCoords(float texX, float texY) {
+void GLVertex::setTexCoords(float texX, float texY) {
 	_texX = texX;
 	_texY = texY;
 }
 
-std::vector<float> Vertex::getPosition() {
+std::vector<float> GLVertex::getPosition() {
 	float arr[] = { _x, _y, _z };
 	std::vector<float> vec(arr, arr + sizeof(arr) / sizeof(arr[0]));
 	return vec;
 }
 
-std::vector<float> Vertex::getColor() {
+std::vector<float> GLVertex::getColor() {
 	float arr[] = { _r, _g, _b };
 	std::vector<float> vec(arr, arr + sizeof(arr) / sizeof(arr[0]));
 	return vec;
 }
 
-std::vector<float> Vertex::getNormal() {
+std::vector<float> GLVertex::getNormal() {
 	float arr[] = { _normX, _normY, _normZ };
 	std::vector<float> vec(arr, arr + sizeof(arr) / sizeof(arr[0]));
 	return vec;
 }
 
-std::vector<float> Vertex::getTexCoords() {
+std::vector<float> GLVertex::getTexCoords() {
 	float arr[] = { _texX, _texY };
 	std::vector<float> vec(arr, arr + sizeof(arr) / sizeof(arr[0]));
 	return vec;
 }
 
-Vertex* Vertex::clone() {
-	return new Vertex(getPosition(), getColor(), getNormal(), getTexCoords());
+GLVertex* GLVertex::clone() {
+	return new GLVertex(getPosition(), getColor(), getNormal(), getTexCoords());
+}
+
+std::string GLVertex::toString() {
+	std::string str = "Vertex{";
+	str += "Position(" + std::to_string(_x) + ", " + std::to_string(_y) + ", " + std::to_string(_z) + "), ";
+	str += "Color(" + std::to_string(_r) + ", " + std::to_string(_g) + ", " + std::to_string(_b) + "), ";
+	str += "Normal(" + std::to_string(_normX) + ", " + std::to_string(_normY) + ", " + std::to_string(_normZ) + "), ";
+	str += "TexCoords(" + std::to_string(_texX) + ", " + std::to_string(_texY) + ")";
+	str += "}";
+	return str;
 }
 

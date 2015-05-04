@@ -8,22 +8,22 @@
 #ifndef COMPONENTS_GLLINE_H_
 #define COMPONENTS_GLLINE_H_
 
-#include "../Components/GLComponent.h"
+#include "GLComponent.h"
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
-class GLLine : public GLComponent {
+class GLLine : public GLComponent{
 public:
-	GLLine(Vertex v1, Vertex v2);
+	GLLine(GLVertex v1, GLVertex v2);
 	GLLine();
 	virtual ~GLLine() {
 	}
-	virtual std::vector<Vertex> getVertices();
-	virtual void setVertices(std::vector<Vertex> vertices);
+	virtual std::vector<GLVertex> getVertices();
+	virtual void setVertices(std::vector<GLVertex> vertices);
 	GLLine* clone();
 	static int _type;
 private:
-	std::vector<Vertex> _vertices;
+	std::vector<GLVertex> _vertices;
 };
 
 #endif /* COMPONENTS_GLLINE_H_ */

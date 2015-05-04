@@ -7,9 +7,9 @@ Input/Keyboard.d: ../Input/Keyboard.cpp ../Input/Keyboard.h \
   ../Input/../Math/ComplexMatrix.h ../Input/../Render/Renderer.h \
   ../Input/../Render/ShaderProgram.h \
   ../Input/../Render/../Drawables/Drawable.h \
-  ../Input/../Render/../Drawables/../Components/GLComponent.h \
-  ../Input/../Render/../Drawables/../Components/../Components/Vertex.h \
   ../Input/../Render/../Drawables/../Components/GLLine.h \
+  ../Input/../Render/../Drawables/../Components/GLComponent.h \
+  ../Input/../Render/../Drawables/../Components/GLVertex.h \
   ../Input/../Render/../Drawables/../Components/GLTriangle.h \
   ../Input/../Render/../Drawables/../Math/GLMatrix.h \
   ../Input/../Render/../Drawables/Triangle.h \
@@ -42,11 +42,11 @@ Input/Keyboard.d: ../Input/Keyboard.cpp ../Input/Keyboard.h \
 
 ../Input/../Render/../Drawables/Drawable.h:
 
+../Input/../Render/../Drawables/../Components/GLLine.h:
+
 ../Input/../Render/../Drawables/../Components/GLComponent.h:
 
-../Input/../Render/../Drawables/../Components/../Components/Vertex.h:
-
-../Input/../Render/../Drawables/../Components/GLLine.h:
+../Input/../Render/../Drawables/../Components/GLVertex.h:
 
 ../Input/../Render/../Drawables/../Components/GLTriangle.h:
 

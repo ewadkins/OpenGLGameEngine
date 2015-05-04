@@ -9,7 +9,7 @@
 
 int GLLine::_type = GL_LINES;
 
-GLLine::GLLine(Vertex v1, Vertex v2) {
+GLLine::GLLine(GLVertex v1, GLVertex v2) {
 	_vertices.push_back(v1);
 	_vertices.push_back(v2);
 }
@@ -17,11 +17,11 @@ GLLine::GLLine(Vertex v1, Vertex v2) {
 GLLine::GLLine() {
 }
 
-std::vector<Vertex> GLLine::getVertices() {
+std::vector<GLVertex> GLLine::getVertices() {
 	return _vertices;
 }
 
-void GLLine::setVertices(std::vector<Vertex> vertices) {
+void GLLine::setVertices(std::vector<GLVertex> vertices) {
 	_vertices = vertices;
 }
 

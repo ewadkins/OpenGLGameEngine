@@ -8,9 +8,9 @@
 #ifndef DRAWABLE_H_
 #define DRAWABLE_H_
 
-#include "../Components/GLComponent.h"
 #include "../Components/GLLine.h"
 #include "../Components/GLTriangle.h"
+#include "../Components/GLVertex.h"
 #include "../Math/Matrix.h"
 #include "../Math/GLMatrix.h"
 #include <vector>
@@ -20,28 +20,14 @@ public:
 	Drawable();
 	virtual ~Drawable() {
 	}
-	virtual std::vector<GLComponent> getComponents() {
-		return std::vector<GLComponent>();
-	}
-	virtual std::vector<GLTriangle> getTransformedTriangles() {
-		return std::vector<GLTriangle>();
-	}
-	virtual std::vector<GLTriangle> getTriangles() {
-		return std::vector<GLTriangle>();
-	}
-	virtual std::vector<GLLine> getTransformedLines() {
-		return std::vector<GLLine>();
-	}
-	virtual std::vector<GLLine> getLines() {
-		return std::vector<GLLine>();
-	}
-	virtual void setColor(float r, float g, float b) {
-	}
-	virtual void setOutlineColor(float r, float g, float b) {
-	}
 	virtual Drawable* clone() {
 		return new Drawable();
 	}
+	std::vector<GLTriangle> getTransformedTriangles();
+	std::vector<GLLine> getTransformedLines();
+	void setColor(float r, float g, float b);
+	void setOutlineColor(float r, float g, float b);
+	void drawOutline(bool drawOutline);
 	void translateX(float x);
 	void translateY(float y);
 	void translateZ(float z);
@@ -75,14 +61,17 @@ public:
 	void setRotationY(float rotationY);
 	void setRotationZ(float rotationZ);
 	void setRotationXYZ(float rotationX, float rotationY, float rotationZ);
-	void drawOutline(bool drawOutline);
 protected:
 	void applyTransformations();
+	GLVertex transform(GLVertex original);
+	std::vector<GLTriangle> _triangles;
+	std::vector<GLLine> _lines;
 	Drawable* _transformed;
 	bool _needsUpdating;
 	bool _drawOutline;
 private:
 	float _x, _y, _z, _scaleX, _scaleY, _scaleZ, _rotationX, _rotationY, _rotationZ;
+	Matrix<float> _modelTransformationMatrix, _rotationMatrix;
 };
 
 #endif /* DRAWABLE_H_ */

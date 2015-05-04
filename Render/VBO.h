@@ -10,7 +10,7 @@
 
 #include "../Components/GLLine.h"
 #include "../Components/GLTriangle.h"
-#include "../Components/Vertex.h"
+#include "../Components/GLVertex.h"
 #include <vector>
 #include <iostream>
 #include <GL/glew.h>

@@ -20,7 +20,7 @@
 #include "../Components/GLLine.h"
 #include "../Components/GLTriangle.h"
 #include "VBO.h"
-#include "../Components/Vertex.h"
+#include "../Components/GLVertex.h"
 
 class Application;
 
