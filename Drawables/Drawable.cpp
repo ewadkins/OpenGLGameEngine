@@ -7,9 +7,7 @@
 
 #include "Drawable.h"
 
-Drawable::Drawable() :
-		_modelTransformationMatrix(Matrix<float>(4)), _rotationMatrix(
-				Matrix<float>(4)) {
+Drawable::Drawable() {
 	_x = 0;
 	_y = 0;
 	_z = 0;
@@ -19,8 +17,41 @@ Drawable::Drawable() :
 	_rotationX = 0;
 	_rotationY = 0;
 	_rotationZ = 0;
+	_transformed = nullptr;
 	_needsUpdating = true;
 	_drawOutline = true;
+	_drawFaces = true;
+}
+
+// Returns a transformed version of this drawable
+void Drawable::applyTransformations() {
+
+	_transformed = clone();
+
+	Matrix<float> rotationMatrix = GLMatrix::rotationMatrixXYZ(getRotationX(),
+			getRotationY(), getRotationZ());
+
+	Matrix<float> modelTransformationMatrix = GLMatrix::modelTransformationMatrix(getX(),
+			getY(), getZ(), getRotationX(), getRotationY(), getRotationZ(),
+			getScaleX(), getScaleY(), getScaleZ());
+
+	std::vector<GLVertex> vertices;
+
+	for (int i = 0; i < _transformed->_triangles.size(); i++) {
+		vertices = _transformed->_triangles[i].getVertices();
+		for (int j = 0; j < vertices.size(); j++)
+			vertices[j].transform(modelTransformationMatrix, rotationMatrix);
+		_transformed->_triangles[i].setVertices(vertices);
+	}
+
+	for (int i = 0; i < _transformed->_lines.size(); i++) {
+		vertices = _transformed->_lines[i].getVertices();
+		for (int j = 0; j < vertices.size(); j++)
+			vertices[j].transform(modelTransformationMatrix, rotationMatrix);
+		_transformed->_lines[i].setVertices(vertices);
+	}
+
+	_needsUpdating = false;
 }
 
 std::vector<GLTriangle> Drawable::getTriangles() {
@@ -31,6 +62,18 @@ std::vector<GLLine> Drawable::getLines() {
 	return _lines;
 }
 
+std::vector<GLTriangle> Drawable::getTransformedTriangles() {
+	if (_needsUpdating)
+		applyTransformations();
+	return _transformed->_triangles;
+}
+
+std::vector<GLLine> Drawable::getTransformedLines() {
+	if (_needsUpdating)
+		applyTransformations();
+	return _transformed->_lines;
+}
+
 void Drawable::setColor(float r, float g, float b) {
 	for (int i = 0; i < _triangles.size(); i++)
 		_triangles[i].setColor(r, g, b);
@@ -39,6 +82,14 @@ void Drawable::setColor(float r, float g, float b) {
 void Drawable::setOutlineColor(float r, float g, float b) {
 	for (int i = 0; i < _lines.size(); i++)
 		_lines[i].setColor(r, g, b);
+}
+
+bool Drawable::getDrawFaces() {
+	return _drawFaces;
+}
+
+void Drawable::setDrawFaces(bool drawFaces) {
+	_drawFaces = drawFaces;
 }
 
 bool Drawable::getDrawOutline() {

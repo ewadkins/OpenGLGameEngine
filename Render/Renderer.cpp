@@ -161,39 +161,19 @@ void Renderer::updateStaticVBOs() {
 	std::vector<GLTriangle> triangles;
 	std::vector<GLLine> lines;
 
+	// Uses pre-transformed versions of each drawable, which prevents recalculation if unnecessary
 	for (int i = 0; i < _staticDrawables.size(); i++) {
-		Drawable* d = _staticDrawables[i];
-		Matrix<float> modelTransformationMatrix =
-				GLMatrix::modelTransformationMatrix(d->getX(), d->getY(),
-						d->getZ(), d->getRotationX(), d->getRotationY(),
-						d->getRotationZ(), d->getScaleX(), d->getScaleY(),
-						d->getScaleZ());
 
-		Matrix<float> rotationMatrix = GLMatrix::rotationMatrixXYZ(
-				d->getRotationX(), d->getRotationY(), d->getRotationZ());
+		triangles = _staticDrawables[i]->getTransformedTriangles();
+		lines = _staticDrawables[i]->getTransformedLines();
 
-		triangles = _staticDrawables[i]->getTriangles();
-		lines = _staticDrawables[i]->getLines();
+		if (_staticDrawables[i]->getDrawFaces())
+			for (int j = 0; j < triangles.size(); j++)
+				_staticTriangleVBO->add(triangles[j]);
 
-		for (int j = 0; j < triangles.size(); j++) {
-			vertices = triangles[j].getVertices();
-			for (int k = 0; k < vertices.size(); k++)
-				vertices[k].transform(modelTransformationMatrix,
-						rotationMatrix);
-			triangles[j].setVertices(vertices);
-			_staticTriangleVBO->add(triangles[j]);
-		}
-
-		if (_staticDrawables[i]->getDrawOutline()) {
-			for (int j = 0; j < triangles.size(); j++) {
-				vertices = lines[j].getVertices();
-				for (int k = 0; k < vertices.size(); k++)
-					vertices[k].transform(modelTransformationMatrix,
-							rotationMatrix);
-				lines[j].setVertices(vertices);
+		if (_staticDrawables[i]->getDrawOutline())
+			for (int j = 0; j < lines.size(); j++)
 				_staticLineVBO->add(lines[j]);
-			}
-		}
 	}
 
 	_staticTriangleVBO->updateData();
@@ -211,39 +191,19 @@ void Renderer::updateDynamicVBOs() {
 	std::vector<GLTriangle> triangles;
 	std::vector<GLLine> lines;
 
+	// Uses pre-transformed versions of each drawable, which prevents recalculation if unnecessary
 	for (int i = 0; i < _dynamicDrawables.size(); i++) {
-		Drawable* d = _dynamicDrawables[i];
-		Matrix<float> modelTransformationMatrix =
-				GLMatrix::modelTransformationMatrix(d->getX(), d->getY(),
-						d->getZ(), d->getRotationX(), d->getRotationY(),
-						d->getRotationZ(), d->getScaleX(), d->getScaleY(),
-						d->getScaleZ());
 
-		Matrix<float> rotationMatrix = GLMatrix::rotationMatrixXYZ(
-				d->getRotationX(), d->getRotationY(), d->getRotationZ());
+		triangles = _dynamicDrawables[i]->getTransformedTriangles();
+		lines = _dynamicDrawables[i]->getTransformedLines();
 
-		triangles = _dynamicDrawables[i]->getTriangles();
-		lines = _dynamicDrawables[i]->getLines();
+		if (_dynamicDrawables[i]->getDrawFaces())
+			for (int j = 0; j < triangles.size(); j++)
+				_dynamicTriangleVBO->add(triangles[j]);
 
-		for (int j = 0; j < triangles.size(); j++) {
-			vertices = triangles[j].getVertices();
-			for (int k = 0; k < vertices.size(); k++)
-				vertices[k].transform(modelTransformationMatrix,
-						rotationMatrix);
-			triangles[j].setVertices(vertices);
-			_dynamicTriangleVBO->add(triangles[j]);
-		}
-
-		if (_dynamicDrawables[i]->getDrawOutline()) {
-			for (int j = 0; j < triangles.size(); j++) {
-				vertices = lines[j].getVertices();
-				for (int k = 0; k < vertices.size(); k++)
-					vertices[k].transform(modelTransformationMatrix,
-							rotationMatrix);
-				lines[j].setVertices(vertices);
+		if (_dynamicDrawables[i]->getDrawOutline())
+			for (int j = 0; j < lines.size(); j++)
 				_dynamicLineVBO->add(lines[j]);
-			}
-		}
 	}
 
 	_dynamicTriangleVBO->updateData();
@@ -261,6 +221,7 @@ void Renderer::updateStreamVBOs() {
 	std::vector<GLTriangle> triangles;
 	std::vector<GLLine> lines;
 
+	// Transforms each drawable on the spot to increase performance for rendering stream drawables
 	for (int i = 0; i < _streamDrawables.size(); i++) {
 		Drawable* d = _streamDrawables[i];
 		Matrix<float> modelTransformationMatrix =
@@ -275,17 +236,19 @@ void Renderer::updateStreamVBOs() {
 		triangles = _streamDrawables[i]->getTriangles();
 		lines = _streamDrawables[i]->getLines();
 
-		for (int j = 0; j < triangles.size(); j++) {
-			vertices = triangles[j].getVertices();
-			for (int k = 0; k < vertices.size(); k++)
-				vertices[k].transform(modelTransformationMatrix,
-						rotationMatrix);
-			triangles[j].setVertices(vertices);
-			_streamTriangleVBO->add(triangles[j]);
+		if (_streamDrawables[i]->getDrawFaces()) {
+			for (int j = 0; j < triangles.size(); j++) {
+				vertices = triangles[j].getVertices();
+				for (int k = 0; k < vertices.size(); k++)
+					vertices[k].transform(modelTransformationMatrix,
+							rotationMatrix);
+				triangles[j].setVertices(vertices);
+				_streamTriangleVBO->add(triangles[j]);
+			}
 		}
 
 		if (_streamDrawables[i]->getDrawOutline()) {
-			for (int j = 0; j < triangles.size(); j++) {
+			for (int j = 0; j < lines.size(); j++) {
 				vertices = lines[j].getVertices();
 				for (int k = 0; k < vertices.size(); k++)
 					vertices[k].transform(modelTransformationMatrix,

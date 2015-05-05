@@ -104,7 +104,6 @@ void VBO<T>::create() {
 	// Unbind the VBO and VAO
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
-
 }
 
 template<typename T>

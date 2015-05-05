@@ -25,8 +25,12 @@ public:
 	}
 	std::vector<GLTriangle> getTriangles();
 	std::vector<GLLine> getLines();
+	std::vector<GLTriangle> getTransformedTriangles();
+	std::vector<GLLine> getTransformedLines();
 	void setColor(float r, float g, float b);
 	void setOutlineColor(float r, float g, float b);
+	bool getDrawFaces();
+	void setDrawFaces(bool drawFaces);
 	bool getDrawOutline();
 	void setDrawOutline(bool drawOutline);
 	void translateX(float x);
@@ -63,13 +67,15 @@ public:
 	void setRotationZ(float rotationZ);
 	void setRotationXYZ(float rotationX, float rotationY, float rotationZ);
 protected:
+	void applyTransformations();
 	std::vector<GLTriangle> _triangles;
 	std::vector<GLLine> _lines;
+	Drawable* _transformed;
 	bool _needsUpdating;
 	bool _drawOutline;
+	bool _drawFaces;
 private:
 	float _x, _y, _z, _scaleX, _scaleY, _scaleZ, _rotationX, _rotationY, _rotationZ;
-	Matrix<float> _modelTransformationMatrix, _rotationMatrix;
 };
 
 #endif /* DRAWABLE_H_ */

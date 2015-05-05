@@ -72,10 +72,10 @@ Cube::Cube() {
 	_lines.push_back(GLLine(f2t1v2, f2t1v3));
 	_lines.push_back(GLLine(f2t2v1, f2t2v2));
 	_lines.push_back(GLLine(f2t2v2, f2t2v3));
-	_lines.push_back(GLLine(f1t1v1, f2t1v1));
+	_lines.push_back(GLLine(f1t1v1, f2t1v3));
 	_lines.push_back(GLLine(f1t1v2, f2t1v2));
 	_lines.push_back(GLLine(f1t2v2, f2t2v2));
-	_lines.push_back(GLLine(f1t2v3, f2t2v3));
+	_lines.push_back(GLLine(f1t2v1, f2t2v3));
 
 	setColor(1.0, 0.0, 0.0);
 }
