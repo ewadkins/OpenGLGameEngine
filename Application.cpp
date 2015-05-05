@@ -407,6 +407,8 @@ void Application::gameLoop() {
 
 	clock_t lastTime;
 
+	std::vector<float> fpsList;
+
 	// Game loop, while window close is not requested
 	while (!glfwWindowShouldClose(_window)) {
 
@@ -415,6 +417,16 @@ void Application::gameLoop() {
 		float fps = CLOCKS_PER_SEC / ((float) delta);
 		updateAverageFPS(fps);
 		_logger->log("FPS: ").log((int) _averageFPS).endLine();
+
+
+		fpsList.push_back(_averageFPS);
+		float avg = 0;
+		for (int i = 0; i < fpsList.size(); i++)
+			avg += fpsList[i];
+		avg /= fpsList.size();
+		std::cout << "Average FPS: " << avg << std::endl;
+
+
 		lastTime = clock();
 
 		static int count = 0;
@@ -451,10 +463,11 @@ int Application::start() {
 
 			} catch (const char* str) {
 				// Fatal error purposely thrown from within the application
-				_logger->endLine().setIndent(0).log(
-						"*** Stopping Application (").log(str).log(
-						") ***").endLine();
-
+				std::string string = std::string(str);
+				if (string.find("\n") == std::string::npos)
+					_logger->endLine().setIndent(0).log("*** Stopping Application (").log(str).log(") ***").endLine();
+				else
+					_logger->endLine().setIndent(0).log("*** Stopping Application ***").endLine().log(str).endLine();
 			}
 		} catch (int e) {
 			// Error thrown to signify the end of the application
@@ -480,7 +493,7 @@ int Application::start() {
 
 void Application::warn(const char* warning) {
 	// Logs a warning message
-	_logger->endLine().log("* WARNING: ").log(warning).log(" *").endLine();
+	_logger->log("WARNING: ").log(warning).endLine();
 }
 
 void Application::stop(const char* reason) {

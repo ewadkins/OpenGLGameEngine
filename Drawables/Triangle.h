@@ -12,9 +12,9 @@
 
 class Triangle: public Drawable {
 public:
+	Triangle();
 	Triangle(GLVertex v1, GLVertex v2, GLVertex v3);
 	Triangle(Triangle* other);
-	Triangle();
 	virtual ~Triangle() {
 	}
 	virtual Drawable* clone();

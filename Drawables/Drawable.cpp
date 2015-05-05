@@ -21,77 +21,14 @@ Drawable::Drawable() :
 	_rotationZ = 0;
 	_needsUpdating = true;
 	_drawOutline = true;
-	_transformed = nullptr;
 }
 
-// Returns a transformed version of this drawable
-void Drawable::applyTransformations() {
-
-	_transformed = clone();
-
-	_rotationMatrix = GLMatrix::rotationMatrixXYZ(getRotationX(),
-			getRotationY(), getRotationZ());
-
-	_modelTransformationMatrix = GLMatrix::modelTransformationMatrix(getX(),
-			getY(), getZ(), getRotationX(), getRotationY(), getRotationZ(),
-			getScaleX(), getScaleY(), getScaleZ());
-
-	std::vector<GLVertex> originalVertices;
-	std::vector<GLVertex> transformedVertices;
-
-	for (int i = 0; i < _transformed->_triangles.size(); i++) {
-		originalVertices = _transformed->_triangles[i].getVertices();
-		transformedVertices.clear();
-		for (int j = 0; j < originalVertices.size(); j++)
-			transformedVertices.push_back(transform(originalVertices[j]));
-		_transformed->_triangles[i].setVertices(transformedVertices);
-	}
-
-	for (int i = 0; i < _transformed->_lines.size(); i++) {
-		originalVertices = _transformed->_lines[i].getVertices();
-		transformedVertices.clear();
-		for (int j = 0; j < originalVertices.size(); j++)
-			transformedVertices.push_back(transform(originalVertices[j]));
-		_transformed->_lines[i].setVertices(transformedVertices);
-	}
-
-	_needsUpdating = false;
+std::vector<GLTriangle> Drawable::getTriangles() {
+	return _triangles;
 }
 
-GLVertex Drawable::transform(GLVertex vertex) {
-	Matrix<float> originalMatrix = Matrix<float>(4, 1);
-
-	// Applies transformations to the vertex's position
-	std::vector<float> pos = vertex.getPosition();
-	pos.push_back(1);
-	originalMatrix.setVector(pos);
-
-	Matrix<float> transformedMatrix = originalMatrix
-			<< _modelTransformationMatrix;
-	vertex.setPosition(transformedMatrix.get(0, 0),
-			transformedMatrix.get(1, 0), transformedMatrix.get(2, 0));
-
-	// Applies rotation to the vertex's normal, other transformations are irrelevant
-	std::vector<float> norm = vertex.getNormal();
-	norm.push_back(1);
-	originalMatrix.setVector(norm);
-	transformedMatrix = originalMatrix << _rotationMatrix;
-	vertex.setNormal(transformedMatrix.get(0, 0),
-			transformedMatrix.get(1, 0), transformedMatrix.get(2, 0));
-
-	return vertex;
-}
-
-std::vector<GLTriangle> Drawable::getTransformedTriangles() {
-	if (_needsUpdating)
-		applyTransformations();
-	return _transformed->_triangles;
-}
-
-std::vector<GLLine> Drawable::getTransformedLines() {
-	if (_needsUpdating)
-		applyTransformations();
-	return _transformed->_lines;
+std::vector<GLLine> Drawable::getLines() {
+	return _lines;
 }
 
 void Drawable::setColor(float r, float g, float b) {
@@ -102,6 +39,14 @@ void Drawable::setColor(float r, float g, float b) {
 void Drawable::setOutlineColor(float r, float g, float b) {
 	for (int i = 0; i < _lines.size(); i++)
 		_lines[i].setColor(r, g, b);
+}
+
+bool Drawable::getDrawOutline() {
+	return _drawOutline;
+}
+
+void Drawable::setDrawOutline(bool drawOutline) {
+	_drawOutline = drawOutline;
 }
 
 // Moves the drawable in the x direction by the specified distance

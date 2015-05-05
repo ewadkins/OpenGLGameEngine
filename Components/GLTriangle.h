@@ -11,6 +11,7 @@
 #include "GLComponent.h"
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+#include <iostream>
 
 class GLTriangle : public GLComponent{
 public:
@@ -20,7 +21,6 @@ public:
 	}
 	virtual std::vector<GLVertex> getVertices();
 	virtual void setVertices(std::vector<GLVertex> vertices);
-	GLTriangle* clone();
 	void useFaceNormal();
 	static int _type;
 private:

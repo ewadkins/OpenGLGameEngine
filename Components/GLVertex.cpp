@@ -133,6 +133,24 @@ GLVertex::GLVertex(std::vector<float> pos, std::vector<float> color, std::vector
 	_texY = tex[1];
 }
 
+void GLVertex::transform(Matrix<float> modelTransformationMatrix, Matrix<float> rotationMatrix) {
+	Matrix<float> m = Matrix<float>(4, 1);
+
+	std::vector<float> pos = getPosition();
+	pos.push_back(1);
+	m.setVector(pos);
+	m = m << modelTransformationMatrix;
+	setPosition(m.get(0, 0), m.get(1, 0),
+			m.get(2, 0));
+
+	std::vector<float> norm = getNormal();
+	norm.push_back(1);
+	m.setVector(norm);
+	m = m << rotationMatrix;
+	setNormal(m.get(0, 0), m.get(1, 0),
+			m.get(2, 0));
+}
+
 void GLVertex::setPosition(float x, float y, float z) {
 	_x = x;
 	_y = y;

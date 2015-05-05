@@ -8,6 +8,7 @@
 #ifndef COMPONENTS_VERTEX_H_
 #define COMPONENTS_VERTEX_H_
 
+#include "../Math/Matrix.h"
 #include <vector>
 #include <string>
 
@@ -26,6 +27,7 @@ public:
 	GLVertex(std::vector<float> pos, std::vector<float> color, std::vector<float> norm, std::vector<float> tex);
 	virtual ~GLVertex() {
 	}
+	void transform(Matrix<float> modelTransformationMatrix, Matrix<float> rotationMatrix);
 	void setPosition(float x, float y, float z);
 	void setColor(float r, float g, float b);
 	void setNormal(float normX, float normY, float normZ);

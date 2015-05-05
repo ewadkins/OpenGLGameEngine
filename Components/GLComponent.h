@@ -8,7 +8,8 @@
 #ifndef COMPONENTS_GLCOMPONENT_H_
 #define COMPONENTS_GLCOMPONENT_H_
 
-#include "../Components/Vertex.h"
+#include "GLVertex.h"
+#include "../Math/Vector.h"
 #include <vector>
 
 class GLComponent {
@@ -16,10 +17,10 @@ public:
 	GLComponent();
 	virtual ~GLComponent() {
 	}
-	virtual std::vector<Vertex> getVertices() {
-		return std::vector<Vertex>();
+	virtual std::vector<GLVertex> getVertices() {
+		return std::vector<GLVertex>();
 	}
-	virtual void setVertices(std::vector<Vertex> vertices) {
+	virtual void setVertices(std::vector<GLVertex> vertices) {
 	}
 	void setColor(float r, float g, float b);
 };

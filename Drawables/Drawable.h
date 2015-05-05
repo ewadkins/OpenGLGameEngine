@@ -23,11 +23,12 @@ public:
 	virtual Drawable* clone() {
 		return new Drawable();
 	}
-	std::vector<GLTriangle> getTransformedTriangles();
-	std::vector<GLLine> getTransformedLines();
+	std::vector<GLTriangle> getTriangles();
+	std::vector<GLLine> getLines();
 	void setColor(float r, float g, float b);
 	void setOutlineColor(float r, float g, float b);
-	void drawOutline(bool drawOutline);
+	bool getDrawOutline();
+	void setDrawOutline(bool drawOutline);
 	void translateX(float x);
 	void translateY(float y);
 	void translateZ(float z);
@@ -62,11 +63,8 @@ public:
 	void setRotationZ(float rotationZ);
 	void setRotationXYZ(float rotationX, float rotationY, float rotationZ);
 protected:
-	void applyTransformations();
-	GLVertex transform(GLVertex original);
 	std::vector<GLTriangle> _triangles;
 	std::vector<GLLine> _lines;
-	Drawable* _transformed;
 	bool _needsUpdating;
 	bool _drawOutline;
 private:

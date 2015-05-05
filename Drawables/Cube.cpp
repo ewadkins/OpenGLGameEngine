@@ -12,19 +12,19 @@ Cube::Cube() {
 	GLVertex f1t1v1 = GLVertex(-0.5, -0.5, -0.5);
 	GLVertex f1t1v2 = GLVertex(-0.5, -0.5, 0.5);
 	GLVertex f1t1v3 = GLVertex(-0.5, 0.5, 0.5);
-	GLVertex f1t2v1 = GLVertex(-0.5, -0.5, -0.5);
+	GLVertex f1t2v1 = GLVertex(-0.5, 0.5, 0.5);
 	GLVertex f1t2v2 = GLVertex(-0.5, 0.5, -0.5);
-	GLVertex f1t2v3 = GLVertex(-0.5, 0.5, 0.5);
+	GLVertex f1t2v3 = GLVertex(-0.5, -0.5, -0.5);
 	// Right
-	GLVertex f2t1v1 = GLVertex(0.5, -0.5, -0.5);
+	GLVertex f2t1v1 = GLVertex(0.5, 0.5, 0.5);
 	GLVertex f2t1v2 = GLVertex(0.5, -0.5, 0.5);
-	GLVertex f2t1v3 = GLVertex(0.5, 0.5, 0.5);
+	GLVertex f2t1v3 = GLVertex(0.5, -0.5, -0.5);
 	GLVertex f2t2v1 = GLVertex(0.5, -0.5, -0.5);
 	GLVertex f2t2v2 = GLVertex(0.5, 0.5, -0.5);
 	GLVertex f2t2v3 = GLVertex(0.5, 0.5, 0.5);
 	// Back
-	GLVertex f3t1v1 = GLVertex(-0.5, -0.5, -0.5);
-	GLVertex f3t1v2 = GLVertex(0.5, -0.5, -0.5);
+	GLVertex f3t1v1 = GLVertex(0.5, -0.5, -0.5);
+	GLVertex f3t1v2 = GLVertex(-0.5, -0.5, -0.5);
 	GLVertex f3t1v3 = GLVertex(0.5, 0.5, -0.5);
 	GLVertex f3t2v1 = GLVertex(-0.5, -0.5, -0.5);
 	GLVertex f3t2v2 = GLVertex(-0.5, 0.5, -0.5);
@@ -33,20 +33,20 @@ Cube::Cube() {
 	GLVertex f4t1v1 = GLVertex(-0.5, -0.5, 0.5);
 	GLVertex f4t1v2 = GLVertex(0.5, -0.5, 0.5);
 	GLVertex f4t1v3 = GLVertex(0.5, 0.5, 0.5);
-	GLVertex f4t2v1 = GLVertex(-0.5, -0.5, 0.5);
-	GLVertex f4t2v2 = GLVertex(-0.5, 0.5, 0.5);
+	GLVertex f4t2v1 = GLVertex(-0.5, 0.5, 0.5);
+	GLVertex f4t2v2 = GLVertex(-0.5, -0.5, 0.5);
 	GLVertex f4t2v3 = GLVertex(0.5, 0.5, 0.5);
 	// Bottom
 	GLVertex f5t1v1 = GLVertex(-0.5, -0.5, -0.5);
 	GLVertex f5t1v2 = GLVertex(-0.5, -0.5, 0.5);
 	GLVertex f5t1v3 = GLVertex(0.5, -0.5, 0.5);
-	GLVertex f5t2v1 = GLVertex(-0.5, -0.5, -0.5);
-	GLVertex f5t2v2 = GLVertex(0.5, -0.5, -0.5);
+	GLVertex f5t2v1 = GLVertex(0.5, -0.5, -0.5);
+	GLVertex f5t2v2 = GLVertex(-0.5, -0.5, -0.5);
 	GLVertex f5t2v3 = GLVertex(0.5, -0.5, 0.5);
 	// Top
 	GLVertex f6t1v1 = GLVertex(-0.5, 0.5, -0.5);
-	GLVertex f6t1v2 = GLVertex(-0.5, 0.5, 0.5);
-	GLVertex f6t1v3 = GLVertex(0.5, 0.5, 0.5);
+	GLVertex f6t1v3 = GLVertex(-0.5, 0.5, 0.5);
+	GLVertex f6t1v2 = GLVertex(0.5, 0.5, 0.5);
 	GLVertex f6t2v1 = GLVertex(-0.5, 0.5, -0.5);
 	GLVertex f6t2v2 = GLVertex(0.5, 0.5, -0.5);
 	GLVertex f6t2v3 = GLVertex(0.5, 0.5, 0.5);

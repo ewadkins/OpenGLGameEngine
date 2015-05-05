@@ -153,44 +153,101 @@ void Renderer::createVBOs() {
 }
 
 void Renderer::updateStaticVBOs() {
+
 	_staticTriangleVBO->clear();
+	_staticLineVBO->clear();
+
+	std::vector<GLVertex> vertices;
+	std::vector<GLTriangle> triangles;
+	std::vector<GLLine> lines;
+
 	for (int i = 0; i < _staticDrawables.size(); i++) {
-		std::vector<GLTriangle> triangles =
-				_staticDrawables[i]->getTransformedTriangles();
-		for (int j = 0; j < triangles.size(); j++)
+		Drawable* d = _staticDrawables[i];
+		Matrix<float> modelTransformationMatrix =
+				GLMatrix::modelTransformationMatrix(d->getX(), d->getY(),
+						d->getZ(), d->getRotationX(), d->getRotationY(),
+						d->getRotationZ(), d->getScaleX(), d->getScaleY(),
+						d->getScaleZ());
+
+		Matrix<float> rotationMatrix = GLMatrix::rotationMatrixXYZ(
+				d->getRotationX(), d->getRotationY(), d->getRotationZ());
+
+		triangles = _staticDrawables[i]->getTriangles();
+		lines = _staticDrawables[i]->getLines();
+
+		for (int j = 0; j < triangles.size(); j++) {
+			vertices = triangles[j].getVertices();
+			for (int k = 0; k < vertices.size(); k++)
+				vertices[k].transform(modelTransformationMatrix,
+						rotationMatrix);
+			triangles[j].setVertices(vertices);
 			_staticTriangleVBO->add(triangles[j]);
+		}
+
+		if (_staticDrawables[i]->getDrawOutline()) {
+			for (int j = 0; j < triangles.size(); j++) {
+				vertices = lines[j].getVertices();
+				for (int k = 0; k < vertices.size(); k++)
+					vertices[k].transform(modelTransformationMatrix,
+							rotationMatrix);
+				lines[j].setVertices(vertices);
+				_staticLineVBO->add(lines[j]);
+			}
+		}
 	}
+
 	_staticTriangleVBO->updateData();
 	_staticTriangleVBO->pushToBuffer();
-
-	_staticLineVBO->clear();
-	for (int i = 0; i < _staticDrawables.size(); i++) {
-		std::vector<GLLine> lines = _staticDrawables[i]->getTransformedLines();
-		for (int j = 0; j < lines.size(); j++)
-			_staticLineVBO->add(lines[j]);
-	}
 	_staticLineVBO->updateData();
 	_staticLineVBO->pushToBuffer();
 }
 
 void Renderer::updateDynamicVBOs() {
+
 	_dynamicTriangleVBO->clear();
+	_dynamicLineVBO->clear();
+
+	std::vector<GLVertex> vertices;
+	std::vector<GLTriangle> triangles;
+	std::vector<GLLine> lines;
+
 	for (int i = 0; i < _dynamicDrawables.size(); i++) {
-		std::vector<GLTriangle> triangles =
-				_dynamicDrawables[i]->getTransformedTriangles();
-		for (int j = 0; j < triangles.size(); j++)
+		Drawable* d = _dynamicDrawables[i];
+		Matrix<float> modelTransformationMatrix =
+				GLMatrix::modelTransformationMatrix(d->getX(), d->getY(),
+						d->getZ(), d->getRotationX(), d->getRotationY(),
+						d->getRotationZ(), d->getScaleX(), d->getScaleY(),
+						d->getScaleZ());
+
+		Matrix<float> rotationMatrix = GLMatrix::rotationMatrixXYZ(
+				d->getRotationX(), d->getRotationY(), d->getRotationZ());
+
+		triangles = _dynamicDrawables[i]->getTriangles();
+		lines = _dynamicDrawables[i]->getLines();
+
+		for (int j = 0; j < triangles.size(); j++) {
+			vertices = triangles[j].getVertices();
+			for (int k = 0; k < vertices.size(); k++)
+				vertices[k].transform(modelTransformationMatrix,
+						rotationMatrix);
+			triangles[j].setVertices(vertices);
 			_dynamicTriangleVBO->add(triangles[j]);
+		}
+
+		if (_dynamicDrawables[i]->getDrawOutline()) {
+			for (int j = 0; j < triangles.size(); j++) {
+				vertices = lines[j].getVertices();
+				for (int k = 0; k < vertices.size(); k++)
+					vertices[k].transform(modelTransformationMatrix,
+							rotationMatrix);
+				lines[j].setVertices(vertices);
+				_dynamicLineVBO->add(lines[j]);
+			}
+		}
 	}
+
 	_dynamicTriangleVBO->updateData();
 	_dynamicTriangleVBO->pushToBuffer();
-
-	_dynamicLineVBO->clear();
-	for (int i = 0; i < _dynamicDrawables.size(); i++) {
-		std::vector<GLLine> lines =
-				_dynamicDrawables[i]->getTransformedLines();
-		for (int j = 0; j < lines.size(); j++)
-			_dynamicLineVBO->add(lines[j]);
-	}
 	_dynamicLineVBO->updateData();
 	_dynamicLineVBO->pushToBuffer();
 }
@@ -198,21 +255,49 @@ void Renderer::updateDynamicVBOs() {
 void Renderer::updateStreamVBOs() {
 
 	_streamTriangleVBO->clear();
+	_streamLineVBO->clear();
+
+	std::vector<GLVertex> vertices;
+	std::vector<GLTriangle> triangles;
+	std::vector<GLLine> lines;
+
 	for (int i = 0; i < _streamDrawables.size(); i++) {
-		std::vector<GLTriangle> triangles =
-				_streamDrawables[i]->getTransformedTriangles();
-		for (int j = 0; j < triangles.size(); j++)
+		Drawable* d = _streamDrawables[i];
+		Matrix<float> modelTransformationMatrix =
+				GLMatrix::modelTransformationMatrix(d->getX(), d->getY(),
+						d->getZ(), d->getRotationX(), d->getRotationY(),
+						d->getRotationZ(), d->getScaleX(), d->getScaleY(),
+						d->getScaleZ());
+
+		Matrix<float> rotationMatrix = GLMatrix::rotationMatrixXYZ(
+				d->getRotationX(), d->getRotationY(), d->getRotationZ());
+
+		triangles = _streamDrawables[i]->getTriangles();
+		lines = _streamDrawables[i]->getLines();
+
+		for (int j = 0; j < triangles.size(); j++) {
+			vertices = triangles[j].getVertices();
+			for (int k = 0; k < vertices.size(); k++)
+				vertices[k].transform(modelTransformationMatrix,
+						rotationMatrix);
+			triangles[j].setVertices(vertices);
 			_streamTriangleVBO->add(triangles[j]);
+		}
+
+		if (_streamDrawables[i]->getDrawOutline()) {
+			for (int j = 0; j < triangles.size(); j++) {
+				vertices = lines[j].getVertices();
+				for (int k = 0; k < vertices.size(); k++)
+					vertices[k].transform(modelTransformationMatrix,
+							rotationMatrix);
+				lines[j].setVertices(vertices);
+				_streamLineVBO->add(lines[j]);
+			}
+		}
 	}
+
 	_streamTriangleVBO->updateData();
 	_streamTriangleVBO->pushToBuffer();
-
-	_streamLineVBO->clear();
-	for (int i = 0; i < _streamDrawables.size(); i++) {
-		std::vector<GLLine> lines = _streamDrawables[i]->getTransformedLines();
-		for (int j = 0; j < lines.size(); j++)
-			_streamLineVBO->add(lines[j]);
-	}
 	_streamLineVBO->updateData();
 	_streamLineVBO->pushToBuffer();
 }
@@ -220,7 +305,7 @@ void Renderer::updateStreamVBOs() {
 void Renderer::update() {
 	for (int i = 0; i < _streamDrawables.size(); i++) {
 		_streamDrawables[i]->rotateXYZ(0, 1, 0);
-		_streamDrawables[i]->translateXYZ(0, 0.01, 0);
+		//_streamDrawables[i]->translateXYZ(0, 0.01, 0);
 	}
 }
 

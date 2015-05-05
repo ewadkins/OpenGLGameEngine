@@ -55,9 +55,12 @@ template<typename T>
 void VBO<T>::pushToBuffer() {
 	glBindBuffer(GL_ARRAY_BUFFER, _vbo);
 
-	if (_type == STREAM)
+	if (_type == STREAM) {
+		//glBufferData(GL_ARRAY_BUFFER, _data.size() * sizeof(GLfloat), nullptr,
+		//GL_STREAM_DRAW);
 		glBufferData(GL_ARRAY_BUFFER, _data.size() * sizeof(GLfloat), &_data[0],
 		GL_STREAM_DRAW);
+	}
 	else if (_type == DYNAMIC)
 		glBufferData(GL_ARRAY_BUFFER, _data.size() * sizeof(GLfloat), &_data[0],
 		GL_DYNAMIC_DRAW);

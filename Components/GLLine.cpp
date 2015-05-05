@@ -25,7 +25,3 @@ void GLLine::setVertices(std::vector<GLVertex> vertices) {
 	_vertices = vertices;
 }
 
-GLLine* GLLine::clone() {
-	return new GLLine(_vertices[0], _vertices[1]);
-}
-

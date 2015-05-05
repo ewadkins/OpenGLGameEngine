@@ -241,7 +241,7 @@ Matrix<T> Matrix<T>::inverse() {
 		throw std::runtime_error("Matrix must be a square matrix");
 	if (determinant() == 0)
 		throw std::runtime_error(
-				"Matrix is std::singular, inverse doesn't exist");
+				"Matrix is singular, inverse doesn't exist");
 
 	Matrix<T> m = Matrix<T>(_rows, 2 * _cols);
 	for (int i = 0; i < _rows; i++)
