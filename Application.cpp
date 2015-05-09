@@ -104,8 +104,9 @@ void Application::setupDisplay() {
 
 void Application::initialize() {
 
-	clock_t start, finish;
+	clock_t start, finish, start2, finish2;
 
+	/*
 	_logger->log("Testing polynomials...").endLine().increaseIndent();
 	start = clock();
 	{
@@ -298,7 +299,8 @@ void Application::initialize() {
 			(double(finish) - double(start)) / CLOCKS_PER_SEC * 1000).log(
 			" ms)").endLine().decreaseIndent();
 
-	//stop("Testing complete");
+
+	//stop("Testing complete");*/
 
 	_logger->log("Initializing GLFW..").endLine().increaseIndent();
 	start = clock();
@@ -316,7 +318,7 @@ void Application::initialize() {
 			(double(finish) - double(start)) / CLOCKS_PER_SEC * 1000).log(
 			" ms)").endLine().decreaseIndent();
 
-	_logger->log("Setting up window..").endLine().increaseIndent();
+	_logger->log("Initializing window..").endLine().increaseIndent();
 	start = clock();
 	{
 		// Creates and setups the window
@@ -347,7 +349,7 @@ void Application::initialize() {
 			(double(finish) - double(start)) / CLOCKS_PER_SEC * 1000).log(
 			" ms)").endLine().decreaseIndent();
 
-	_logger->log("Setting up display..").endLine().increaseIndent();
+	_logger->log("Initializing display..").endLine().increaseIndent();
 	start = clock();
 	{
 		// Setup the display
@@ -358,19 +360,33 @@ void Application::initialize() {
 			(double(finish) - double(start)) / CLOCKS_PER_SEC * 1000).log(
 			" ms)").endLine().decreaseIndent();
 
-	_logger->log("Setting up renderer..").endLine().increaseIndent();
+	_logger->log("Initializing renderer..").endLine().increaseIndent();
 	start = clock();
 	{
 		// Create and initialize the renderer
 		_renderer = new Renderer(_application);
-		_renderer->initialize();
+		_logger->log("Initializing shaders..").endLine().increaseIndent();
+		start2 = clock();
+		_renderer->initializeShaders();
+		finish2 = clock();
+		_logger->log("(Took ").log(
+				(double(finish2) - double(start2)) / CLOCKS_PER_SEC * 1000).log(
+				" ms)").endLine().decreaseIndent();
+
+		_logger->log("Initializing VBOs..").endLine().increaseIndent();
+		start2 = clock();
+		_renderer->initializeVBOs();
+		finish2 = clock();
+		_logger->log("(Took ").log(
+				(double(finish2) - double(start2)) / CLOCKS_PER_SEC * 1000).log(
+				" ms)").endLine().decreaseIndent();
 	}
 	finish = clock();
 	_logger->log("(Took ").log(
 			(double(finish) - double(start)) / CLOCKS_PER_SEC * 1000).log(
 			" ms)").endLine().decreaseIndent();
 
-	_logger->log("Setting up camera..").endLine().increaseIndent();
+	_logger->log("Initializing camera..").endLine().increaseIndent();
 	start = clock();
 	{
 		// Create and initialize the camera
@@ -383,7 +399,7 @@ void Application::initialize() {
 			(double(finish) - double(start)) / CLOCKS_PER_SEC * 1000).log(
 			" ms)").endLine().decreaseIndent();
 
-	_logger->log("Setting up keyboard..").endLine().increaseIndent();
+	_logger->log("Initializing keyboard..").endLine().increaseIndent();
 	start = clock();
 	{
 		// Create and initialize the keyboard manager

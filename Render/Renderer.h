@@ -9,7 +9,12 @@
 #define RENDERER_H_
 
 #include "ShaderProgram.h"
+#include "VBO.h"
 #include "../Math/Matrix.h"
+#include "../Components/GLTriangle.h"
+#include "../Components/GLLine.h"
+#include "../Components/GLPoint.h"
+#include "../Components/GLVertex.h"
 #include "../Drawables/Drawable.h"
 #include "../Drawables/Triangle.h"
 #include "../Drawables/Cube.h"
@@ -17,10 +22,6 @@
 #include <fstream>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
-#include "../Components/GLLine.h"
-#include "../Components/GLTriangle.h"
-#include "VBO.h"
-#include "../Components/GLVertex.h"
 
 class Application;
 
@@ -29,7 +30,7 @@ public:
 	Renderer(Application* application);
 	virtual ~Renderer() {
 	}
-	void initialize();
+	void initializeShaders();
 	void initializeVBOs();
 	void createVBOs();
 	void updateStaticVBOs();
@@ -40,7 +41,8 @@ public:
 	void display();
 	void useProgram(ShaderProgram*);
 	void setProjectionMatrix(Matrix<float> projectionMatrix);
-	ShaderProgram* _shaderProgram1;
+	ShaderProgram* _basicShader;
+	ShaderProgram* _lightingShader;
 	ShaderProgram* _currentProgram;
 private:
 	void setupShaders();
@@ -49,10 +51,13 @@ private:
 
 	VBO<GLTriangle>* _staticTriangleVBO;
 	VBO<GLLine>* _staticLineVBO;
+	VBO<GLPoint>* _staticPointVBO;
 	VBO<GLTriangle>* _dynamicTriangleVBO;
 	VBO<GLLine>* _dynamicLineVBO;
+	VBO<GLPoint>* _dynamicPointVBO;
 	VBO<GLTriangle>* _streamTriangleVBO;
 	VBO<GLLine>* _streamLineVBO;
+	VBO<GLPoint>* _streamPointVBO;
 
 	std::vector<VBOBase*> _staticVBOs;
 	std::vector<VBOBase*> _dynamicVBOs;

@@ -8,5 +8,5 @@ out vec4 outColor;
 
 void main()
 {
-    outColor = vec4(abs(passPosition), 1.0);
+    outColor = vec4(passColor, 1.0);
 }

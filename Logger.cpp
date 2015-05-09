@@ -12,7 +12,7 @@
 Logger::Logger() {
 	newLine = true;
 	numIndents = 0;
-	indentString = "    ";
+	indentString = "  ";
 	_log.push_back(std::string(""));
 }
 

@@ -5,7 +5,7 @@
  *      Author: ericwadkins
  */
 
-#include "../Components/GLTriangle.h"
+#include "GLTriangle.h"
 
 int GLTriangle::_type = GL_TRIANGLES;
 

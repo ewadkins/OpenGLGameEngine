@@ -129,3 +129,4 @@ void VBO<T>::draw() {
 // Explicit instantiation of template classes
 template class VBO<GLTriangle> ;
 template class VBO<GLLine> ;
+template class VBO<GLPoint> ;

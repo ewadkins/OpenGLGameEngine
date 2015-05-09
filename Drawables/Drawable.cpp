@@ -62,6 +62,10 @@ std::vector<GLLine> Drawable::getLines() {
 	return _lines;
 }
 
+std::vector<GLPoint> Drawable::getPoints() {
+	return _points;
+}
+
 std::vector<GLTriangle> Drawable::getTransformedTriangles() {
 	if (_needsUpdating)
 		applyTransformations();
@@ -72,6 +76,12 @@ std::vector<GLLine> Drawable::getTransformedLines() {
 	if (_needsUpdating)
 		applyTransformations();
 	return _transformed->_lines;
+}
+
+std::vector<GLPoint> Drawable::getTransformedPoints() {
+	if (_needsUpdating)
+		applyTransformations();
+	return _transformed->_points;
 }
 
 void Drawable::setColor(float r, float g, float b) {

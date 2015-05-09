@@ -8,8 +8,9 @@
 #ifndef DRAWABLE_H_
 #define DRAWABLE_H_
 
-#include "../Components/GLLine.h"
 #include "../Components/GLTriangle.h"
+#include "../Components/GLLine.h"
+#include "../Components/GLPoint.h"
 #include "../Components/GLVertex.h"
 #include "../Math/Matrix.h"
 #include "../Math/GLMatrix.h"
@@ -25,8 +26,10 @@ public:
 	}
 	std::vector<GLTriangle> getTriangles();
 	std::vector<GLLine> getLines();
+	std::vector<GLPoint> getPoints();
 	std::vector<GLTriangle> getTransformedTriangles();
 	std::vector<GLLine> getTransformedLines();
+	std::vector<GLPoint> getTransformedPoints();
 	void setColor(float r, float g, float b);
 	void setOutlineColor(float r, float g, float b);
 	bool getDrawFaces();
@@ -70,6 +73,7 @@ protected:
 	void applyTransformations();
 	std::vector<GLTriangle> _triangles;
 	std::vector<GLLine> _lines;
+	std::vector<GLPoint> _points;
 	Drawable* _transformed;
 	bool _needsUpdating;
 	bool _drawOutline;

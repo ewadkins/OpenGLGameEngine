@@ -8,8 +8,9 @@
 #ifndef COMPONENTS_VBO_H_
 #define COMPONENTS_VBO_H_
 
-#include "../Components/GLLine.h"
 #include "../Components/GLTriangle.h"
+#include "../Components/GLLine.h"
+#include "../Components/GLPoint.h"
 #include "../Components/GLVertex.h"
 #include <vector>
 #include <iostream>

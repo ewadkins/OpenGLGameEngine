@@ -12,14 +12,17 @@
 Renderer::Renderer(Application* application) :
 		_projectionMatrix(Matrix<float>::identity(4)) {
 	_application = application;
-	_shaderProgram1 = nullptr;
+	_basicShader = nullptr;
+	_lightingShader = nullptr;
 	_currentProgram = nullptr;
 }
 
 // Sets up the shaders for use in rendering
 void Renderer::setupShaders() {
-	_shaderProgram1 = new ShaderProgram(_application, "Shader 1",
-			"shaders/vertex.glsl", "shaders/fragment.glsl");
+	_basicShader = new ShaderProgram(_application, "Basic shader",
+			"shaders/basicVertex.glsl", "shaders/basicFragment.glsl");
+	_lightingShader = new ShaderProgram(_application, "Lighting shader",
+			"shaders/lightingVertex.glsl", "shaders/lightingFragment.glsl");
 }
 
 // Sets the shader program to be used in rendering
@@ -44,17 +47,17 @@ void Renderer::updateUniforms() {
 }
 
 // Initialization method ran on startup
-void Renderer::initialize() {
+void Renderer::initializeShaders() {
 	// Create shader programs
 	setupShaders();
 
 	// Attempt to assign a shader program
-	if (_shaderProgram1->getProgramId() != 0)
-		useProgram(_shaderProgram1);
+	if (_lightingShader->getProgramId() != 0)
+		useProgram(_lightingShader);
+	else if (_basicShader->getProgramId() != 0)
+		useProgram(_basicShader);
 	else
 		throw "No shader assigned";
-
-	initializeVBOs();
 }
 
 // Test: Initializes data that will draw a triangle
@@ -129,6 +132,8 @@ void Renderer::createVBOs() {
 	_staticVBOs.push_back(_staticTriangleVBO);
 	_staticLineVBO = new VBO<GLLine>(VBOBase::STATIC);
 	_staticVBOs.push_back(_staticLineVBO);
+	_staticPointVBO = new VBO<GLPoint>(VBOBase::STATIC);
+	_staticVBOs.push_back(_staticPointVBO);
 	//updateStaticVBOs();
 	for (int i = 0; i < _staticVBOs.size(); i++)
 		_staticVBOs[i]->create();
@@ -138,6 +143,8 @@ void Renderer::createVBOs() {
 	_dynamicVBOs.push_back(_dynamicTriangleVBO);
 	_dynamicLineVBO = new VBO<GLLine>(VBOBase::DYNAMIC);
 	_dynamicVBOs.push_back(_dynamicLineVBO);
+	_dynamicPointVBO = new VBO<GLPoint>(VBOBase::DYNAMIC);
+	_dynamicVBOs.push_back(_dynamicPointVBO);
 	//updateDynamicVBOs();
 	for (int i = 0; i < _dynamicVBOs.size(); i++)
 		_dynamicVBOs[i]->create();
@@ -147,6 +154,8 @@ void Renderer::createVBOs() {
 	_streamVBOs.push_back(_streamTriangleVBO);
 	_streamLineVBO = new VBO<GLLine>(VBOBase::STREAM);
 	_streamVBOs.push_back(_streamLineVBO);
+	_streamPointVBO = new VBO<GLPoint>(VBOBase::STREAM);
+	_streamVBOs.push_back(_streamPointVBO);
 	//updateStreamVBOs();
 	for (int i = 0; i < _streamVBOs.size(); i++)
 		_streamVBOs[i]->create();
@@ -156,70 +165,88 @@ void Renderer::updateStaticVBOs() {
 
 	_staticTriangleVBO->clear();
 	_staticLineVBO->clear();
+	_staticPointVBO->clear();
 
 	std::vector<GLVertex> vertices;
 	std::vector<GLTriangle> triangles;
 	std::vector<GLLine> lines;
+	std::vector<GLPoint> points;
 
 	// Uses pre-transformed versions of each drawable, which prevents recalculation if unnecessary
 	for (int i = 0; i < _staticDrawables.size(); i++) {
 
 		triangles = _staticDrawables[i]->getTransformedTriangles();
 		lines = _staticDrawables[i]->getTransformedLines();
+		points = _staticDrawables[i]->getTransformedPoints();
 
 		if (_staticDrawables[i]->getDrawFaces())
 			for (int j = 0; j < triangles.size(); j++)
 				_staticTriangleVBO->add(triangles[j]);
 
-		if (_staticDrawables[i]->getDrawOutline())
+		if (_staticDrawables[i]->getDrawOutline()) {
 			for (int j = 0; j < lines.size(); j++)
 				_staticLineVBO->add(lines[j]);
+			for (int j = 0; j < points.size(); j++)
+				_staticPointVBO->add(points[j]);
+		}
 	}
 
 	_staticTriangleVBO->updateData();
 	_staticTriangleVBO->pushToBuffer();
 	_staticLineVBO->updateData();
 	_staticLineVBO->pushToBuffer();
+	_staticPointVBO->updateData();
+	_staticPointVBO->pushToBuffer();
 }
 
 void Renderer::updateDynamicVBOs() {
 
 	_dynamicTriangleVBO->clear();
 	_dynamicLineVBO->clear();
+	_dynamicPointVBO->clear();
 
 	std::vector<GLVertex> vertices;
 	std::vector<GLTriangle> triangles;
 	std::vector<GLLine> lines;
+	std::vector<GLPoint> points;
 
 	// Uses pre-transformed versions of each drawable, which prevents recalculation if unnecessary
 	for (int i = 0; i < _dynamicDrawables.size(); i++) {
 
 		triangles = _dynamicDrawables[i]->getTransformedTriangles();
 		lines = _dynamicDrawables[i]->getTransformedLines();
+		points = _dynamicDrawables[i]->getTransformedPoints();
 
 		if (_dynamicDrawables[i]->getDrawFaces())
 			for (int j = 0; j < triangles.size(); j++)
 				_dynamicTriangleVBO->add(triangles[j]);
 
-		if (_dynamicDrawables[i]->getDrawOutline())
+		if (_dynamicDrawables[i]->getDrawOutline()) {
 			for (int j = 0; j < lines.size(); j++)
 				_dynamicLineVBO->add(lines[j]);
+			for (int j = 0; j < points.size(); j++)
+				_dynamicPointVBO->add(points[j]);
+		}
 	}
 
 	_dynamicTriangleVBO->updateData();
 	_dynamicTriangleVBO->pushToBuffer();
 	_dynamicLineVBO->updateData();
 	_dynamicLineVBO->pushToBuffer();
+	_dynamicPointVBO->updateData();
+	_dynamicPointVBO->pushToBuffer();
 }
 
 void Renderer::updateStreamVBOs() {
 
 	_streamTriangleVBO->clear();
 	_streamLineVBO->clear();
+	_streamPointVBO->clear();
 
 	std::vector<GLVertex> vertices;
 	std::vector<GLTriangle> triangles;
 	std::vector<GLLine> lines;
+	std::vector<GLPoint> points;
 
 	// Transforms each drawable on the spot to increase performance for rendering stream drawables
 	for (int i = 0; i < _streamDrawables.size(); i++) {
@@ -235,6 +262,7 @@ void Renderer::updateStreamVBOs() {
 
 		triangles = _streamDrawables[i]->getTriangles();
 		lines = _streamDrawables[i]->getLines();
+		points = _streamDrawables[i]->getPoints();
 
 		if (_streamDrawables[i]->getDrawFaces()) {
 			for (int j = 0; j < triangles.size(); j++) {
@@ -256,6 +284,14 @@ void Renderer::updateStreamVBOs() {
 				lines[j].setVertices(vertices);
 				_streamLineVBO->add(lines[j]);
 			}
+			for (int j = 0; j < points.size(); j++) {
+				vertices = points[j].getVertices();
+				for (int k = 0; k < vertices.size(); k++)
+					vertices[k].transform(modelTransformationMatrix,
+							rotationMatrix);
+				points[j].setVertices(vertices);
+				_streamPointVBO->add(points[j]);
+			}
 		}
 	}
 
@@ -263,6 +299,8 @@ void Renderer::updateStreamVBOs() {
 	_streamTriangleVBO->pushToBuffer();
 	_streamLineVBO->updateData();
 	_streamLineVBO->pushToBuffer();
+	_streamPointVBO->updateData();
+	_streamPointVBO->pushToBuffer();
 }
 
 void Renderer::update() {

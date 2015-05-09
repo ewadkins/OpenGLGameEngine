@@ -152,6 +152,8 @@ GLuint ShaderProgram::create() {
 	GLuint vertexShader, fragmentShader;
 	GLint linked = false;
 
+	_application->_logger->log(_name).log(":").endLine().increaseIndent();
+
 	// Loads vertex shader
 	_application->_logger->log("Loading vertex shader..").endLine().increaseIndent();
 	vertexShader = loadShader(_vertexPath, GL_VERTEX_SHADER);
@@ -184,11 +186,11 @@ GLuint ShaderProgram::create() {
 		glGetProgramiv(_program, GL_LINK_STATUS, &linked);
 	}
 	if (!linked || !_program || !vertexShader || !fragmentShader) {
-		_application->warn("Could not create/link the shader");
-		_application->_logger->decreaseIndent();
+		_application->warn("Could not create/link the shader program");
+		_application->_logger->decreaseIndent().decreaseIndent();
 		return 0;
 	} else
-		_application->_logger->log("Shader program created and linked successfully!").endLine().decreaseIndent();
+		_application->_logger->log("Shader program created and linked successfully!").endLine().decreaseIndent().decreaseIndent();
 
 	return _program;
 }
