@@ -85,6 +85,12 @@ void Renderer::initializeVBOs() {
 	t4->setColor(1, 0.5, 0);
 	_streamDrawables.push_back(t4);
 
+	Drawable* lightCube = new Cube();
+	lightCube->setXYZ(0, 3, 0);
+	lightCube->scaleXYZ(0.2, 0.2, 0.2);
+	lightCube->setColor(1, 1, 0);
+	_staticDrawables.push_back(lightCube);
+
 	Drawable* c1 = new Cube();
 	c1->setRotationXYZ(45, 45, 45);
 	c1->scaleXYZ(2, 2, 2);

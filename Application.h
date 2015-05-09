@@ -41,6 +41,7 @@ public:
 	int _windowSizeX;
 	int _windowSizeY;
 	bool _fullScreen;
+	int _frameCount;
 private:
 	void setupWindow();
 	void setupDisplay();

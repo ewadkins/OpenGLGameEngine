@@ -48,6 +48,7 @@ Application::Application(int screenSizeX, int screenSizeY, bool fullScreen) {
 	_windowSizeX = screenSizeX;
 	_windowSizeY = screenSizeY;
 	_fullScreen = fullScreen;
+	_frameCount = 0;
 	_renderer = nullptr;
 	_camera = nullptr;
 	_keyboard = nullptr;
@@ -427,6 +428,8 @@ void Application::gameLoop() {
 
 	// Game loop, while window close is not requested
 	while (!glfwWindowShouldClose(_window)) {
+
+		_frameCount++;
 
 		long currentTime = clock();
 		long delta = currentTime - lastTime;

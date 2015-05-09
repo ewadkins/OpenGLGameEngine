@@ -46,6 +46,8 @@ void Camera::useView() {
 	_application->_renderer->_currentProgram->setUniformMatrix4x4f("viewMatrix",
 			viewMatrix.getArray());
 
+	_application->_renderer->_currentProgram->setUniform3f("cameraPosition", getX(), getY(), getZ());
+
 }
 
 // Updates the projection matrices as well as setting the desired projection matrix
