@@ -7,10 +7,6 @@
 
 #include "GLComponent.h"
 
-GLComponent::GLComponent() {
-
-}
-
 void GLComponent::setColor(float r, float g, float b) {
 	std::vector<GLVertex> vertices = getVertices();
 	for (int i = 0; i < vertices.size(); i++)

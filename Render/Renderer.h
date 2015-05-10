@@ -30,13 +30,11 @@ public:
 	Renderer(Application* application);
 	virtual ~Renderer() {
 	}
-	void initializeShaders();
-	void initializeVBOs();
+	void createShaders();
 	void createVBOs();
 	void updateStaticVBOs();
 	void updateDynamicVBOs();
 	void updateStreamVBOs();
-	void update();
 	void render();
 	void display();
 	void useProgram(ShaderProgram*);
@@ -62,10 +60,6 @@ private:
 	std::vector<VBOBase*> _staticVBOs;
 	std::vector<VBOBase*> _dynamicVBOs;
 	std::vector<VBOBase*> _streamVBOs;
-
-	std::vector<Drawable*> _staticDrawables;
-	std::vector<Drawable*> _dynamicDrawables;
-	std::vector<Drawable*> _streamDrawables;
 
 	Matrix<float> _projectionMatrix;
 };

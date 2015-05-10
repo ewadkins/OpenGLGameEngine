@@ -13,9 +13,11 @@ Matrix<T>::Matrix(int rows, int cols) {
 	_rows = rows;
 	_cols = cols;
 	_matrix = new T*[_rows];
-	for (int i = 0; i < _rows; i++)
+	for (int i = 0; i < _rows; i++) {
 		_matrix[i] = new T[_cols];
-	fill(0);
+		for (int j = 0; j < _cols; j++)
+			_matrix[i][j] = 0;
+	}
 }
 
 // Square matrix constructor
@@ -24,9 +26,11 @@ Matrix<T>::Matrix(int size) {
 	_rows = size;
 	_cols = size;
 	_matrix = new T*[_rows];
-	for (int i = 0; i < _rows; i++)
+	for (int i = 0; i < _rows; i++) {
 		_matrix[i] = new T[_cols];
-	fill(0);
+		for (int j = 0; j < _cols; j++)
+			_matrix[i][j] = 0;
+	}
 }
 
 // Constructor that allows matrix casting

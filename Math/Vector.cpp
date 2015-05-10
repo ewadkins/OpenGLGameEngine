@@ -18,6 +18,12 @@ Vector<T>::Vector(int size) {
 }
 
 template<typename T>
+Vector<T>::Vector(T v1, T v2) {
+	_vector.push_back(v1);
+	_vector.push_back(v2);
+}
+
+template<typename T>
 Vector<T>::Vector(T v1, T v2, T v3) {
 	_vector.push_back(v1);
 	_vector.push_back(v2);

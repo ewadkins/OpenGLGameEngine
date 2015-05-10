@@ -10,6 +10,7 @@ RM := rm -rf
 -include sources.mk
 -include Render/subdir.mk
 -include Math/subdir.mk
+-include Map/subdir.mk
 -include Input/subdir.mk
 -include Drawables/subdir.mk
 -include Components/subdir.mk

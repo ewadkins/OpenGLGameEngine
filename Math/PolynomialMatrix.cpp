@@ -13,9 +13,11 @@ PolynomialMatrix<T>::PolynomialMatrix(int rows, int cols) {
 	_rows = rows;
 	_cols = cols;
 	_matrix = new Polynomial<T>*[_rows];
-	for (int i = 0; i < _rows; i++)
-		_matrix[i] = new Polynomial<T> [_cols];
-	fill(0);
+	for (int i = 0; i < _rows; i++) {
+		_matrix[i] = new Polynomial<T>[_cols];
+		for (int j = 0; j < _cols; j++)
+			_matrix[i][j] = 0;
+	}
 }
 
 // Square matrix constructor
@@ -24,9 +26,11 @@ PolynomialMatrix<T>::PolynomialMatrix(int size) {
 	_rows = size;
 	_cols = size;
 	_matrix = new Polynomial<T>*[_rows];
-	for (int i = 0; i < _rows; i++)
-		_matrix[i] = new Polynomial<T> [_cols];
-	fill(0);
+	for (int i = 0; i < _rows; i++) {
+		_matrix[i] = new Polynomial<T>[_cols];
+		for (int j = 0; j < _cols; j++)
+			_matrix[i][j] = 0;
+	}
 }
 
 // Constructor that allows matrix casting

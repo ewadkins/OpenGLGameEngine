@@ -26,7 +26,8 @@ Triangle::Triangle(GLVertex v1, GLVertex v2, GLVertex v3) {
 	_lines.push_back(GLLine(GLVertex(v2.getPosition()), GLVertex(v3.getPosition())));
 	_lines.push_back(GLLine(GLVertex(v3.getPosition()), GLVertex(v1.getPosition())));
 
-	setColor(0.0, 1.0, 0.0);
+	if (!v1.hasColor() && !v2.hasColor() && !v3.hasColor())
+		setColor(0.0, 1.0, 0.0);
 }
 
 Triangle::Triangle(Triangle* other) {

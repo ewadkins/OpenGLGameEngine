@@ -13,9 +13,11 @@ ComplexMatrix<T>::ComplexMatrix(int rows, int cols) {
 	_rows = rows;
 	_cols = cols;
 	_matrix = new Complex<T>*[_rows];
-	for (int i = 0; i < _rows; i++)
-		_matrix[i] = new Complex<T> [_cols];
-	fill(0);
+	for (int i = 0; i < _rows; i++) {
+		_matrix[i] = new Complex<T>[_cols];
+		for (int j = 0; j < _cols; j++)
+			_matrix[i][j] = 0;
+	}
 }
 
 // Square matrix constructor
@@ -24,9 +26,11 @@ ComplexMatrix<T>::ComplexMatrix(int size) {
 	_rows = size;
 	_cols = size;
 	_matrix = new Complex<T>*[_rows];
-	for (int i = 0; i < _rows; i++)
-		_matrix[i] = new Complex<T> [_cols];
-	fill(0);
+	for (int i = 0; i < _rows; i++) {
+		_matrix[i] = new Complex<T>[_cols];
+		for (int j = 0; j < _cols; j++)
+			_matrix[i][j] = 0;
+	}
 }
 
 // Constructor that allows matrix casting

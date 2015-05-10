@@ -14,7 +14,8 @@ GLTriangle::GLTriangle(GLVertex v1, GLVertex v2, GLVertex v3) {
 	_vertices.push_back(v2);
 	_vertices.push_back(v3);
 
-	useFaceNormal();
+	if (!v1.hasNormal() && !v2.hasNormal() && !v3.hasNormal())
+		useFaceNormal();
 }
 
 GLTriangle::GLTriangle() {
@@ -28,7 +29,7 @@ void GLTriangle::setVertices(std::vector<GLVertex> vertices) {
 	_vertices = vertices;
 }
 
-void GLTriangle::useFaceNormal() {
+Vector<float> GLTriangle::getFaceNormal() {
 	std::vector<float> pos1 = _vertices[0].getPosition();
 	std::vector<float> pos2 = _vertices[1].getPosition();
 	std::vector<float> pos3 = _vertices[2].getPosition();
@@ -36,6 +37,11 @@ void GLTriangle::useFaceNormal() {
 	Vector<float> v2 = Vector<float>(pos3[0] - pos1[0], pos3[1] - pos1[1], pos3[2] - pos1[2]);
 	Vector<float> normal = v1.cross(v2);
 	normal.normalize();
+	return normal;
+}
+
+void GLTriangle::useFaceNormal() {
+	Vector<float> normal = getFaceNormal();
 	_vertices[0].setNormal(normal[0], normal[1], normal[2]);
 	_vertices[1].setNormal(normal[0], normal[1], normal[2]);
 	_vertices[2].setNormal(normal[0], normal[1], normal[2]);

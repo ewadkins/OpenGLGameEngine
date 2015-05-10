@@ -6,15 +6,24 @@
  */
 
 #include "Renderer.h"
-
 #include "../Application.h"
 
-Renderer::Renderer(Application* application) :
+Renderer::Renderer(Application* application) : // FIXME Random warning message
 		_projectionMatrix(Matrix<float>::identity(4)) {
 	_application = application;
 	_basicShader = nullptr;
 	_lightingShader = nullptr;
 	_currentProgram = nullptr;
+
+	/*_staticTriangleVBO = nullptr;
+	_staticLineVBO = nullptr;
+	_staticPointVBO = nullptr;
+	_dynamicTriangleVBO = nullptr;
+	_dynamicLineVBO = nullptr;
+	_dynamicPointVBO = nullptr;
+	_streamTriangleVBO = nullptr;
+	_streamLineVBO = nullptr;
+	_streamPointVBO = nullptr;*/
 }
 
 // Sets up the shaders for use in rendering
@@ -47,7 +56,7 @@ void Renderer::updateUniforms() {
 }
 
 // Initialization method ran on startup
-void Renderer::initializeShaders() {
+void Renderer::createShaders() {
 	// Create shader programs
 	setupShaders();
 
@@ -58,73 +67,6 @@ void Renderer::initializeShaders() {
 		useProgram(_basicShader);
 	else
 		throw "No shader assigned";
-}
-
-// Test: Initializes data that will draw a triangle
-void Renderer::initializeVBOs() {
-
-	createVBOs();
-
-	Drawable* t1 = new Triangle();
-	t1->setXYZ(-5, 0, 0);
-	_staticDrawables.push_back(t1);
-
-	Drawable* t2 = new Triangle();
-	t2->setXYZ(-4, 0, 0);
-	t2->rotateXYZ(45, 45, 45);
-	_staticDrawables.push_back(t2);
-
-	Drawable* t3 = new Triangle();
-	t3->setXYZ(-3, 0, 0);
-	t3->rotateXYZ(45, 45, 45);
-	t3->scaleXYZ(1, 2, 1);
-	_staticDrawables.push_back(t3);
-
-	Drawable* t4 = new Triangle();
-	t4->setXYZ(-2, 3, 0);
-	t4->setColor(1, 0.5, 0);
-	_streamDrawables.push_back(t4);
-
-	Drawable* lightCube = new Cube();
-	lightCube->setXYZ(0, 3, 0);
-	lightCube->scaleXYZ(0.2, 0.2, 0.2);
-	lightCube->setColor(1, 1, 0);
-	_staticDrawables.push_back(lightCube);
-
-	Drawable* c1 = new Cube();
-	c1->setRotationXYZ(45, 45, 45);
-	c1->scaleXYZ(2, 2, 2);
-	_staticDrawables.push_back(c1);
-
-	Drawable* c2 = new Cube();
-	c2->setXYZ(3, 0, 0);
-	c2->setRotationXYZ(30, 30, 30);
-	c2->scaleXYZ(1, 1, 2);
-	c2->setColor(0, 0, 1);
-	_staticDrawables.push_back(c2);
-
-	Drawable* c3 = new Cube();
-	c3->setXYZ(5, 0, 0);
-	c3->setColor(1, 0, 1);
-	_staticDrawables.push_back(c3);
-
-	for (int i = 0; i < 1; i++) {
-		Drawable* c4 = new Cube();
-		c4->setXYZ(i, 5, 0);
-		c4->setColor(1, 0, 0);
-		_streamDrawables.push_back(c4);
-	}
-
-	Drawable* c5 = new Cube();
-	c5->setXYZ(2, 3, 0);
-	c5->setRotationXYZ(45, 0, 45);
-	c5->setColor(0, 1, 0);
-	_streamDrawables.push_back(c5);
-
-	updateStaticVBOs();
-	updateDynamicVBOs();
-	updateStreamVBOs();
-
 }
 
 void Renderer::createVBOs() {
@@ -178,18 +120,20 @@ void Renderer::updateStaticVBOs() {
 	std::vector<GLLine> lines;
 	std::vector<GLPoint> points;
 
+	std::vector<Drawable*> staticDrawables = _application->_map->getStaticDrawables();
+
 	// Uses pre-transformed versions of each drawable, which prevents recalculation if unnecessary
-	for (int i = 0; i < _staticDrawables.size(); i++) {
+	for (int i = 0; i < staticDrawables.size(); i++) {
 
-		triangles = _staticDrawables[i]->getTransformedTriangles();
-		lines = _staticDrawables[i]->getTransformedLines();
-		points = _staticDrawables[i]->getTransformedPoints();
+		triangles = staticDrawables[i]->getTransformedTriangles();
+		lines = staticDrawables[i]->getTransformedLines();
+		points = staticDrawables[i]->getTransformedPoints();
 
-		if (_staticDrawables[i]->getDrawFaces())
+		if (staticDrawables[i]->getDrawFaces())
 			for (int j = 0; j < triangles.size(); j++)
 				_staticTriangleVBO->add(triangles[j]);
 
-		if (_staticDrawables[i]->getDrawOutline()) {
+		if (staticDrawables[i]->getDrawOutline()) {
 			for (int j = 0; j < lines.size(); j++)
 				_staticLineVBO->add(lines[j]);
 			for (int j = 0; j < points.size(); j++)
@@ -216,18 +160,20 @@ void Renderer::updateDynamicVBOs() {
 	std::vector<GLLine> lines;
 	std::vector<GLPoint> points;
 
+	std::vector<Drawable*> dynamicDrawables = _application->_map->getDynamicDrawables();
+
 	// Uses pre-transformed versions of each drawable, which prevents recalculation if unnecessary
-	for (int i = 0; i < _dynamicDrawables.size(); i++) {
+	for (int i = 0; i < dynamicDrawables.size(); i++) {
 
-		triangles = _dynamicDrawables[i]->getTransformedTriangles();
-		lines = _dynamicDrawables[i]->getTransformedLines();
-		points = _dynamicDrawables[i]->getTransformedPoints();
+		triangles = dynamicDrawables[i]->getTransformedTriangles();
+		lines = dynamicDrawables[i]->getTransformedLines();
+		points = dynamicDrawables[i]->getTransformedPoints();
 
-		if (_dynamicDrawables[i]->getDrawFaces())
+		if (dynamicDrawables[i]->getDrawFaces())
 			for (int j = 0; j < triangles.size(); j++)
 				_dynamicTriangleVBO->add(triangles[j]);
 
-		if (_dynamicDrawables[i]->getDrawOutline()) {
+		if (dynamicDrawables[i]->getDrawOutline()) {
 			for (int j = 0; j < lines.size(); j++)
 				_dynamicLineVBO->add(lines[j]);
 			for (int j = 0; j < points.size(); j++)
@@ -254,9 +200,11 @@ void Renderer::updateStreamVBOs() {
 	std::vector<GLLine> lines;
 	std::vector<GLPoint> points;
 
+	std::vector<Drawable*> streamDrawables = _application->_map->getStreamDrawables();
+
 	// Transforms each drawable on the spot to increase performance for rendering stream drawables
-	for (int i = 0; i < _streamDrawables.size(); i++) {
-		Drawable* d = _streamDrawables[i];
+	for (int i = 0; i < streamDrawables.size(); i++) {
+		Drawable* d = streamDrawables[i];
 		Matrix<float> modelTransformationMatrix =
 				GLMatrix::modelTransformationMatrix(d->getX(), d->getY(),
 						d->getZ(), d->getRotationX(), d->getRotationY(),
@@ -266,11 +214,11 @@ void Renderer::updateStreamVBOs() {
 		Matrix<float> rotationMatrix = GLMatrix::rotationMatrixXYZ(
 				d->getRotationX(), d->getRotationY(), d->getRotationZ());
 
-		triangles = _streamDrawables[i]->getTriangles();
-		lines = _streamDrawables[i]->getLines();
-		points = _streamDrawables[i]->getPoints();
+		triangles = streamDrawables[i]->_triangles;
+		lines = streamDrawables[i]->_lines;
+		points = streamDrawables[i]->_points;
 
-		if (_streamDrawables[i]->getDrawFaces()) {
+		if (streamDrawables[i]->getDrawFaces()) {
 			for (int j = 0; j < triangles.size(); j++) {
 				vertices = triangles[j].getVertices();
 				for (int k = 0; k < vertices.size(); k++)
@@ -281,7 +229,7 @@ void Renderer::updateStreamVBOs() {
 			}
 		}
 
-		if (_streamDrawables[i]->getDrawOutline()) {
+		if (streamDrawables[i]->getDrawOutline()) {
 			for (int j = 0; j < lines.size(); j++) {
 				vertices = lines[j].getVertices();
 				for (int k = 0; k < vertices.size(); k++)
@@ -307,13 +255,6 @@ void Renderer::updateStreamVBOs() {
 	_streamLineVBO->pushToBuffer();
 	_streamPointVBO->updateData();
 	_streamPointVBO->pushToBuffer();
-}
-
-void Renderer::update() {
-	for (int i = 0; i < _streamDrawables.size(); i++) {
-		_streamDrawables[i]->rotateXYZ(0, 1, 0);
-		//_streamDrawables[i]->translateXYZ(0, 0.01, 0);
-	}
 }
 
 void Renderer::render() {

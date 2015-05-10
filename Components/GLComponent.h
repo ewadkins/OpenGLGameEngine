@@ -14,7 +14,6 @@
 
 class GLComponent {
 public:
-	GLComponent();
 	virtual ~GLComponent() {
 	}
 	virtual std::vector<GLVertex> getVertices() {

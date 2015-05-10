@@ -69,11 +69,11 @@ public:
 	void setRotationY(float rotationY);
 	void setRotationZ(float rotationZ);
 	void setRotationXYZ(float rotationX, float rotationY, float rotationZ);
-protected:
-	void applyTransformations();
 	std::vector<GLTriangle> _triangles;
 	std::vector<GLLine> _lines;
 	std::vector<GLPoint> _points;
+protected:
+	void applyTransformations();
 	Drawable* _transformed;
 	bool _needsUpdating;
 	bool _drawOutline;

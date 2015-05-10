@@ -10,6 +10,7 @@
 
 #include "Logger.h"
 #include "Render/Renderer.h"
+#include "Map/Map.h"
 #include "Render/Camera.h"
 #include "Math/Matrix.h"
 #include "Input/Keyboard.h"
@@ -36,6 +37,7 @@ public:
 	GLFWwindow* _window;
 	Logger* _logger;
 	Renderer* _renderer;
+	Map* _map;
 	Camera* _camera;
 	Keyboard* _keyboard;
 	int _windowSizeX;

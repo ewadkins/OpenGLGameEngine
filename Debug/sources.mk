@@ -25,6 +25,7 @@ C_UPPER_DEPS :=
 SUBDIRS := \
 Render \
 Math \
+Map \
 . \
 Input \
 Drawables \

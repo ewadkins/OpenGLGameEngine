@@ -50,6 +50,7 @@ Application::Application(int screenSizeX, int screenSizeY, bool fullScreen) {
 	_fullScreen = fullScreen;
 	_frameCount = 0;
 	_renderer = nullptr;
+	_map = nullptr;
 	_camera = nullptr;
 	_keyboard = nullptr;
 	_averageFPS = 0;
@@ -108,200 +109,200 @@ void Application::initialize() {
 	clock_t start, finish, start2, finish2;
 
 	/*
-	_logger->log("Testing polynomials...").endLine().increaseIndent();
-	start = clock();
-	{
-		//float numArr[] = { -5, 3, -3, 1 };
-		//float numArr[] = { -64, 48, -12, 1 };
-		//float numArr[] = { 1200, -140, -270, 0, 10 };
-		float numArr[] = { -22680, 6966, 25209, -7884, -2521, 934, -9, -16, 1 };
-		//float numArr[] = { 5, 3, 2, -2, 1, 4, 2, 5, -2 };
-		std::vector<float> values(numArr,
-				numArr + sizeof(numArr) / sizeof(numArr[0]));
-		Polynomial<float> p = Polynomial<float>(values, 1);
-		p.print();
+	 _logger->log("Testing polynomials...").endLine().increaseIndent();
+	 start = clock();
+	 {
+	 //float numArr[] = { -5, 3, -3, 1 };
+	 //float numArr[] = { -64, 48, -12, 1 };
+	 //float numArr[] = { 1200, -140, -270, 0, 10 };
+	 float numArr[] = { -22680, 6966, 25209, -7884, -2521, 934, -9, -16, 1 };
+	 //float numArr[] = { 5, 3, 2, -2, 1, 4, 2, 5, -2 };
+	 std::vector<float> values(numArr,
+	 numArr + sizeof(numArr) / sizeof(numArr[0]));
+	 Polynomial<float> p = Polynomial<float>(values, 1);
+	 p.print();
 
-		std::vector<Complex<float> > roots = p.roots();
-		std::cout << "Roots: " << std::endl;
-		for (int i = 0; i < roots.size(); i++)
-			roots[i].print();
+	 std::vector<Complex<float> > roots = p.roots();
+	 std::cout << "Roots: " << std::endl;
+	 for (int i = 0; i < roots.size(); i++)
+	 roots[i].print();
 
-		std::cout << std::endl;
+	 std::cout << std::endl;
 
-		float numArr2[] = { -122, 25, 4, -1 };
-		std::vector<float> values2(numArr2,
-				numArr2 + sizeof(numArr2) / sizeof(numArr2[0]));
-		Polynomial<float> p2 = Polynomial<float>(values2, 1);
-		p2.print();
+	 float numArr2[] = { -122, 25, 4, -1 };
+	 std::vector<float> values2(numArr2,
+	 numArr2 + sizeof(numArr2) / sizeof(numArr2[0]));
+	 Polynomial<float> p2 = Polynomial<float>(values2, 1);
+	 p2.print();
 
-		(p/p2).print();
+	 (p/p2).print();
 
-		std::vector<Complex<float> > roots2 = p2.roots();
-		std::cout << "Roots: " << std::endl;
-		for (int i = 0; i < roots2.size(); i++)
-			roots2[i].print();
+	 std::vector<Complex<float> > roots2 = p2.roots();
+	 std::cout << "Roots: " << std::endl;
+	 for (int i = 0; i < roots2.size(); i++)
+	 roots2[i].print();
 
-	}
-	finish = clock();
-	_logger->log("(Took ").log(
-			(double(finish) - double(start)) / CLOCKS_PER_SEC * 1000).log(
-			" ms)").endLine().decreaseIndent();
+	 }
+	 finish = clock();
+	 _logger->log("(Took ").log(
+	 (double(finish) - double(start)) / CLOCKS_PER_SEC * 1000).log(
+	 " ms)").endLine().decreaseIndent();
 
-	_logger->log("Testing matrices...").endLine().increaseIndent();
-	start = clock();
-	{
-		{
-			PolynomialMatrix<float> pm = PolynomialMatrix<float>(3, 3);
+	 _logger->log("Testing matrices...").endLine().increaseIndent();
+	 start = clock();
+	 {
+	 {
+	 PolynomialMatrix<float> pm = PolynomialMatrix<float>(3, 3);
 
-			//float numArr[] = { 5, 3, 2, -2, 1, 4, 2, 5, -2 };
-			float numArr[] = { 5, 3, 9, -2, 1, 3, 2, 5, 15 };
-			std::vector<float> values2(numArr,
-					numArr + sizeof(numArr) / sizeof(numArr[0]));
-			pm.setVector(values2);
+	 //float numArr[] = { 5, 3, 2, -2, 1, 4, 2, 5, -2 };
+	 float numArr[] = { 5, 3, 9, -2, 1, 3, 2, 5, 15 };
+	 std::vector<float> values2(numArr,
+	 numArr + sizeof(numArr) / sizeof(numArr[0]));
+	 pm.setVector(values2);
 
-			float denArr[] = { 5, 1 };
-			std::vector<float> numCoeffs(denArr,
-					denArr + sizeof(denArr) / sizeof(denArr[0]));
+	 float denArr[] = { 5, 1 };
+	 std::vector<float> numCoeffs(denArr,
+	 denArr + sizeof(denArr) / sizeof(denArr[0]));
 
-			Polynomial<float> p = Polynomial<float>(numCoeffs, 1);
-			pm.set(0, 0, p);
+	 Polynomial<float> p = Polynomial<float>(numCoeffs, 1);
+	 pm.set(0, 0, p);
 
-			pm.print();
-			pm.upperTriangular().print();
-			pm.rref().print();
-			std::vector<std::vector<Polynomial<float> > > specialSolutions = pm.specialSolutions();
-			for (int i = 0; i < specialSolutions.size(); i++) {
-				std::cout << "Special solution " << i + 1 << ": ";
-				for (int j = 0; j < specialSolutions[i].size(); j++)
-					std::cout << specialSolutions[i][j].toString() << ", ";
-				std::cout << std::endl;
-			}
+	 pm.print();
+	 pm.upperTriangular().print();
+	 pm.rref().print();
+	 std::vector<std::vector<Polynomial<float> > > specialSolutions = pm.specialSolutions();
+	 for (int i = 0; i < specialSolutions.size(); i++) {
+	 std::cout << "Special solution " << i + 1 << ": ";
+	 for (int j = 0; j < specialSolutions[i].size(); j++)
+	 std::cout << specialSolutions[i][j].toString() << ", ";
+	 std::cout << std::endl;
+	 }
 
-		}
+	 }
 
-		std::cout << std::endl << "-------------------" << std::endl
-				<< std::endl;
+	 std::cout << std::endl << "-------------------" << std::endl
+	 << std::endl;
 
-		{
-			ComplexMatrix<float> cm = ComplexMatrix<float>(3, 3);
+	 {
+	 ComplexMatrix<float> cm = ComplexMatrix<float>(3, 3);
 
-			float numArr[] = { 5, 3, 2, -2, 1, 4, 2, 5, -2 };
-			std::vector<float> values2(numArr,
-					numArr + sizeof(numArr) / sizeof(numArr[0]));
-			cm.setVector(values2);
+	 float numArr[] = { 5, 3, 2, -2, 1, 4, 2, 5, -2 };
+	 std::vector<float> values2(numArr,
+	 numArr + sizeof(numArr) / sizeof(numArr[0]));
+	 cm.setVector(values2);
 
-			float denArr[] = { 5, 1 };
-			std::vector<float> numCoeffs(denArr,
-					denArr + sizeof(denArr) / sizeof(denArr[0]));
+	 float denArr[] = { 5, 1 };
+	 std::vector<float> numCoeffs(denArr,
+	 denArr + sizeof(denArr) / sizeof(denArr[0]));
 
-			Complex<float> c = Complex<float>(numCoeffs, 1);
-			cm.set(0, 0, c);
+	 Complex<float> c = Complex<float>(numCoeffs, 1);
+	 cm.set(0, 0, c);
 
-			cm.print();
-			cm.upperTriangular().print();
-			cm.determinant().print();
-		}
+	 cm.print();
+	 cm.upperTriangular().print();
+	 cm.determinant().print();
+	 }
 
-		std::cout << std::endl << "-------------------" << std::endl
-				<< std::endl;
+	 std::cout << std::endl << "-------------------" << std::endl
+	 << std::endl;
 
-		Matrix<float> m1 = Matrix<float>(2, 2);
-		float arr[] = { 2, 1, 1, 1 };
-		//float arr[] = { 4, -4, 8, -4, 4, -8, 8, -8, 16 };
-		//float arr[] = { 5, 3, 2, -2, 1, 4, 2, 5, -2 };
-		//float arr[] = { 5, 25, 2, -2, -10, 4, 2, 10, -2 };
-		//float arr[] = { 5, 0, 2, -2, 0, 4, 2, 0, -2 };
-		std::vector<float> values(arr, arr + sizeof(arr) / sizeof(arr[0]));
-		m1.setVector(values);
+	 Matrix<float> m1 = Matrix<float>(2, 2);
+	 float arr[] = { 2, 1, 1, 1 };
+	 //float arr[] = { 4, -4, 8, -4, 4, -8, 8, -8, 16 };
+	 //float arr[] = { 5, 3, 2, -2, 1, 4, 2, 5, -2 };
+	 //float arr[] = { 5, 25, 2, -2, -10, 4, 2, 10, -2 };
+	 //float arr[] = { 5, 0, 2, -2, 0, 4, 2, 0, -2 };
+	 std::vector<float> values(arr, arr + sizeof(arr) / sizeof(arr[0]));
+	 m1.setVector(values);
 
-		m1.print();
-		std::vector<Complex<float> > eigenvalues;
-		eigenvalues = m1.eigenvalues();
-		for (int i = 0; i < eigenvalues.size(); i++) {
-			std::cout << "Eigenvalue " << i + 1 << ": ";
-			eigenvalues[i].print();
-		}
+	 m1.print();
+	 std::vector<Complex<float> > eigenvalues;
+	 eigenvalues = m1.eigenvalues();
+	 for (int i = 0; i < eigenvalues.size(); i++) {
+	 std::cout << "Eigenvalue " << i + 1 << ": ";
+	 eigenvalues[i].print();
+	 }
 
-		std::vector<std::vector<Complex<float> > > evectors = m1.eigenvectors();
-		for (int i = 0; i < evectors.size(); i++) {
-			std::cout << "Eigenvector " << i + 1 << ": ";
-			for (int j = 0; j < evectors[i].size(); j++)
-				std::cout << evectors[i][j].toString() << ", ";
-			std::cout << std::endl;
-		}
+	 std::vector<std::vector<Complex<float> > > evectors = m1.eigenvectors();
+	 for (int i = 0; i < evectors.size(); i++) {
+	 std::cout << "Eigenvector " << i + 1 << ": ";
+	 for (int j = 0; j < evectors[i].size(); j++)
+	 std::cout << evectors[i][j].toString() << ", ";
+	 std::cout << std::endl;
+	 }
 
-		std::cout << std::endl << "-------------------" << std::endl
-				<< std::endl;
+	 std::cout << std::endl << "-------------------" << std::endl
+	 << std::endl;
 
-		m1 = Matrix<float>(3, 3);
-		float arr2[] = { 5, 25, 2, -2, -10, 4, 2, 10, -2 };
-		//float arr2[] = { 5, 0, 2, -2, 0, 4, 2, 0, -2 };
-		std::vector<float> values2(arr2, arr2 + sizeof(arr2) / sizeof(arr2[0]));
-		m1.setVector(values2);
+	 m1 = Matrix<float>(3, 3);
+	 float arr2[] = { 5, 25, 2, -2, -10, 4, 2, 10, -2 };
+	 //float arr2[] = { 5, 0, 2, -2, 0, 4, 2, 0, -2 };
+	 std::vector<float> values2(arr2, arr2 + sizeof(arr2) / sizeof(arr2[0]));
+	 m1.setVector(values2);
 
-		m1.print();
-		eigenvalues = m1.eigenvalues();
-		for (int i = 0; i < eigenvalues.size(); i++) {
-			std::cout << "Eigenvalue " << i + 1 << ": ";
-			eigenvalues[i].print();
-		}
+	 m1.print();
+	 eigenvalues = m1.eigenvalues();
+	 for (int i = 0; i < eigenvalues.size(); i++) {
+	 std::cout << "Eigenvalue " << i + 1 << ": ";
+	 eigenvalues[i].print();
+	 }
 
-		evectors = m1.eigenvectors();
-		for (int i = 0; i < evectors.size(); i++) {
-			std::cout << "Eigenvector " << i + 1 << ": ";
-			for (int j = 0; j < evectors[i].size(); j++)
-				std::cout << evectors[i][j].toString() << ", ";
-			std::cout << std::endl;
-		}
+	 evectors = m1.eigenvectors();
+	 for (int i = 0; i < evectors.size(); i++) {
+	 std::cout << "Eigenvector " << i + 1 << ": ";
+	 for (int j = 0; j < evectors[i].size(); j++)
+	 std::cout << evectors[i][j].toString() << ", ";
+	 std::cout << std::endl;
+	 }
 
-		std::cout << std::endl << "-------------------" << std::endl
-				<< std::endl;
+	 std::cout << std::endl << "-------------------" << std::endl
+	 << std::endl;
 
-		float arr3[] = { 5, 25, 10, -2, -10, -4, 2, 10, 4 };
-		std::vector<float> values3(arr3, arr3 + sizeof(arr3) / sizeof(arr3[0]));
-		m1.setVector(values3);
+	 float arr3[] = { 5, 25, 10, -2, -10, -4, 2, 10, 4 };
+	 std::vector<float> values3(arr3, arr3 + sizeof(arr3) / sizeof(arr3[0]));
+	 m1.setVector(values3);
 
-		m1.print();
-		eigenvalues = m1.eigenvalues();
-		for (int i = 0; i < eigenvalues.size(); i++) {
-			std::cout << "Eigenvalue " << i + 1 << ": ";
-			eigenvalues[i].print();
-		}
+	 m1.print();
+	 eigenvalues = m1.eigenvalues();
+	 for (int i = 0; i < eigenvalues.size(); i++) {
+	 std::cout << "Eigenvalue " << i + 1 << ": ";
+	 eigenvalues[i].print();
+	 }
 
-		evectors = m1.eigenvectors();
-		for (int i = 0; i < evectors.size(); i++) {
-			std::cout << "Eigenvector " << i + 1 << ": ";
-			for (int j = 0; j < evectors[i].size(); j++)
-				std::cout << evectors[i][j].toString() << ", ";
-			std::cout << std::endl;
-		}
+	 evectors = m1.eigenvectors();
+	 for (int i = 0; i < evectors.size(); i++) {
+	 std::cout << "Eigenvector " << i + 1 << ": ";
+	 for (int j = 0; j < evectors[i].size(); j++)
+	 std::cout << evectors[i][j].toString() << ", ";
+	 std::cout << std::endl;
+	 }
 
-		std::cout << std::endl << "-------------------" << std::endl
-				<< std::endl;
+	 std::cout << std::endl << "-------------------" << std::endl
+	 << std::endl;
 
-		m1 = Matrix<float>::identity(3);
+	 m1 = Matrix<float>::identity(3);
 
-		m1.print();
-		eigenvalues = m1.eigenvalues();
-		for (int i = 0; i < eigenvalues.size(); i++)
-			eigenvalues[i].print();
+	 m1.print();
+	 eigenvalues = m1.eigenvalues();
+	 for (int i = 0; i < eigenvalues.size(); i++)
+	 eigenvalues[i].print();
 
-		evectors = m1.eigenvectors();
-		for (int i = 0; i < evectors.size(); i++) {
-			std::cout << "Eigenvector " << i + 1 << ": ";
-			for (int j = 0; j < evectors[i].size(); j++)
-				std::cout << evectors[i][j].toString() << ", ";
-			std::cout << std::endl;
-		}
+	 evectors = m1.eigenvectors();
+	 for (int i = 0; i < evectors.size(); i++) {
+	 std::cout << "Eigenvector " << i + 1 << ": ";
+	 for (int j = 0; j < evectors[i].size(); j++)
+	 std::cout << evectors[i][j].toString() << ", ";
+	 std::cout << std::endl;
+	 }
 
-	}
-	finish = clock();
-	_logger->log("(Took ").log(
-			(double(finish) - double(start)) / CLOCKS_PER_SEC * 1000).log(
-			" ms)").endLine().decreaseIndent();
+	 }
+	 finish = clock();
+	 _logger->log("(Took ").log(
+	 (double(finish) - double(start)) / CLOCKS_PER_SEC * 1000).log(
+	 " ms)").endLine().decreaseIndent();
 
 
-	//stop("Testing complete");*/
+	 //stop("Testing complete");*/
 
 	_logger->log("Initializing GLFW..").endLine().increaseIndent();
 	start = clock();
@@ -315,9 +316,9 @@ void Application::initialize() {
 		glfwSetErrorCallback(error_callback);
 	}
 	finish = clock();
-	_logger->log("(Took ").log(
+	_logger->decreaseIndent().log("(Took ").log(
 			(double(finish) - double(start)) / CLOCKS_PER_SEC * 1000).log(
-			" ms)").endLine().decreaseIndent();
+			" ms)").endLine();
 
 	_logger->log("Initializing window..").endLine().increaseIndent();
 	start = clock();
@@ -332,9 +333,9 @@ void Application::initialize() {
 		glfwSetFramebufferSizeCallback(_window, framebuffer_size_callback);
 	}
 	finish = clock();
-	_logger->log("(Took ").log(
+	_logger->decreaseIndent().log("(Took ").log(
 			(double(finish) - double(start)) / CLOCKS_PER_SEC * 1000).log(
-			" ms)").endLine().decreaseIndent();
+			" ms)").endLine();
 
 	_logger->log("Initializing GLEW..").endLine().increaseIndent();
 	start = clock();
@@ -346,9 +347,9 @@ void Application::initialize() {
 		}
 	}
 	finish = clock();
-	_logger->log("(Took ").log(
+	_logger->decreaseIndent().log("(Took ").log(
 			(double(finish) - double(start)) / CLOCKS_PER_SEC * 1000).log(
-			" ms)").endLine().decreaseIndent();
+			" ms)").endLine();
 
 	_logger->log("Initializing display..").endLine().increaseIndent();
 	start = clock();
@@ -357,48 +358,59 @@ void Application::initialize() {
 		setupDisplay();
 	}
 	finish = clock();
-	_logger->log("(Took ").log(
+	_logger->decreaseIndent().log("(Took ").log(
 			(double(finish) - double(start)) / CLOCKS_PER_SEC * 1000).log(
-			" ms)").endLine().decreaseIndent();
+			" ms)").endLine();
 
 	_logger->log("Initializing renderer..").endLine().increaseIndent();
 	start = clock();
 	{
 		// Create and initialize the renderer
 		_renderer = new Renderer(_application);
-		_logger->log("Initializing shaders..").endLine().increaseIndent();
+		_logger->log("Creating shaders..").endLine().increaseIndent();
 		start2 = clock();
-		_renderer->initializeShaders();
+		_renderer->createShaders();
 		finish2 = clock();
-		_logger->log("(Took ").log(
+		_logger->decreaseIndent().log("(Took ").log(
 				(double(finish2) - double(start2)) / CLOCKS_PER_SEC * 1000).log(
-				" ms)").endLine().decreaseIndent();
+				" ms)").endLine();
 
-		_logger->log("Initializing VBOs..").endLine().increaseIndent();
+		_logger->log("Creating VBOs..").endLine().increaseIndent();
 		start2 = clock();
-		_renderer->initializeVBOs();
+		_renderer->createVBOs();
 		finish2 = clock();
-		_logger->log("(Took ").log(
+		_logger->decreaseIndent().log("(Took ").log(
 				(double(finish2) - double(start2)) / CLOCKS_PER_SEC * 1000).log(
-				" ms)").endLine().decreaseIndent();
+				" ms)").endLine();
 	}
 	finish = clock();
-	_logger->log("(Took ").log(
+	_logger->decreaseIndent().log("(Took ").log(
 			(double(finish) - double(start)) / CLOCKS_PER_SEC * 1000).log(
-			" ms)").endLine().decreaseIndent();
+			" ms)").endLine();
+
+	_logger->log("Initializing map..").endLine().increaseIndent();
+	start = clock();
+	{
+		_map = new Map(this);
+		_map->initialize();
+	}
+	finish = clock();
+	_logger->decreaseIndent().log("(Took ").log(
+			(double(finish) - double(start)) / CLOCKS_PER_SEC * 1000).log(
+			" ms)").endLine();
 
 	_logger->log("Initializing camera..").endLine().increaseIndent();
 	start = clock();
 	{
 		// Create and initialize the camera
 		//_camera = new Camera(this, 1.5, 1.5, 4, -20, 20, 0);
-		_camera = new Camera(this, 0, 0, 8, 0, 0, 0);
+		_camera = new Camera(this, 0, 1.5, 8, 0, 0, 0);
 		_camera->initialize();
 	}
 	finish = clock();
-	_logger->log("(Took ").log(
+	_logger->decreaseIndent().log("(Took ").log(
 			(double(finish) - double(start)) / CLOCKS_PER_SEC * 1000).log(
-			" ms)").endLine().decreaseIndent();
+			" ms)").endLine();
 
 	_logger->log("Initializing keyboard..").endLine().increaseIndent();
 	start = clock();
@@ -407,9 +419,9 @@ void Application::initialize() {
 		_keyboard = new Keyboard(this);
 	}
 	finish = clock();
-	_logger->log("(Took ").log(
+	_logger->decreaseIndent().log("(Took ").log(
 			(double(finish) - double(start)) / CLOCKS_PER_SEC * 1000).log(
-			" ms)").endLine().decreaseIndent();
+			" ms)").endLine();
 
 	// Get info of GPU and supported OpenGL version
 	_logger->endLine().log("###").endLine();
@@ -437,14 +449,12 @@ void Application::gameLoop() {
 		updateAverageFPS(fps);
 		_logger->log("FPS: ").log((int) _averageFPS).endLine();
 
-
 		fpsList.push_back(_averageFPS);
 		float avg = 0;
 		for (int i = 0; i < fpsList.size(); i++)
 			avg += fpsList[i];
 		avg /= fpsList.size();
 		std::cout << "Average FPS: " << avg << std::endl;
-
 
 		lastTime = clock();
 
@@ -455,7 +465,8 @@ void Application::gameLoop() {
 
 		_camera->useView();
 
-		_renderer->update();
+		_map->update();
+
 		_renderer->render();
 		_renderer->display();
 
@@ -484,9 +495,11 @@ int Application::start() {
 				// Fatal error purposely thrown from within the application
 				std::string string = std::string(str);
 				if (string.find("\n") == std::string::npos)
-					_logger->endLine().setIndent(0).log("*** Stopping Application (").log(str).log(") ***").endLine();
+					_logger->endLine().setIndent(0).log(
+							"*** Stopping Application (").log(str).log(") ***").endLine();
 				else
-					_logger->endLine().setIndent(0).log("*** Stopping Application ***").endLine().log(str).endLine();
+					_logger->endLine().setIndent(0).log(
+							"*** Stopping Application ***").endLine().log(str).endLine();
 			}
 		} catch (int e) {
 			// Error thrown to signify the end of the application

@@ -32,14 +32,23 @@ public:
 	void setColor(float r, float g, float b);
 	void setNormal(float normX, float normY, float normZ);
 	void setTexCoords(float texX, float texY);
+	void setPosition(std::vector<float> pos);
+	void setColor(std::vector<float> color);
+	void setNormal(std::vector<float> norm);
+	void setTexCoords(std::vector<float> tex);
 	std::vector<float> getPosition();
 	std::vector<float> getColor();
 	std::vector<float> getNormal();
 	std::vector<float> getTexCoords();
+	bool hasPosition();
+	bool hasColor();
+	bool hasNormal();
+	bool hasTexCoords();
 	GLVertex* clone();
 	std::string toString();
 private:
 	float _x, _y, _z, _r, _g, _b, _normX, _normY, _normZ, _texX, _texY;
+	bool _hasPosition, _hasColor, _hasNormal, _hasTexCoords;
 };
 
 #endif /* COMPONENTS_VERTEX_H_ */
