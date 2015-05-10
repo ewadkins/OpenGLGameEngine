@@ -12,6 +12,7 @@ Map::Map(Application* application) {
 	_application = application;
 	_staticsNeedUpdating = false;
 	_dynamicsNeedUpdating = false;
+	_terrainsNeedUpdating = false;
 }
 
 void Map::initialize() {
@@ -93,6 +94,10 @@ void Map::update() {
 		_application->_renderer->updateDynamicVBOs();
 		_dynamicsNeedUpdating = false;
 	}
+	if (_terrainsNeedUpdating) {
+		_application->_renderer->updateTerrainVBOs();
+		_terrainsNeedUpdating = false;
+	}
 }
 
 void Map::addStatic(Drawable* drawable) {
@@ -107,6 +112,13 @@ void Map::addDynamic(Drawable* drawable) {
 
 void Map::addStream(Drawable* drawable) {
 	_streamDrawables.push_back(drawable);
+}
+
+void Map::addTerrain(Terrain* terrain) {
+	std::vector<Drawable*> drawables = terrain->getDrawables();
+	for (int i = 0; i < drawables.size(); i++)
+		_terrainDrawables.push_back(drawables[i]);
+	_terrainsNeedUpdating = true;
 }
 
 void Map::removeStatic(Drawable* drawable) {
@@ -125,16 +137,13 @@ void Map::removeStream(Drawable* drawable) {
 	_streamDrawables.push_back(drawable);
 }
 
-void Map::addTerrain(Terrain* terrain) {
-	std::vector<Drawable*> drawables = terrain->getDrawables();
-	for (int i = 0; i < drawables.size(); i++)
-		addStatic(drawables[i]);
-}
-
 void Map::removeTerrain(Terrain* terrain) {
 	std::vector<Drawable*> drawables = terrain->getDrawables();
 	for (int i = 0; i < drawables.size(); i++)
-		removeStatic(drawables[i]);
+		for (int j = 0; j < _terrainDrawables.size(); j++)
+			if (_terrainDrawables[j] == drawables[i])
+				_terrainDrawables.erase(_terrainDrawables.begin() + j);
+	_terrainsNeedUpdating = true;
 }
 
 std::vector<Drawable*> Map::getStaticDrawables() {
@@ -151,5 +160,9 @@ std::vector<Drawable*> Map::getDynamicDrawables() {
 
 std::vector<Drawable*> Map::getStreamDrawables() {
 	return _streamDrawables;
+}
+
+std::vector<Drawable*> Map::getTerrainDrawables() {
+	return _terrainDrawables;
 }
 

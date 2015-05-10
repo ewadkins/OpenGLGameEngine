@@ -8,6 +8,7 @@ out vec4 outColor;
 
 uniform vec3 cameraPosition;
 uniform bool lightingEnabled;
+uniform float shininess;
 
 struct Light
 {
@@ -26,7 +27,7 @@ void main()
     //lights[0].position = cameraPosition;
     lights[0].ambient = vec3(0.3, 0.3, 0.3);
     lights[0].diffuse = vec3(0.5, 0.5, 0.5);
-    lights[0].specular = vec3(0.3, 0.3, 0.3);
+    lights[0].specular = vec3(0.5, 0.5, 0.5);
     lights[0].range = 3000;
     
     //vec3 ambient = vec3(0.0, 0.0, 0.0);
@@ -35,6 +36,8 @@ void main()
     vec3 ambient;
     vec3 diffuse;
     vec3 specular;
+    
+    vec3 color = passColor;
     
     if (lightingEnabled) {
         for (int i = 0; i < lights.length(); i++)
@@ -55,8 +58,8 @@ void main()
                 diffuse += lights[i].diffuse * max(0.0, dot(passNormal, surfaceToLight)) * k;
                 
                 // Specular lighting
-                float shininess = 5;
                 //if (dot(passNormal, surfaceToLight) > 0)
+                if (shininess > 0)
                     specular += lights[i].specular * pow(max(0.0, dot(surfaceToCamera, lightReflection)), shininess) * k;
                 
                 //ambient = vec3((dot(passNormal, surfaceToLight)));
@@ -70,7 +73,7 @@ void main()
                 //specular = passNormal;
                 
             }
+        color = color * (ambient + diffuse) + specular;
     }
-    vec3 color = passColor * (ambient + diffuse) + specular;
     outColor = vec4(color, 1.0);
 }

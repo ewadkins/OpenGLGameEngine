@@ -35,10 +35,12 @@ public:
 	void updateStaticVBOs();
 	void updateDynamicVBOs();
 	void updateStreamVBOs();
+	void updateTerrainVBOs();
 	void render();
 	void display();
 	void useProgram(ShaderProgram*);
-	void useLighting(bool useLighting);
+	void enableLighting();
+	void disableLighting();
 	void setProjectionMatrix(Matrix<float> projectionMatrix);
 	ShaderProgram* _basicShader;
 	ShaderProgram* _lightingShader;
@@ -46,6 +48,8 @@ public:
 private:
 	void setupShaders();
 	void updateUniforms();
+	void setLightingEnabled(bool lighting);
+	void setShininess(float shininess);
 	Application* _application;
 
 	VBO<GLTriangle>* _staticTriangleVBO;
@@ -57,6 +61,11 @@ private:
 	VBO<GLTriangle>* _streamTriangleVBO;
 	VBO<GLLine>* _streamLineVBO;
 	VBO<GLPoint>* _streamPointVBO;
+	VBO<GLTriangle>* _terrainTriangleVBO;
+	VBO<GLLine>* _terrainLineVBO;
+	VBO<GLPoint>* _terrainPointVBO;
+
+	bool _lightingEnabled;
 
 	Matrix<float> _projectionMatrix;
 };

@@ -14,6 +14,7 @@ Renderer::Renderer(Application* application) : // FIXME Random warning message
 	_basicShader = nullptr;
 	_lightingShader = nullptr;
 	_currentProgram = nullptr;
+	_lightingEnabled = true;
 
 	/*_staticTriangleVBO = nullptr;
 	_staticLineVBO = nullptr;
@@ -42,8 +43,16 @@ void Renderer::useProgram(ShaderProgram* program) {
 	updateUniforms();
 }
 
-void Renderer::useLighting(bool useLighting) {
-	_currentProgram->setUniform1i("lightingEnabled", useLighting);
+void Renderer::enableLighting() {
+	_lightingEnabled = true;
+}
+
+void Renderer::setLightingEnabled(bool lighting) {
+	_currentProgram->setUniform1i("lightingEnabled", lighting);
+}
+
+void Renderer::setShininess(float shininess) {
+	_currentProgram->setUniform1f("shininess", shininess);
 }
 
 // Sets the projection matrix to be used in rendering
@@ -98,6 +107,14 @@ void Renderer::createVBOs() {
 	_streamTriangleVBO->create();
 	_streamLineVBO->create();
 	_streamPointVBO->create();
+
+	// Create terrain VBOs
+	_terrainTriangleVBO = new VBO<GLTriangle>(VBOBase::STATIC);
+	_terrainLineVBO = new VBO<GLLine>(VBOBase::STATIC);
+	_terrainPointVBO = new VBO<GLPoint>(VBOBase::STATIC);
+	_terrainTriangleVBO->create();
+	_terrainLineVBO->create();
+	_terrainPointVBO->create();
 }
 
 void Renderer::updateStaticVBOs() {
@@ -248,6 +265,46 @@ void Renderer::updateStreamVBOs() {
 	_streamPointVBO->pushToBuffer();
 }
 
+void Renderer::updateTerrainVBOs() {
+
+	_terrainTriangleVBO->clear();
+	_terrainLineVBO->clear();
+	_terrainPointVBO->clear();
+
+	std::vector<GLVertex> vertices;
+	std::vector<GLTriangle> triangles;
+	std::vector<GLLine> lines;
+	std::vector<GLPoint> points;
+
+	std::vector<Drawable*> terrainDrawables = _application->_map->getTerrainDrawables();
+
+	// Uses pre-transformed versions of each drawable, which prevents recalculation if unnecessary
+	for (int i = 0; i < terrainDrawables.size(); i++) {
+
+		triangles = terrainDrawables[i]->getTransformedTriangles();
+		lines = terrainDrawables[i]->getTransformedLines();
+		points = terrainDrawables[i]->getTransformedPoints();
+
+		if (terrainDrawables[i]->getDrawFaces())
+			for (int j = 0; j < triangles.size(); j++)
+				_terrainTriangleVBO->add(triangles[j]);
+
+		if (terrainDrawables[i]->getDrawOutline()) {
+			for (int j = 0; j < lines.size(); j++)
+				_terrainLineVBO->add(lines[j]);
+			for (int j = 0; j < points.size(); j++)
+				_terrainPointVBO->add(points[j]);
+		}
+	}
+
+	_terrainTriangleVBO->updateData();
+	_terrainTriangleVBO->pushToBuffer();
+	_terrainLineVBO->updateData();
+	_terrainLineVBO->pushToBuffer();
+	_terrainPointVBO->updateData();
+	_terrainPointVBO->pushToBuffer();
+}
+
 void Renderer::render() {
 
 	// Clear everything
@@ -255,17 +312,25 @@ void Renderer::render() {
 
 	updateStreamVBOs();
 
+	if (_lightingEnabled)
+		setLightingEnabled(true);
+	setShininess(20);
 	_staticTriangleVBO->draw();
 	_dynamicTriangleVBO->draw();
 	_streamTriangleVBO->draw();
-	useLighting(false);
+	setShininess(2);
+	_terrainTriangleVBO->draw();
+
+	if (_lightingEnabled)
+		setLightingEnabled(false);
 	_staticLineVBO->draw();
-	_dynamicLineVBO->draw();
-	_streamLineVBO->draw();
 	_staticPointVBO->draw();
+	_dynamicLineVBO->draw();
 	_dynamicPointVBO->draw();
+	_streamLineVBO->draw();
 	_streamPointVBO->draw();
-	useLighting(true);
+	_terrainLineVBO->draw();
+	_terrainPointVBO->draw();
 }
 
 // Displays the rendered scene
