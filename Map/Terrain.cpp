@@ -11,6 +11,8 @@
 void Terrain::updateDrawables() {
 	bool smoothLighting = true;
 
+	_drawables.clear();
+
 	std::vector<std::vector<GLVertex> > vertices;
 	std::vector<GLVertex> rowVertices;
 	for (int i = 0; i < _length; i++) {
