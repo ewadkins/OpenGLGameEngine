@@ -38,6 +38,7 @@ public:
 	void render();
 	void display();
 	void useProgram(ShaderProgram*);
+	void useLighting(bool useLighting);
 	void setProjectionMatrix(Matrix<float> projectionMatrix);
 	ShaderProgram* _basicShader;
 	ShaderProgram* _lightingShader;
@@ -56,10 +57,6 @@ private:
 	VBO<GLTriangle>* _streamTriangleVBO;
 	VBO<GLLine>* _streamLineVBO;
 	VBO<GLPoint>* _streamPointVBO;
-
-	std::vector<VBOBase*> _staticVBOs;
-	std::vector<VBOBase*> _dynamicVBOs;
-	std::vector<VBOBase*> _streamVBOs;
 
 	Matrix<float> _projectionMatrix;
 };

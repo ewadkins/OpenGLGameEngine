@@ -37,7 +37,7 @@ void Map::initialize() {
 	addStream(t4);
 
 	Drawable* lightCube = new Cube();
-	lightCube->setXYZ(0, 30, 0);
+	lightCube->setXYZ(0, 15, 0);
 	lightCube->scaleXYZ(0.5, 0.5, 0.5);
 	lightCube->setColor(1, 1, 0);
 	addStatic(lightCube);

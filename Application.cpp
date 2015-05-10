@@ -72,7 +72,7 @@ void Application::setupWindow() {
 				"OpenGL Application", NULL, NULL);
 	else
 		_window = glfwCreateWindow(_windowSizeX, _windowSizeY,
-				"OpenGL Application", glfwGetPrimaryMonitor(), NULL);
+				"OpenGL Application", glfwGetPrimaryMonitor(), nullptr);
 
 	// If window creation fails, then exit
 	if (!_window) {
@@ -449,12 +449,12 @@ void Application::gameLoop() {
 		updateAverageFPS(fps);
 		_logger->log("FPS: ").log((int) _averageFPS).endLine();
 
-		fpsList.push_back(_averageFPS);
+		/*fpsList.push_back(_averageFPS);
 		float avg = 0;
 		for (int i = 0; i < fpsList.size(); i++)
 			avg += fpsList[i];
 		avg /= fpsList.size();
-		std::cout << "Average FPS: " << avg << std::endl;
+		std::cout << "Average FPS: " << avg << std::endl;*/
 
 		lastTime = clock();
 

@@ -42,6 +42,10 @@ void Renderer::useProgram(ShaderProgram* program) {
 	updateUniforms();
 }
 
+void Renderer::useLighting(bool useLighting) {
+	_currentProgram->setUniform1i("lightingEnabled", useLighting);
+}
+
 // Sets the projection matrix to be used in rendering
 void Renderer::setProjectionMatrix(Matrix<float> projectionMatrix) {
 	_projectionMatrix = projectionMatrix;
@@ -71,42 +75,29 @@ void Renderer::createShaders() {
 
 void Renderer::createVBOs() {
 
-	_staticVBOs.clear();
-	_dynamicVBOs.clear();
-	_streamVBOs.clear();
-
 	// Create static VBOs
 	_staticTriangleVBO = new VBO<GLTriangle>(VBOBase::STATIC);
-	_staticVBOs.push_back(_staticTriangleVBO);
 	_staticLineVBO = new VBO<GLLine>(VBOBase::STATIC);
-	_staticVBOs.push_back(_staticLineVBO);
 	_staticPointVBO = new VBO<GLPoint>(VBOBase::STATIC);
-	_staticVBOs.push_back(_staticPointVBO);
-	//updateStaticVBOs();
-	for (int i = 0; i < _staticVBOs.size(); i++)
-		_staticVBOs[i]->create();
+	_staticTriangleVBO->create();
+	_staticLineVBO->create();
+	_staticPointVBO->create();
 
 	// Create dynamic VBOs
 	_dynamicTriangleVBO = new VBO<GLTriangle>(VBOBase::DYNAMIC);
-	_dynamicVBOs.push_back(_dynamicTriangleVBO);
 	_dynamicLineVBO = new VBO<GLLine>(VBOBase::DYNAMIC);
-	_dynamicVBOs.push_back(_dynamicLineVBO);
 	_dynamicPointVBO = new VBO<GLPoint>(VBOBase::DYNAMIC);
-	_dynamicVBOs.push_back(_dynamicPointVBO);
-	//updateDynamicVBOs();
-	for (int i = 0; i < _dynamicVBOs.size(); i++)
-		_dynamicVBOs[i]->create();
+	_dynamicTriangleVBO->create();
+	_dynamicLineVBO->create();
+	_dynamicPointVBO->create();
 
 	// Create stream VBOs
 	_streamTriangleVBO = new VBO<GLTriangle>(VBOBase::STREAM);
-	_streamVBOs.push_back(_streamTriangleVBO);
 	_streamLineVBO = new VBO<GLLine>(VBOBase::STREAM);
-	_streamVBOs.push_back(_streamLineVBO);
 	_streamPointVBO = new VBO<GLPoint>(VBOBase::STREAM);
-	_streamVBOs.push_back(_streamPointVBO);
-	//updateStreamVBOs();
-	for (int i = 0; i < _streamVBOs.size(); i++)
-		_streamVBOs[i]->create();
+	_streamTriangleVBO->create();
+	_streamLineVBO->create();
+	_streamPointVBO->create();
 }
 
 void Renderer::updateStaticVBOs() {
@@ -262,18 +253,19 @@ void Renderer::render() {
 	// Clear everything
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	// Draw each static vbo
-	for (int i = 0; i < _staticVBOs.size(); i++)
-		_staticVBOs[i]->draw();
-
-	// Draw each dynamic vbo
-	for (int i = 0; i < _dynamicVBOs.size(); i++)
-		_dynamicVBOs[i]->draw();
-
-	// Update and draw each stream vbo
 	updateStreamVBOs();
-	for (int i = 0; i < _streamVBOs.size(); i++)
-		_streamVBOs[i]->draw();
+
+	_staticTriangleVBO->draw();
+	_dynamicTriangleVBO->draw();
+	_streamTriangleVBO->draw();
+	useLighting(false);
+	_staticLineVBO->draw();
+	_dynamicLineVBO->draw();
+	_streamLineVBO->draw();
+	_staticPointVBO->draw();
+	_dynamicPointVBO->draw();
+	_streamPointVBO->draw();
+	useLighting(true);
 }
 
 // Displays the rendered scene
