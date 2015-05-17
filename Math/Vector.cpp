@@ -39,6 +39,11 @@ Vector<T>::Vector(T v1, T v2, T v3, T v4) {
 }
 
 template<typename T>
+Vector<T>::Vector(std::vector<T> vector) {
+	_vector = vector;
+}
+
+template<typename T>
 template<typename S>
 Vector<T>::Vector(Vector<S> other) {
 	for (int i = 0; i < other.size(); i++)
@@ -79,7 +84,7 @@ Vector<T> Vector<T>::cross(Vector other) {
 		throw std::runtime_error("Vector dimensions don't match");
 	return Vector<T>(
 			_vector[1] * other._vector[2] - _vector[2] * other._vector[1],
-			_vector[0] * other._vector[2] - _vector[2] * other._vector[0],
+			_vector[2] * other._vector[0] - _vector[0] * other._vector[2],
 			_vector[0] * other._vector[1] - _vector[1] * other._vector[0]);
 }
 

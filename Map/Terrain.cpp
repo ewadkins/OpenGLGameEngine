@@ -74,19 +74,19 @@ void Terrain::updateDrawables() {
 				pos2 = vertices[i][j + 1].getPosition();
 				pos3 = vertices[i + 1][j + 1].getPosition();
 				pos4 = vertices[i + 1][j].getPosition();
-				v1 = Vector<float>(pos4[0] - pos1[0], pos1[1] - pos4[1],
+				v2 = Vector<float>(pos4[0] - pos1[0], pos4[1] - pos1[1],
 						pos4[2] - pos1[2]);
-				v2 = Vector<float>(pos2[0] - pos1[0], pos1[1] - pos2[1],
+				v1 = Vector<float>(pos2[0] - pos1[0], pos2[1] - pos1[1],
 						pos2[2] - pos1[2]);
 				normal = v1.cross(v2);
 				normal = normal.normalize();
 				faceNormals.push_back(normal);
-				v1 = Vector<float>(pos4[0] - pos2[0], pos2[1] - pos4[1],
+				v2 = Vector<float>(pos4[0] - pos2[0], pos4[1] - pos2[1],
 						pos4[2] - pos2[2]);
-				v2 = Vector<float>(pos3[0] - pos2[0], pos2[1] - pos3[1],
+				v1 = Vector<float>(pos3[0] - pos2[0], pos3[1] - pos2[1],
 						pos3[2] - pos2[2]);
 				normal = v1.cross(v2);
-				normal.normalize();
+				normal = normal.normalize();
 				faceNormals.push_back(normal);
 				rowNormals.push_back(faceNormals);
 
@@ -131,8 +131,8 @@ void Terrain::updateDrawables() {
 			GLVertex v4 = vertices[i + 1][j];
 			Drawable* t1 = new Triangle(v1, v2, v4);
 			Drawable* t2 = new Triangle(v2, v3, v4);
-			t1->setDrawOutline(false);
-			t2->setDrawOutline(false);
+			//t1->setDrawOutline(false);
+			//t2->setDrawOutline(false);
 			_drawables.push_back(t1);
 			_drawables.push_back(t2);
 		}

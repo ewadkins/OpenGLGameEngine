@@ -30,7 +30,7 @@ void Map::initialize() {
 
 	Drawable* t3 = new Triangle();
 	t3->setXYZ(-3, 0, 0);
-	t3->rotateXYZ(45, 45, 45);
+	t3->rotateXYZ(-80, 0, 0);
 	t3->scaleXYZ(1, 2, 1);
 	addStatic(t3);
 
@@ -51,7 +51,7 @@ void Map::initialize() {
 	addStatic(c1);
 
 	Drawable* c2 = new Cube();
-	c2->setXYZ(3 + 15, 0 + 10, 0 + 15);
+	c2->setXYZ(3, 0, 0);
 	c2->setRotationXYZ(30, 30, 30);
 	c2->scaleXYZ(1, 1, 2);
 	c2->setColor(0, 0, 1);
@@ -75,7 +75,7 @@ void Map::initialize() {
 	c5->setColor(0, 1, 0);
 	addStream(c5);
 
-	Terrain* terrain = new HillTerrain(_application, 200, 200, 12345);
+	Terrain* terrain = new HillTerrain(_application, 100, 100, 12345);
 	terrain->generate();
 	terrain->updateDrawables();
 	addTerrain(terrain);

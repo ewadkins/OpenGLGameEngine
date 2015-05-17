@@ -21,6 +21,7 @@ public:
 	Vector(T v1, T v2);
 	Vector(T v1, T v2, T v3);
 	Vector(T v1, T v2, T v3, T v4);
+	Vector(std::vector<T> vector);
 	template<typename S> Vector(Vector<S> other);
 	virtual ~Vector() {
 	}
