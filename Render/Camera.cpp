@@ -61,7 +61,7 @@ void Camera::updateProjectionMatrices() {
 	_perspective = GLMatrix::perspectiveProjectionMatrix(getFOV(), aspect,
 			getNear(), getFar());
 
-	_application->_logger->log("Orthographic matrix:").endLine().increaseIndent();
+	/*_application->_logger->log("Orthographic matrix:").endLine().increaseIndent();
 	_application->_logger->log("Aspect: ").log(aspect).endLine().log("Z near: ").log(
 			getNear()).endLine().log("Z far: ").log(getFar()).endLine();
 	_application->_logger->log(_orthographic).decreaseIndent();
@@ -70,7 +70,7 @@ void Camera::updateProjectionMatrices() {
 	_application->_logger->log("FOV: ").log(getFOV()).endLine().log("Aspect: ").log(
 			aspect).endLine().log("Z near: ").log(getNear()).endLine().log(
 			"Z far: ").log(getFar()).endLine();
-	_application->_logger->log(_perspective).decreaseIndent();
+	_application->_logger->log(_perspective).decreaseIndent();*/
 
 	useProjectionMatrix();
 
@@ -221,23 +221,45 @@ void Camera::setXYZ(float x, float y, float z) {
 
 // Sets the camera's angle around the x axis
 void Camera::setRotationX(float rotationX) {
+	while (fabs(rotationX) > 180) {
+		if (rotationX > 180)
+			rotationX -= 360;
+		else
+			rotationX += 360;
+	}
+	if (rotationX > 90)
+		rotationX = 90;
+	if (rotationX < -90)
+		rotationX = -90;
 	_rotationX = rotationX;
 }
 
 // Sets the camera's angle around the y axis
 void Camera::setRotationY(float rotationY) {
+	while (fabs(rotationY) > 180) {
+		if (rotationY > 180)
+			rotationY -= 360;
+		else
+			rotationY += 360;
+	}
 	_rotationY = rotationY;
 }
 
 // Sets the camera's angle around the z axis
 void Camera::setRotationZ(float rotationZ) {
+	while (fabs(rotationZ) > 180) {
+		if (rotationZ > 180)
+			rotationZ -= 360;
+		else
+			rotationZ += 360;
+	}
 	_rotationZ = rotationZ;
 }
 
 // Sets the camera's angle around the x, y, and z axes
 void Camera::setRotationXYZ(float rotationX, float rotationY, float rotationZ) {
-	_rotationX = rotationX;
-	_rotationY = rotationY;
-	_rotationZ = rotationZ;
+	setRotationX(rotationX);
+	setRotationY(rotationY);
+	setRotationZ(rotationZ);
 }
 

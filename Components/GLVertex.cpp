@@ -12,7 +12,6 @@ GLVertex::GLVertex() {
 	setColor(0, 0, 0);
 	setNormal(0, 0, 0);
 	setTexCoords(0, 0);
-	_hasPosition = false;
 	_hasColor = false;
 	_hasNormal = false;
 	_hasTexCoords = false;
@@ -23,7 +22,6 @@ GLVertex::GLVertex(float x, float y, float z) {
 	setColor(0, 0, 0);
 	setNormal(0, 0, 0);
 	setTexCoords(0, 0);
-	_hasPosition = true;
 	_hasColor = false;
 	_hasNormal = false;
 	_hasTexCoords = false;
@@ -34,7 +32,6 @@ GLVertex::GLVertex(float x, float y, float z, float r, float g, float b) {
 	setColor(r, g, b);
 	setNormal(0, 0, 0);
 	setTexCoords(0, 0);
-	_hasPosition = true;
 	_hasColor = true;
 	_hasNormal = false;
 	_hasTexCoords = false;
@@ -46,7 +43,6 @@ GLVertex::GLVertex(float x, float y, float z, float r, float g, float b,
 	setColor(r, g, b);
 	setNormal(normX, normY, normZ);
 	setTexCoords(0, 0);
-	_hasPosition = true;
 	_hasColor = true;
 	_hasNormal = true;
 	_hasTexCoords = false;
@@ -58,7 +54,6 @@ GLVertex::GLVertex(float x, float y, float z, float r, float g, float b,
 	setColor(r, g, b);
 	setNormal(normX, normY, normZ);
 	setTexCoords(texX, texY);
-	_hasPosition = true;
 	_hasColor = true;
 	_hasNormal = true;
 	_hasTexCoords = true;
@@ -69,7 +64,6 @@ GLVertex::GLVertex(std::vector<float> pos) {
 	setColor(0, 0, 0);
 	setNormal(0, 0, 0);
 	setTexCoords(0, 0);
-	_hasPosition = true;
 	_hasColor = false;
 	_hasNormal = false;
 	_hasTexCoords = false;
@@ -80,7 +74,6 @@ GLVertex::GLVertex(std::vector<float> pos, std::vector<float> color) {
 	setColor(color);
 	setNormal(0, 0, 0);
 	setTexCoords(0, 0);
-	_hasPosition = true;
 	_hasColor = true;
 	_hasNormal = false;
 	_hasTexCoords = false;
@@ -92,7 +85,6 @@ GLVertex::GLVertex(std::vector<float> pos, std::vector<float> color,
 	setColor(color);
 	setNormal(norm);
 	setTexCoords(0, 0);
-	_hasPosition = true;
 	_hasColor = true;
 	_hasNormal = true;
 	_hasTexCoords = false;
@@ -104,7 +96,6 @@ GLVertex::GLVertex(std::vector<float> pos, std::vector<float> color,
 	setColor(color);
 	setNormal(norm);
 	setTexCoords(tex);
-	_hasPosition = true;
 	_hasColor = true;
 	_hasNormal = true;
 	_hasTexCoords = true;
@@ -120,18 +111,19 @@ void GLVertex::transform(Matrix<float> modelTransformationMatrix,
 	m = m << modelTransformationMatrix;
 	setPosition(m.get(0, 0), m.get(1, 0), m.get(2, 0));
 
-	std::vector<float> norm = getNormal();
-	norm.push_back(1);
-	m.setVector(norm);
-	m = m << rotationMatrix;
-	setNormal(m.get(0, 0), m.get(1, 0), m.get(2, 0));
+	if (_hasNormal) {
+		std::vector<float> norm = getNormal();
+		norm.push_back(1);
+		m.setVector(norm);
+		m = m << rotationMatrix;
+		setNormal(m.get(0, 0), m.get(1, 0), m.get(2, 0));
+	}
 }
 
 void GLVertex::setPosition(float x, float y, float z) {
 	_x = x;
 	_y = y;
 	_z = z;
-	_hasPosition = true;
 }
 
 void GLVertex::setColor(float r, float g, float b) {
@@ -158,7 +150,6 @@ void GLVertex::setPosition(std::vector<float> pos) {
 	_x = pos[0];
 	_y = pos[1];
 	_z = pos[2];
-	_hasPosition = true;
 }
 
 void GLVertex::setColor(std::vector<float> color) {
@@ -203,10 +194,6 @@ std::vector<float> GLVertex::getTexCoords() {
 	float arr[] = { _texX, _texY };
 	std::vector<float> vec(arr, arr + sizeof(arr) / sizeof(arr[0]));
 	return vec;
-}
-
-bool GLVertex::hasPosition() {
-	return _hasPosition;
 }
 
 bool GLVertex::hasColor() {

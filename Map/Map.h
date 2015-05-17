@@ -21,6 +21,7 @@ public:
 	}
 	void initialize();
 	void update();
+	void updateVBOs();
 	void addStatic(Drawable* drawable);
 	void addDynamic(Drawable* drawable);
 	void addStream(Drawable* drawable);

@@ -17,11 +17,3 @@ GLLine::GLLine(GLVertex v1, GLVertex v2) {
 GLLine::GLLine() {
 }
 
-std::vector<GLVertex> GLLine::getVertices() {
-	return _vertices;
-}
-
-void GLLine::setVertices(std::vector<GLVertex> vertices) {
-	_vertices = vertices;
-}
-

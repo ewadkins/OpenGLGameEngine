@@ -16,11 +16,3 @@ GLPoint::GLPoint(GLVertex v1) {
 GLPoint::GLPoint() {
 }
 
-std::vector<GLVertex> GLPoint::getVertices() {
-	return _vertices;
-}
-
-void GLPoint::setVertices(std::vector<GLVertex> vertices) {
-	_vertices = vertices;
-}
-

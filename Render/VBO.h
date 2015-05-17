@@ -19,9 +19,6 @@
 
 class VBOBase {
 public:
-	enum Type {
-		STATIC, DYNAMIC, STREAM
-	};
 	virtual ~VBOBase() {
 	}
 	virtual void clear() {
@@ -34,6 +31,9 @@ public:
 	}
 	virtual void draw() {
 	}
+	enum Type {
+		STATIC, DYNAMIC, STREAM
+	};
 };
 
 template<typename T>

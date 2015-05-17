@@ -123,7 +123,6 @@ void Renderer::updateStaticVBOs() {
 	_staticLineVBO->clear();
 	_staticPointVBO->clear();
 
-	std::vector<GLVertex> vertices;
 	std::vector<GLTriangle> triangles;
 	std::vector<GLLine> lines;
 	std::vector<GLPoint> points;
@@ -163,7 +162,6 @@ void Renderer::updateDynamicVBOs() {
 	_dynamicLineVBO->clear();
 	_dynamicPointVBO->clear();
 
-	std::vector<GLVertex> vertices;
 	std::vector<GLTriangle> triangles;
 	std::vector<GLLine> lines;
 	std::vector<GLPoint> points;
@@ -203,7 +201,6 @@ void Renderer::updateStreamVBOs() {
 	_streamLineVBO->clear();
 	_streamPointVBO->clear();
 
-	std::vector<GLVertex> vertices;
 	std::vector<GLTriangle> triangles;
 	std::vector<GLLine> lines;
 	std::vector<GLPoint> points;
@@ -228,30 +225,24 @@ void Renderer::updateStreamVBOs() {
 
 		if (streamDrawables[i]->getDrawFaces()) {
 			for (int j = 0; j < triangles.size(); j++) {
-				vertices = triangles[j].getVertices();
-				for (int k = 0; k < vertices.size(); k++)
-					vertices[k].transform(modelTransformationMatrix,
+				for (int k = 0; k < triangles[j]._vertices.size(); k++)
+					triangles[j]._vertices[k].transform(modelTransformationMatrix,
 							rotationMatrix);
-				triangles[j].setVertices(vertices);
 				_streamTriangleVBO->add(triangles[j]);
 			}
 		}
 
 		if (streamDrawables[i]->getDrawOutline()) {
 			for (int j = 0; j < lines.size(); j++) {
-				vertices = lines[j].getVertices();
-				for (int k = 0; k < vertices.size(); k++)
-					vertices[k].transform(modelTransformationMatrix,
+				for (int k = 0; k < lines[j]._vertices.size(); k++)
+					lines[j]._vertices[k].transform(modelTransformationMatrix,
 							rotationMatrix);
-				lines[j].setVertices(vertices);
 				_streamLineVBO->add(lines[j]);
 			}
 			for (int j = 0; j < points.size(); j++) {
-				vertices = points[j].getVertices();
-				for (int k = 0; k < vertices.size(); k++)
-					vertices[k].transform(modelTransformationMatrix,
+				for (int k = 0; k < points[j]._vertices.size(); k++)
+					points[j]._vertices[k].transform(modelTransformationMatrix,
 							rotationMatrix);
-				points[j].setVertices(vertices);
 				_streamPointVBO->add(points[j]);
 			}
 		}
@@ -271,7 +262,6 @@ void Renderer::updateTerrainVBOs() {
 	_terrainLineVBO->clear();
 	_terrainPointVBO->clear();
 
-	std::vector<GLVertex> vertices;
 	std::vector<GLTriangle> triangles;
 	std::vector<GLLine> lines;
 	std::vector<GLPoint> points;

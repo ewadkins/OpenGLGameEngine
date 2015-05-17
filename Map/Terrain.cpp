@@ -8,8 +8,43 @@
 #include "Terrain.h"
 #include "../Application.h"
 
+Terrain::Terrain(Application* application, int length, int width) {
+	_application = application;
+	_length = length;
+	_width = width;
+	_seed = clock();
+	srand(_seed);
+	_heightScale = 1;
+	_lightingType = ROUGH;
+
+	_heightMap = new float*[length];
+	for (int i = 0; i < length; i++) {
+		_heightMap[i] = new float[width];
+		for (int j = 0; j < width; j++)
+			_heightMap[i][j] = -1;
+	}
+}
+
+Terrain::Terrain(Application* application, int length, int width, long seed) {
+	_application = application;
+	_length = length;
+	_width = width;
+	_seed = seed;
+	srand(_seed);
+	_heightScale = 1;
+	_lightingType = ROUGH;
+
+	_heightMap = new float*[length];
+	for (int i = 0; i < length; i++) {
+		_heightMap[i] = new float[width];
+		for (int j = 0; j < width; j++)
+			_heightMap[i][j] = -1;
+	}
+}
+
 void Terrain::updateDrawables() {
-	bool smoothLighting = true;
+
+	_application->_logger->log("Updating terrain drawables..").endLine();
 
 	_drawables.clear();
 
@@ -19,12 +54,12 @@ void Terrain::updateDrawables() {
 		rowVertices.clear();
 		for (int j = 0; j < _width; j++)
 			rowVertices.push_back(
-					GLVertex(i, _heightMap[i][j] * _maxHeight, j,
+					GLVertex(i, _heightMap[i][j] * _heightScale, j,
 							1 - _heightMap[i][j], 1, 1 - _heightMap[i][j]));
 		vertices.push_back(rowVertices);
 	}
 
-	if (smoothLighting) {
+	if (_lightingType == SMOOTH) {
 
 		std::vector<std::vector<std::vector<Vector<float> > > > normals;
 		std::vector<std::vector<Vector<float> > > rowNormals;
@@ -45,9 +80,6 @@ void Terrain::updateDrawables() {
 						pos2[2] - pos1[2]);
 				normal = v1.cross(v2);
 				normal = normal.normalize();
-				//std::cout << "v1: " << v1.toString() << std::endl;
-				//std::cout << "v2: " << v2.toString() << std::endl;
-				//std::cout << "Normal: " << normal.toString() << std::endl;
 				faceNormals.push_back(normal);
 				v1 = Vector<float>(pos4[0] - pos2[0], pos2[1] - pos4[1],
 						pos4[2] - pos2[2]);
@@ -104,6 +136,13 @@ void Terrain::updateDrawables() {
 			_drawables.push_back(t1);
 			_drawables.push_back(t2);
 		}
+}
+
+void Terrain::setLightingType(LightingType lightingType) {
+	if (_lightingType != lightingType) {
+		_lightingType = lightingType;
+		updateDrawables();
+	}
 }
 
 std::vector<Drawable*> Terrain::getDrawables() {

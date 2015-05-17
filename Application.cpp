@@ -101,7 +101,7 @@ void Application::setupDisplay() {
 	glDepthFunc(GL_LEQUAL);
 
 	// Sets background color
-	glClearColor(0, 0, 0, 1);
+	glClearColor(0.8, 1, 1, 1);
 }
 
 void Application::initialize() {

@@ -19,13 +19,9 @@ public:
 	GLTriangle();
 	virtual ~GLTriangle() {
 	}
-	virtual std::vector<GLVertex> getVertices();
-	virtual void setVertices(std::vector<GLVertex> vertices);
 	Vector<float> getFaceNormal();
 	void useFaceNormal();
 	static int _type;
-private:
-	std::vector<GLVertex> _vertices;
 };
 
 #endif /* COMPONENTS_GLTRIANGLE_H_ */

@@ -40,7 +40,6 @@ public:
 	std::vector<float> getColor();
 	std::vector<float> getNormal();
 	std::vector<float> getTexCoords();
-	bool hasPosition();
 	bool hasColor();
 	bool hasNormal();
 	bool hasTexCoords();
@@ -48,7 +47,7 @@ public:
 	std::string toString();
 private:
 	float _x, _y, _z, _r, _g, _b, _normX, _normY, _normZ, _texX, _texY;
-	bool _hasPosition, _hasColor, _hasNormal, _hasTexCoords;
+	bool _hasColor, _hasNormal, _hasTexCoords;
 };
 
 #endif /* COMPONENTS_VERTEX_H_ */

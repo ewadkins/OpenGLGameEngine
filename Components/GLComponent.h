@@ -16,12 +16,8 @@ class GLComponent {
 public:
 	virtual ~GLComponent() {
 	}
-	virtual std::vector<GLVertex> getVertices() {
-		return std::vector<GLVertex>();
-	}
-	virtual void setVertices(std::vector<GLVertex> vertices) {
-	}
 	void setColor(float r, float g, float b);
+	std::vector<GLVertex> _vertices;
 };
 
 #endif /* COMPONENTS_GLCOMPONENT_H_ */

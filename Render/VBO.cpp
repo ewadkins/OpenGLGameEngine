@@ -28,9 +28,8 @@ template<typename T>
 void VBO<T>::updateData() {
 	_data.clear();
 	for (int i = 0; i < _components.size(); i++) {
-		std::vector<GLVertex> vertices = _components[i].getVertices();
-		for (int j = 0; j < vertices.size(); j++) {
-			GLVertex v = vertices[j];
+		for (int j = 0; j < _components[i]._vertices.size(); j++) {
+			GLVertex v = _components[i]._vertices[j];
 			std::vector<float> pos = v.getPosition();
 			std::vector<float> color = v.getColor();
 			std::vector<float> norm = v.getNormal();
@@ -112,7 +111,7 @@ void VBO<T>::draw() {
 	if (_data.size() > 0) {
 		int vertexCount = 0;
 		for (int i = 0; i < _components.size(); i++)
-			vertexCount += _components[i].getVertices().size();
+			vertexCount += _components[i]._vertices.size();
 
 		// Bind the VAO
 		glBindVertexArray(_vao);

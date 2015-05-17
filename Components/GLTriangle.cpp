@@ -21,14 +21,6 @@ GLTriangle::GLTriangle(GLVertex v1, GLVertex v2, GLVertex v3) {
 GLTriangle::GLTriangle() {
 }
 
-std::vector<GLVertex> GLTriangle::getVertices() {
-	return _vertices;
-}
-
-void GLTriangle::setVertices(std::vector<GLVertex> vertices) {
-	_vertices = vertices;
-}
-
 Vector<float> GLTriangle::getFaceNormal() {
 	std::vector<float> pos1 = _vertices[0].getPosition();
 	std::vector<float> pos2 = _vertices[1].getPosition();

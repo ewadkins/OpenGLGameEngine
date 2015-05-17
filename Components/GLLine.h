@@ -18,11 +18,7 @@ public:
 	GLLine();
 	virtual ~GLLine() {
 	}
-	virtual std::vector<GLVertex> getVertices();
-	virtual void setVertices(std::vector<GLVertex> vertices);
 	static int _type;
-private:
-	std::vector<GLVertex> _vertices;
 };
 
 #endif /* COMPONENTS_GLLINE_H_ */

@@ -20,11 +20,17 @@ class Application;
 
 class Terrain {
 public:
+	Terrain(Application* application, int length, int width);
+	Terrain(Application* application, int length, int width, long seed);
 	virtual ~Terrain() {
 	}
 	virtual void generate() {
 	}
 	void updateDrawables();
+	enum LightingType {
+		ROUGH, SMOOTH
+	};
+	void setLightingType(LightingType lightingType);
 	std::vector<Drawable*> getDrawables();
 protected:
 	float randomFloat();
@@ -35,7 +41,8 @@ protected:
 	float** _heightMap;
 	int _length, _width;
 	long _seed;
-	float _maxHeight;
+	float _heightScale;
+	LightingType _lightingType;
 };
 
 #endif /* MAP_TERRAIN_H_ */

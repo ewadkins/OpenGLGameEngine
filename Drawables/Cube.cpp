@@ -8,74 +8,41 @@
 #include "Cube.h"
 
 Cube::Cube() {
-	// Left
-	GLVertex f1t1v1 = GLVertex(-0.5, -0.5, -0.5);
-	GLVertex f1t1v2 = GLVertex(-0.5, -0.5, 0.5);
-	GLVertex f1t1v3 = GLVertex(-0.5, 0.5, 0.5);
-	GLVertex f1t2v1 = GLVertex(-0.5, 0.5, 0.5);
-	GLVertex f1t2v2 = GLVertex(-0.5, 0.5, -0.5);
-	GLVertex f1t2v3 = GLVertex(-0.5, -0.5, -0.5);
-	// Right
-	GLVertex f2t1v1 = GLVertex(0.5, 0.5, 0.5);
-	GLVertex f2t1v2 = GLVertex(0.5, -0.5, 0.5);
-	GLVertex f2t1v3 = GLVertex(0.5, -0.5, -0.5);
-	GLVertex f2t2v1 = GLVertex(0.5, -0.5, -0.5);
-	GLVertex f2t2v2 = GLVertex(0.5, 0.5, -0.5);
-	GLVertex f2t2v3 = GLVertex(0.5, 0.5, 0.5);
-	// Back
-	GLVertex f3t1v1 = GLVertex(0.5, -0.5, -0.5);
-	GLVertex f3t1v2 = GLVertex(-0.5, -0.5, -0.5);
-	GLVertex f3t1v3 = GLVertex(0.5, 0.5, -0.5);
-	GLVertex f3t2v1 = GLVertex(-0.5, -0.5, -0.5);
-	GLVertex f3t2v2 = GLVertex(-0.5, 0.5, -0.5);
-	GLVertex f3t2v3 = GLVertex(0.5, 0.5, -0.5);
-	// Front
-	GLVertex f4t1v1 = GLVertex(-0.5, -0.5, 0.5);
-	GLVertex f4t1v2 = GLVertex(0.5, -0.5, 0.5);
-	GLVertex f4t1v3 = GLVertex(0.5, 0.5, 0.5);
-	GLVertex f4t2v1 = GLVertex(-0.5, 0.5, 0.5);
-	GLVertex f4t2v2 = GLVertex(-0.5, -0.5, 0.5);
-	GLVertex f4t2v3 = GLVertex(0.5, 0.5, 0.5);
-	// Bottom
-	GLVertex f5t1v1 = GLVertex(-0.5, -0.5, -0.5);
-	GLVertex f5t1v2 = GLVertex(-0.5, -0.5, 0.5);
-	GLVertex f5t1v3 = GLVertex(0.5, -0.5, 0.5);
-	GLVertex f5t2v1 = GLVertex(0.5, -0.5, -0.5);
-	GLVertex f5t2v2 = GLVertex(-0.5, -0.5, -0.5);
-	GLVertex f5t2v3 = GLVertex(0.5, -0.5, 0.5);
-	// Top
-	GLVertex f6t1v1 = GLVertex(-0.5, 0.5, -0.5);
-	GLVertex f6t1v3 = GLVertex(-0.5, 0.5, 0.5);
-	GLVertex f6t1v2 = GLVertex(0.5, 0.5, 0.5);
-	GLVertex f6t2v1 = GLVertex(-0.5, 0.5, -0.5);
-	GLVertex f6t2v2 = GLVertex(0.5, 0.5, -0.5);
-	GLVertex f6t2v3 = GLVertex(0.5, 0.5, 0.5);
 
-	_triangles.push_back(GLTriangle(f1t1v1, f1t1v2, f1t1v3));
-	_triangles.push_back(GLTriangle(f1t2v1, f1t2v2, f1t2v3));
-	_triangles.push_back(GLTriangle(f2t1v1, f2t1v2, f2t1v3));
-	_triangles.push_back(GLTriangle(f2t2v1, f2t2v2, f2t2v3));
-	_triangles.push_back(GLTriangle(f3t1v1, f3t1v2, f3t1v3));
-	_triangles.push_back(GLTriangle(f3t2v1, f3t2v2, f3t2v3));
-	_triangles.push_back(GLTriangle(f4t1v1, f4t1v2, f4t1v3));
-	_triangles.push_back(GLTriangle(f4t2v1, f4t2v2, f4t2v3));
-	_triangles.push_back(GLTriangle(f5t1v1, f5t1v2, f5t1v3));
-	_triangles.push_back(GLTriangle(f5t2v1, f5t2v2, f5t2v3));
-	_triangles.push_back(GLTriangle(f6t1v1, f6t1v2, f6t1v3));
-	_triangles.push_back(GLTriangle(f6t2v1, f6t2v2, f6t2v3));
+	GLVertex v1 = GLVertex(-0.5, -0.5, -0.5);
+	GLVertex v2 = GLVertex(-0.5, -0.5, 0.5);
+	GLVertex v3 = GLVertex(-0.5, 0.5, -0.5);
+	GLVertex v4 = GLVertex(-0.5, 0.5, 0.5);
+	GLVertex v5 = GLVertex(0.5, -0.5, -0.5);
+	GLVertex v6 = GLVertex(0.5, -0.5, 0.5);
+	GLVertex v7 = GLVertex(0.5, 0.5, -0.5);
+	GLVertex v8 = GLVertex(0.5, 0.5, 0.5);
 
-	_lines.push_back(GLLine(f1t1v1, f1t1v2));
-	_lines.push_back(GLLine(f1t1v2, f1t1v3));
-	_lines.push_back(GLLine(f1t2v1, f1t2v2));
-	_lines.push_back(GLLine(f1t2v2, f1t2v3));
-	_lines.push_back(GLLine(f2t1v1, f2t1v2));
-	_lines.push_back(GLLine(f2t1v2, f2t1v3));
-	_lines.push_back(GLLine(f2t2v1, f2t2v2));
-	_lines.push_back(GLLine(f2t2v2, f2t2v3));
-	_lines.push_back(GLLine(f1t1v1, f2t1v3));
-	_lines.push_back(GLLine(f1t1v2, f2t1v2));
-	_lines.push_back(GLLine(f1t2v2, f2t2v2));
-	_lines.push_back(GLLine(f1t2v1, f2t2v3));
+	_triangles.push_back(GLTriangle(v1, v2, v4));
+	_triangles.push_back(GLTriangle(v4, v3, v1));
+	_triangles.push_back(GLTriangle(v8, v6, v5));
+	_triangles.push_back(GLTriangle(v5, v7, v8));
+	_triangles.push_back(GLTriangle(v5, v1, v7));
+	_triangles.push_back(GLTriangle(v1, v3, v7));
+	_triangles.push_back(GLTriangle(v2, v6, v8));
+	_triangles.push_back(GLTriangle(v4, v2, v8));
+	_triangles.push_back(GLTriangle(v1, v2, v6));
+	_triangles.push_back(GLTriangle(v5, v1, v6));
+	_triangles.push_back(GLTriangle(v3, v8, v4));
+	_triangles.push_back(GLTriangle(v3, v7, v8));
+
+	_lines.push_back(GLLine(v1, v2));
+	_lines.push_back(GLLine(v2, v4));
+	_lines.push_back(GLLine(v4, v3));
+	_lines.push_back(GLLine(v3, v1));
+	_lines.push_back(GLLine(v8, v6));
+	_lines.push_back(GLLine(v6, v5));
+	_lines.push_back(GLLine(v5, v7));
+	_lines.push_back(GLLine(v7, v8));
+	_lines.push_back(GLLine(v1, v5));
+	_lines.push_back(GLLine(v2, v6));
+	_lines.push_back(GLLine(v3, v7));
+	_lines.push_back(GLLine(v4, v8));
 
 	setColor(1.0, 0.0, 0.0);
 }

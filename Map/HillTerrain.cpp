@@ -8,38 +8,24 @@
 #include "HillTerrain.h"
 #include "../Application.h"
 
-HillTerrain::HillTerrain(Application* application, int length, int width) {
-	_application = application;
-	_length = length;
-	_width = width;
-	_seed = clock();
-	srand(_seed);
-	_maxHeight = 5;
+HillTerrain::HillTerrain(Application* application, int length, int width) :
+		Terrain(application, length, width) {
+	_heightScale = 5;
+	_lightingType = SMOOTH;
 }
 
 HillTerrain::HillTerrain(Application* application, int length, int width,
-		long seed) {
-	_application = application;
-	_length = length;
-	_width = width;
-	_seed = seed;
-	srand(_seed);
-	_maxHeight = 5;
+		long seed) :
+		Terrain(application, length, width, seed) {
+	_heightScale = 5;
+	_lightingType = SMOOTH;
 }
 
 void HillTerrain::generate() {
 	_application->_logger->log("Generating hill terrain (").log(_length).log(
 			"x").log(_width).log(")..").endLine().increaseIndent();
 
-	_application->_logger->log("Creating empty height map..").endLine();
-	_heightMap = new float*[_length];
-	for (int i = 0; i < _length; i++) {
-		_heightMap[i] = new float[_width];
-		for (int j = 0; j < _width; j++)
-			_heightMap[i][j] = -1;
-	}
-
-	_application->_logger->log("Generating initial points..").endLine();
+	_application->_logger->log("Setting initial points..").endLine();
 	std::vector<Vector<float> > initPoints;
 	bool success = false;
 	while (!success) {
@@ -109,6 +95,6 @@ void HillTerrain::generate() {
 
 	_application->_logger->log("Successfully generated terrain!").endLine().decreaseIndent();
 
-	logMatrixRepresentation();
+	//logMatrixRepresentation();
 }
 

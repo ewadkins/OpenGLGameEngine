@@ -23,7 +23,7 @@ Drawable::Drawable() {
 	_drawFaces = true;
 }
 
-// Returns a transformed version of this drawable
+// Updates transformed version of this drawable
 void Drawable::applyTransformations() {
 
 	_transformed = clone();
@@ -35,35 +35,19 @@ void Drawable::applyTransformations() {
 			getY(), getZ(), getRotationX(), getRotationY(), getRotationZ(),
 			getScaleX(), getScaleY(), getScaleZ());
 
-	std::vector<GLVertex> vertices;
+	for (int i = 0; i < _transformed->_triangles.size(); i++)
+		for (int j = 0; j < _transformed->_triangles[i]._vertices.size(); j++)
+			_transformed->_triangles[i]._vertices[j].transform(modelTransformationMatrix, rotationMatrix);
 
-	for (int i = 0; i < _transformed->_triangles.size(); i++) {
-		vertices = _transformed->_triangles[i].getVertices();
-		for (int j = 0; j < vertices.size(); j++)
-			vertices[j].transform(modelTransformationMatrix, rotationMatrix);
-		_transformed->_triangles[i].setVertices(vertices);
-	}
+	for (int i = 0; i < _transformed->_lines.size(); i++)
+		for (int j = 0; j < _transformed->_lines[i]._vertices.size(); j++)
+			_transformed->_lines[i]._vertices[j].transform(modelTransformationMatrix, rotationMatrix);
 
-	for (int i = 0; i < _transformed->_lines.size(); i++) {
-		vertices = _transformed->_lines[i].getVertices();
-		for (int j = 0; j < vertices.size(); j++)
-			vertices[j].transform(modelTransformationMatrix, rotationMatrix);
-		_transformed->_lines[i].setVertices(vertices);
-	}
+		for (int i = 0; i < _transformed->_points.size(); i++)
+			for (int j = 0; j < _transformed->_points[i]._vertices.size(); j++)
+				_transformed->_points[i]._vertices[j].transform(modelTransformationMatrix, rotationMatrix);
 
 	_needsUpdating = false;
-}
-
-std::vector<GLTriangle> Drawable::getTriangles() {
-	return _triangles;
-}
-
-std::vector<GLLine> Drawable::getLines() {
-	return _lines;
-}
-
-std::vector<GLPoint> Drawable::getPoints() {
-	return _points;
 }
 
 std::vector<GLTriangle> Drawable::getTransformedTriangles() {

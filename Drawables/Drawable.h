@@ -24,9 +24,6 @@ public:
 	virtual Drawable* clone() {
 		return new Drawable();
 	}
-	std::vector<GLTriangle> getTriangles();
-	std::vector<GLLine> getLines();
-	std::vector<GLPoint> getPoints();
 	std::vector<GLTriangle> getTransformedTriangles();
 	std::vector<GLLine> getTransformedLines();
 	std::vector<GLPoint> getTransformedPoints();

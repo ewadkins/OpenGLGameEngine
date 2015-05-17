@@ -17,6 +17,8 @@ Map::Map(Application* application) {
 
 void Map::initialize() {
 
+	_application->_logger->log("Adding objects..").endLine();
+
 	Drawable* t1 = new Triangle();
 	t1->setXYZ(-5, 0, 0);
 	addStatic(t1);
@@ -38,7 +40,7 @@ void Map::initialize() {
 	addStream(t4);
 
 	Drawable* lightCube = new Cube();
-	lightCube->setXYZ(0, 15, 0);
+	lightCube->setXYZ(0, 30, 0);
 	lightCube->scaleXYZ(0.5, 0.5, 0.5);
 	lightCube->setColor(1, 1, 0);
 	addStatic(lightCube);
@@ -49,7 +51,7 @@ void Map::initialize() {
 	addStatic(c1);
 
 	Drawable* c2 = new Cube();
-	c2->setXYZ(3, 0, 0);
+	c2->setXYZ(3 + 15, 0 + 10, 0 + 15);
 	c2->setRotationXYZ(30, 30, 30);
 	c2->scaleXYZ(1, 1, 2);
 	c2->setColor(0, 0, 1);
@@ -73,11 +75,13 @@ void Map::initialize() {
 	c5->setColor(0, 1, 0);
 	addStream(c5);
 
-	Terrain* terrain = new HillTerrain(_application, 50, 50, 12345);
+	Terrain* terrain = new HillTerrain(_application, 200, 200, 12345);
 	terrain->generate();
 	terrain->updateDrawables();
 	addTerrain(terrain);
 
+	_application->_logger->log("Initially updating VBOs..").endLine();
+	updateVBOs();
 }
 
 void Map::update() {
@@ -85,7 +89,10 @@ void Map::update() {
 		_streamDrawables[i]->rotateXYZ(0, 1, 0);
 		//_streamDrawables[i]->translateXYZ(0, 0.01, 0);
 	}
+	updateVBOs();
+}
 
+void Map::updateVBOs() {
 	if (_staticsNeedUpdating) {
 		_application->_renderer->updateStaticVBOs();
 		_staticsNeedUpdating = false;
