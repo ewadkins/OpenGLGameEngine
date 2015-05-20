@@ -28,7 +28,7 @@ void main()
     lights[0].ambient = vec3(0.3, 0.3, 0.3);
     lights[0].diffuse = vec3(0.6, 0.6, 0.6);
     lights[0].specular = vec3(0.4, 0.4, 0.4);
-    lights[0].range = 200;
+    lights[0].range = 20;
     
     //vec3 ambient = vec3(0.0, 0.0, 0.0);
     //vec3 diffuse = vec3(0.0, 0.0, 0.0);

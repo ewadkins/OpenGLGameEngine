@@ -55,6 +55,10 @@ void Renderer::setShininess(float shininess) {
 	_currentProgram->setUniform1f("shininess", shininess);
 }
 
+void Renderer::setBackgroundColor(float r, float g, float b) {
+	glClearColor(r, g, b, 1);
+}
+
 // Sets the projection matrix to be used in rendering
 void Renderer::setProjectionMatrix(Matrix<float> projectionMatrix) {
 	_projectionMatrix = projectionMatrix;
@@ -127,7 +131,7 @@ void Renderer::updateStaticVBOs() {
 	std::vector<GLLine> lines;
 	std::vector<GLPoint> points;
 
-	std::vector<Drawable*> staticDrawables = _application->_map->getStaticDrawables();
+	std::vector<Drawable*> staticDrawables = _application->_map->_staticDrawables;
 
 	// Uses pre-transformed versions of each drawable, which prevents recalculation if unnecessary
 	for (int i = 0; i < staticDrawables.size(); i++) {
@@ -166,7 +170,7 @@ void Renderer::updateDynamicVBOs() {
 	std::vector<GLLine> lines;
 	std::vector<GLPoint> points;
 
-	std::vector<Drawable*> dynamicDrawables = _application->_map->getDynamicDrawables();
+	std::vector<Drawable*> dynamicDrawables = _application->_map->_dynamicDrawables;
 
 	// Uses pre-transformed versions of each drawable, which prevents recalculation if unnecessary
 	for (int i = 0; i < dynamicDrawables.size(); i++) {
@@ -205,7 +209,7 @@ void Renderer::updateStreamVBOs() {
 	std::vector<GLLine> lines;
 	std::vector<GLPoint> points;
 
-	std::vector<Drawable*> streamDrawables = _application->_map->getStreamDrawables();
+	std::vector<Drawable*> streamDrawables = _application->_map->_streamDrawables;
 
 	// Transforms each drawable on the spot to increase performance for rendering stream drawables
 	for (int i = 0; i < streamDrawables.size(); i++) {
@@ -266,7 +270,7 @@ void Renderer::updateTerrainVBOs() {
 	std::vector<GLLine> lines;
 	std::vector<GLPoint> points;
 
-	std::vector<Drawable*> terrainDrawables = _application->_map->getTerrainDrawables();
+	std::vector<Drawable*> terrainDrawables = _application->_map->_terrainDrawables;
 
 	// Uses pre-transformed versions of each drawable, which prevents recalculation if unnecessary
 	for (int i = 0; i < terrainDrawables.size(); i++) {

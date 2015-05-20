@@ -7,8 +7,6 @@
 
 #include "GLMatrix.h"
 
-const float GLMatrix::PI = 3.1415926535897;
-
 // Returns the translation matrix given the desired change in x, y, and z coordinates
 Matrix<float> GLMatrix::translationMatrix(float deltaX, float deltaY,
 		float deltaZ) {
@@ -32,7 +30,7 @@ Matrix<float> GLMatrix::scalarMatrix(float scaleX, float scaleY, float scaleZ) {
 // Returns the rotation matrix given the desired change in angle about the x axis
 Matrix<float> GLMatrix::rotationMatrixX(float theta) {
 	Matrix<float> result = Matrix<float>(4);
-	float rads = theta * PI / 180;
+	float rads = theta * M_PI / 180;
 	result.set(0, 0, 1);
 	result.set(1, 1, cos(rads));
 	result.set(1, 2, -sin(rads));
@@ -45,7 +43,7 @@ Matrix<float> GLMatrix::rotationMatrixX(float theta) {
 // Returns the rotation matrix given the desired change in angle about the y axis
 Matrix<float> GLMatrix::rotationMatrixY(float theta) {
 	Matrix<float> result = Matrix<float>(4);
-	float rads = theta * PI / 180;
+	float rads = theta * M_PI / 180;
 	result.set(0, 0, cos(rads));
 	result.set(0, 2, sin(rads));
 	result.set(1, 1, 1);
@@ -58,7 +56,7 @@ Matrix<float> GLMatrix::rotationMatrixY(float theta) {
 // Returns the rotation matrix given the desired change in angle about the z axis
 Matrix<float> GLMatrix::rotationMatrixZ(float theta) {
 	Matrix<float> result = Matrix<float>(4);
-	float rads = theta * PI / 180;
+	float rads = theta * M_PI / 180;
 	result.set(0, 0, cos(rads));
 	result.set(0, 1, -sin(rads));
 	result.set(1, 0, sin(rads));
@@ -72,9 +70,9 @@ Matrix<float> GLMatrix::rotationMatrixZ(float theta) {
 Matrix<float> GLMatrix::rotationMatrixXYZ(float thetaX, float thetaY,
 		float thetaZ) {
 	Matrix<float> result = Matrix<float>(4);
-	float radsX = thetaX * PI / 180;
-	float radsY = thetaY * PI / 180;
-	float radsZ = thetaZ * PI / 180;
+	float radsX = thetaX * M_PI / 180;
+	float radsY = thetaY * M_PI / 180;
+	float radsZ = thetaZ * M_PI / 180;
 	result.set(0, 0, cos(radsY) * cos(radsZ));
 	result.set(0, 1,
 			cos(radsZ) * sin(radsX) * sin(radsY) - cos(radsX) * sin(radsZ));
@@ -96,7 +94,7 @@ Matrix<float> GLMatrix::rotationMatrixXYZ(float thetaX, float thetaY,
 Matrix<float> GLMatrix::rotationMatrixLine(float x, float y, float z, float u,
 		float v, float w, float theta) {
 	Matrix<float> result = Matrix<float>(4);
-	float rads = theta * PI / 180;
+	float rads = theta * M_PI / 180;
 	result.set(0, 0,
 			(u * u + (v * v + w * w) * cos(rads)) / (u * u + v * v + w * w));
 	result.set(0, 1,
@@ -147,9 +145,9 @@ Matrix<float> GLMatrix::modelTransformationMatrix(float deltaX, float deltaY,
 		float deltaZ, float thetaX, float thetaY, float thetaZ, float scaleX,
 		float scaleY, float scaleZ) {
 	Matrix<float> result = Matrix<float>(4);
-	float radsX = thetaX * PI / 180;
-	float radsY = thetaY * PI / 180;
-	float radsZ = thetaZ * PI / 180;
+	float radsX = thetaX * M_PI / 180;
+	float radsY = thetaY * M_PI / 180;
+	float radsZ = thetaZ * M_PI / 180;
 	result.set(0, 0, scaleX * cos(radsY) * cos(radsZ));
 	result.set(0, 1,
 			-scaleY
@@ -181,9 +179,9 @@ Matrix<float> GLMatrix::modelTransformationMatrix(float deltaX, float deltaY,
 Matrix<float> GLMatrix::cameraTransformationMatrix(float deltaX, float deltaY,
 		float deltaZ, float thetaX, float thetaY, float thetaZ) {
 	Matrix<float> result = Matrix<float>(4);
-	float radsX = thetaX * PI / 180;
-	float radsY = thetaY * PI / 180;
-	float radsZ = thetaZ * PI / 180;
+	float radsX = thetaX * M_PI / 180;
+	float radsY = thetaY * M_PI / 180;
+	float radsZ = thetaZ * M_PI / 180;
 	result.set(0, 0, cos(radsY) * cos(radsZ));
 	result.set(0, 1,
 			-(cos(radsX) * sin(radsZ) - cos(radsZ) * sin(radsX) * sin(radsY)));
@@ -236,7 +234,7 @@ Matrix<float> GLMatrix::orthographicProjectionMatrix(float width, float height,
 Matrix<float> GLMatrix::perspectiveProjectionMatrix(float fov, float aspect,
 		float near, float far) {
 	Matrix<float> result = Matrix<float>(4);
-	float f = 1 / tan(fov / 2 * PI / 180);
+	float f = 1 / tan(fov / 2 * M_PI / 180);
 	result.set(0, 0, f / aspect);
 	result.set(1, 1, f);
 	result.set(2, 2, -(far + near) / (far - near));

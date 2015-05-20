@@ -32,8 +32,6 @@ public:
 			float near, float far);
 	static Matrix<float> perspectiveProjectionMatrix(float fov, float aspect,
 			float near, float far);
-private:
-	static const float PI;
 };
 
 #endif /* GLMATRIX_H_ */

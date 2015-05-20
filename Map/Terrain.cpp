@@ -131,8 +131,8 @@ void Terrain::updateDrawables() {
 			GLVertex v4 = vertices[i + 1][j];
 			Drawable* t1 = new Triangle(v1, v2, v4);
 			Drawable* t2 = new Triangle(v2, v3, v4);
-			//t1->setDrawOutline(false);
-			//t2->setDrawOutline(false);
+			t1->setDrawOutline(false);
+			t2->setDrawOutline(false);
 			_drawables.push_back(t1);
 			_drawables.push_back(t2);
 		}

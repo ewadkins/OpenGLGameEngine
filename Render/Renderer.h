@@ -41,6 +41,7 @@ public:
 	void useProgram(ShaderProgram*);
 	void enableLighting();
 	void disableLighting();
+	void setBackgroundColor(float r, float g, float b);
 	void setProjectionMatrix(Matrix<float> projectionMatrix);
 	ShaderProgram* _basicShader;
 	ShaderProgram* _lightingShader;

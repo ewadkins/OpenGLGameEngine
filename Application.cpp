@@ -1,5 +1,5 @@
 /*
- * OpenGLApplication.cpp
+ * Application.cpp
  *
  *  Created on: Feb 3, 2015
  *      Author: ericwadkins
@@ -8,7 +8,8 @@
 #define GLEW_STATIC
 
 #include "Application.h"
-#include "Main.h"
+
+std::vector<Application*> Application::_applications;
 
 void error_callback(int error, const char* description) {
 	throw description;
@@ -19,9 +20,9 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action,
 
 	// Get the OpenGLApplication context running in the window
 	Application* application = nullptr;
-	for (int i = 0; i < Main::applications.size(); i++)
-		if (Main::applications[i]->_window == window)
-			application = Main::applications[i];
+	for (int i = 0; i < Application::_applications.size(); i++)
+		if (Application::_applications[i]->_window == window)
+			application = Application::_applications[i];
 
 	application->_keyboard->dispatchEvent(key, scancode, action, mods);
 }
@@ -32,31 +33,35 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
 
 	// Get the OpenGLApplication context running in the window
 	Application* application = nullptr;
-	for (int i = 0; i < Main::applications.size(); i++)
-		if (Main::applications[i]->_window == window)
-			application = Main::applications[i];
+	for (int i = 0; i < Application::_applications.size(); i++)
+		if (Application::_applications[i]->_window == window)
+			application = Application::_applications[i];
 
-	application->_windowSizeX = width;
-	application->_windowSizeY = height;
+	application->_windowWidth = width;
+	application->_windowHeight = height;
 	application->_camera->updateProjectionMatrices();
 }
 
-Application::Application(int screenSizeX, int screenSizeY, bool fullScreen) {
+Application::Application(const char* windowName, int screenSizeX,
+		int screenSizeY, bool fullScreen) {
 	_application = this;
 	_window = nullptr;
 	_logger = new Logger();
-	_windowSizeX = screenSizeX;
-	_windowSizeY = screenSizeY;
+	_windowName = windowName;
+	_windowWidth = screenSizeX;
+	_windowHeight = screenSizeY;
 	_fullScreen = fullScreen;
 	_frameCount = 0;
 	_renderer = nullptr;
 	_map = nullptr;
 	_camera = nullptr;
 	_keyboard = nullptr;
-	_averageFPS = 0;
+	_fps = 0;
+
+	_applications.push_back(this);
 }
 
-void Application::setupWindow() {
+void Application::_initializeWindow() {
 	// Basic window setup
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -68,11 +73,11 @@ void Application::setupWindow() {
 
 	// Create the window
 	if (!_fullScreen)
-		_window = glfwCreateWindow(_windowSizeX, _windowSizeY,
-				"OpenGL Application", NULL, NULL);
+		_window = glfwCreateWindow(_windowWidth, _windowHeight, _windowName,
+				NULL, NULL);
 	else
-		_window = glfwCreateWindow(_windowSizeX, _windowSizeY,
-				"OpenGL Application", glfwGetPrimaryMonitor(), nullptr);
+		_window = glfwCreateWindow(_windowWidth, _windowHeight, _windowName,
+				glfwGetPrimaryMonitor(), nullptr);
 
 	// If window creation fails, then exit
 	if (!_window) {
@@ -88,21 +93,6 @@ void Application::setupWindow() {
 	// Creates an OpenGL context in the window
 	glfwMakeContextCurrent(_window);
 
-}
-
-void Application::setupDisplay() {
-	// Depth buffer setup
-	glClearDepth(1.0f);
-
-	// Enables depth testing
-	glEnable(GL_DEPTH_TEST);
-
-	// Type of depth testing
-	glDepthFunc(GL_LEQUAL);
-
-	// Sets background color
-	glClearColor(0, 0, 0, 1);
-	//glClearColor(0.8, 1, 1, 1);
 }
 
 void Application::initialize() {
@@ -325,13 +315,12 @@ void Application::initialize() {
 	start = clock();
 	{
 		// Creates and setups the window
-		setupWindow();
-
-		// Creates key callback
-		glfwSetKeyCallback(_window, key_callback);
+		_initializeWindow();
 
 		// Creates framebuffer callback
 		glfwSetFramebufferSizeCallback(_window, framebuffer_size_callback);
+
+		initializeWindow();
 	}
 	finish = clock();
 	_logger->decreaseIndent().log("(Took ").log(
@@ -355,8 +344,15 @@ void Application::initialize() {
 	_logger->log("Initializing display..").endLine().increaseIndent();
 	start = clock();
 	{
-		// Setup the display
-		setupDisplay();
+		// Depth buffer setup
+		glClearDepth(1.0f);
+
+		// Enables depth testing
+		glEnable(GL_DEPTH_TEST);
+
+		// Type of depth testing
+		glDepthFunc(GL_LEQUAL);
+		initializeDisplay();
 	}
 	finish = clock();
 	_logger->decreaseIndent().log("(Took ").log(
@@ -393,7 +389,7 @@ void Application::initialize() {
 	start = clock();
 	{
 		_map = new Map(this);
-		_map->initialize();
+		initializeMap();
 	}
 	finish = clock();
 	_logger->decreaseIndent().log("(Took ").log(
@@ -405,8 +401,9 @@ void Application::initialize() {
 	{
 		// Create and initialize the camera
 		//_camera = new Camera(this, 1.5, 1.5, 4, -20, 20, 0);
-		_camera = new Camera(this, 0, 1.5, 8, 0, 0, 0);
+		_camera = new Camera(this, 0, 0, 0, 0, 0, 0);
 		_camera->initialize();
+		initializeCamera();
 	}
 	finish = clock();
 	_logger->decreaseIndent().log("(Took ").log(
@@ -416,6 +413,9 @@ void Application::initialize() {
 	_logger->log("Initializing keyboard..").endLine().increaseIndent();
 	start = clock();
 	{
+		// Creates key callback
+		glfwSetKeyCallback(_window, key_callback);
+
 		// Create and initialize the keyboard manager
 		_keyboard = new Keyboard(this);
 	}
@@ -437,40 +437,16 @@ void Application::gameLoop() {
 
 	clock_t lastTime;
 
-	std::vector<float> fpsList;
-
 	// Game loop, while window close is not requested
 	while (!glfwWindowShouldClose(_window)) {
 
 		_frameCount++;
-
 		long currentTime = clock();
 		long delta = currentTime - lastTime;
-		float fps = CLOCKS_PER_SEC / ((float) delta);
-		updateAverageFPS(fps);
-		_logger->log("FPS: ").log((int) _averageFPS).endLine();
-
-		/*fpsList.push_back(_averageFPS);
-		float avg = 0;
-		for (int i = 0; i < fpsList.size(); i++)
-			avg += fpsList[i];
-		avg /= fpsList.size();
-		std::cout << "Average FPS: " << avg << std::endl;*/
-
+		_fps = CLOCKS_PER_SEC / ((float) delta);
 		lastTime = clock();
 
-		static int count = 0;
-		count++;
-
-		_keyboard->update();
-
-		_camera->useView();
-
-		_map->update();
-
-		_renderer->render();
-		_renderer->display();
-
+		onGameLoop();
 	}
 }
 
@@ -525,7 +501,6 @@ int Application::start() {
 }
 
 void Application::warn(const char* warning) {
-	// Logs a warning message
 	_logger->log("WARNING: ").log(warning).endLine();
 }
 
@@ -537,23 +512,15 @@ void Application::stop() {
 	throw 0;
 }
 
-void Application::updateAverageFPS(float fps) {
-
-	static long count = 0;
-	int minData = std::max(1, std::min(10, (int) fps));
-	if (fpsList.size() < minData)
-		fpsList.push_back(fps);
-	else {
-		count++;
-		fpsList.erase(fpsList.begin());
-		fpsList.push_back(fps);
-
-		double average = 0;
-		for (int i = 0; i < fpsList.size(); i++)
-			average += fpsList[i];
-		average /= fpsList.size();
-		_averageFPS = average;
-	}
-	if (count == 0)
-		_averageFPS = fps;
+int Application::getWindowWidth() {
+	return _windowWidth;
 }
+
+int Application::getWindowHeight() {
+	return _windowHeight;
+}
+
+bool Application::isFullScreen() {
+	return _fullScreen;
+}
+

@@ -46,15 +46,16 @@ void Camera::useView() {
 	_application->_renderer->_currentProgram->setUniformMatrix4x4f("viewMatrix",
 			viewMatrix.getArray());
 
-	_application->_renderer->_currentProgram->setUniform3f("cameraPosition", getX(), getY(), getZ());
+	_application->_renderer->_currentProgram->setUniform3f("cameraPosition",
+			getX(), getY(), getZ());
 
 }
 
 // Updates the projection matrices as well as setting the desired projection matrix
 void Camera::updateProjectionMatrices() {
 
-	float aspect = (float) _application->_windowSizeX
-			/ (float) _application->_windowSizeY;
+	float aspect = (float) _application->getWindowWidth()
+			/ (float) _application->getWindowHeight();
 
 	_orthographic = GLMatrix::orthographicProjectionMatrix(aspect, 1, getNear(),
 			getFar());
@@ -62,15 +63,15 @@ void Camera::updateProjectionMatrices() {
 			getNear(), getFar());
 
 	/*_application->_logger->log("Orthographic matrix:").endLine().increaseIndent();
-	_application->_logger->log("Aspect: ").log(aspect).endLine().log("Z near: ").log(
-			getNear()).endLine().log("Z far: ").log(getFar()).endLine();
-	_application->_logger->log(_orthographic).decreaseIndent();
+	 _application->_logger->log("Aspect: ").log(aspect).endLine().log("Z near: ").log(
+	 getNear()).endLine().log("Z far: ").log(getFar()).endLine();
+	 _application->_logger->log(_orthographic).decreaseIndent();
 
-	_application->_logger->log("Perspective matrix:").endLine().increaseIndent();
-	_application->_logger->log("FOV: ").log(getFOV()).endLine().log("Aspect: ").log(
-			aspect).endLine().log("Z near: ").log(getNear()).endLine().log(
-			"Z far: ").log(getFar()).endLine();
-	_application->_logger->log(_perspective).decreaseIndent();*/
+	 _application->_logger->log("Perspective matrix:").endLine().increaseIndent();
+	 _application->_logger->log("FOV: ").log(getFOV()).endLine().log("Aspect: ").log(
+	 aspect).endLine().log("Z near: ").log(getNear()).endLine().log(
+	 "Z far: ").log(getFar()).endLine();
+	 _application->_logger->log(_perspective).decreaseIndent();*/
 
 	useProjectionMatrix();
 

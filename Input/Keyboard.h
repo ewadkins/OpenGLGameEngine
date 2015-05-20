@@ -18,7 +18,6 @@ public:
 	Keyboard(Application* application);
 	virtual ~Keyboard() {
 	}
-	void update();
 	void dispatchEvent(int key, int scancode, int action,
 			int mods);
 	bool isKeyDown(int key);

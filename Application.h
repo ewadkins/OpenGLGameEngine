@@ -24,15 +24,16 @@
 
 class Application {
 public:
-	Application(int screenSizeX, int screenSizeY, bool fullScreen);
+	Application(const char* windowName, int screenSizeX, int screenSizeY, bool fullScreen);
 	virtual ~Application() {
 	}
 	int start();
 	void warn(const char*);
 	void stop(const char*);
 	void stop();
-	const static int VERSION_MAJOR = 4;
-	const static int VERSION_MINOR = 1;
+	int getWindowWidth();
+	int getWindowHeight();
+	bool isFullScreen();
 	Application* _application;
 	GLFWwindow* _window;
 	Logger* _logger;
@@ -40,19 +41,41 @@ public:
 	Map* _map;
 	Camera* _camera;
 	Keyboard* _keyboard;
-	int _windowSizeX;
-	int _windowSizeY;
-	bool _fullScreen;
+	static std::vector<Application*> _applications;
+	friend void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+	friend class Keyboard;
+protected:
 	int _frameCount;
+	int _fps;
 private:
-	void setupWindow();
-	void setupDisplay();
-	void setupShaders();
 	void initialize();
+	void _initializeWindow();
+	virtual void initializeWindow() {
+		warn("Missing function: initializeWindow()");
+	}
+	virtual void initializeDisplay() {
+		warn("Missing function: initializeDisplay()");
+	}
+	virtual void initializeMap() {
+		warn("Missing function: initializeMap()");
+	}
+	virtual void initializeCamera() {
+		warn("Missing function: initializeCamera()");
+	}
 	void gameLoop();
-	void updateAverageFPS(float fps);
-	std::vector<float> fpsList;
-	float _averageFPS;
+	virtual void onGameLoop() {
+		warn("Missing function: onGameLoop()");
+	}
+	virtual void onKeyEvent(int key, int action) {
+		warn("Missing function: onKeyEvent(int key, int action)");
+	}
+	//void updateAverageFPS(float fps);
+	const static int VERSION_MAJOR = 4;
+	const static int VERSION_MINOR = 1;
+	const char* _windowName;
+	int _windowWidth;
+	int _windowHeight;
+	bool _fullScreen;
 };
 
 #endif /* APPLICATION_H_ */

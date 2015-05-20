@@ -20,27 +20,21 @@ public:
 	Map(Application* application);
 	virtual ~Map() {
 	}
-	void initialize();
-	void update();
 	void updateVBOs();
-	void addStatic(Drawable* drawable);
-	void addDynamic(Drawable* drawable);
-	void addStream(Drawable* drawable);
+	void addStaticDrawable(Drawable* drawable);
+	void addDynamicDrawable(Drawable* drawable);
+	void addStreamDrawable(Drawable* drawable);
 	void addTerrain(Terrain* terrain);
-	void removeStatic(Drawable* drawable);
-	void removeDynamic(Drawable* drawable);
-	void removeStream(Drawable* drawable);
+	void removeStaticDrawable(Drawable* drawable);
+	void removeDynamicDrawable(Drawable* drawable);
+	void removeStreamDrawable(Drawable* drawable);
 	void removeTerrain(Terrain* terrain);
-	std::vector<Drawable*> getStaticDrawables();
-	std::vector<Drawable*> getDynamicDrawables();
-	std::vector<Drawable*> getStreamDrawables();
-	std::vector<Drawable*> getTerrainDrawables();
-private:
-	Application* _application;
 	std::vector<Drawable*> _staticDrawables;
 	std::vector<Drawable*> _dynamicDrawables;
 	std::vector<Drawable*> _streamDrawables;
 	std::vector<Drawable*> _terrainDrawables;
+private:
+	Application* _application;
 	bool _staticsNeedUpdating;
 	bool _dynamicsNeedUpdating;
 	bool _terrainsNeedUpdating;

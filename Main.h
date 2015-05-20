@@ -8,11 +8,10 @@
 #ifndef MAIN_H_
 #define MAIN_H_
 
-#include "Application.h"
+#include "TestGame.h"
 
 class Main {
-public:
-	static std::vector<Application*> applications;
+
 };
 
 #endif /* MAIN_H_ */

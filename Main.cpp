@@ -7,12 +7,9 @@
 
 #include "Main.h"
 
-std::vector<Application*> Main::applications;
-
 int main() {
 
-	Application* application = new Application(800, 600, false);
-	Main::applications.push_back(application);
+	Application* application = new TestGame("Test Game", 800, 600, false);
 	int result = application->start();
 	std::cout << "Exit code: " << result << std::endl;
 	return result;
