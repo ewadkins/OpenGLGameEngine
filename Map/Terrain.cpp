@@ -153,28 +153,32 @@ float Terrain::randomFloat() {
 	return (float) rand() / RAND_MAX;
 }
 
-void Terrain::smooth(float smoothness) {
+void Terrain::smooth(float smoothness, int num) {
 	std::vector<float> adjacentHeights;
 	std::vector<Vector<float> > points;
 	for (int i = 0; i < _length; i++)
 		for (int j = 0; j < _width; j++)
 			points.push_back(Vector<float>(i, j));
-	random_shuffle(points.begin(), points.end());
-	for (int n = 0; n < points.size(); n++) {
-		int i = points[n][0];
-		int j = points[n][1];
-		adjacentHeights.clear();
-		float averageHeight = 0;
-		for (int x = std::max(i - 1, 0); x <= std::min(i + 1, _length - 1); x++)
-			for (int y = std::max(j - 1, 0); y <= std::min(j + 1, _width - 1);
-					y++)
-				adjacentHeights.push_back(_heightMap[x][y]);
-		if (adjacentHeights.size() > 0) {
-			for (int k = 0; k < adjacentHeights.size(); k++)
-				averageHeight += adjacentHeights[k];
-			averageHeight /= adjacentHeights.size();
-			if (std::abs(averageHeight - _heightMap[i][j]) > (1 - smoothness))
-				_heightMap[i][j] = averageHeight;
+	for (int n = 0; n < num; n++) {
+		random_shuffle(points.begin(), points.end());
+		for (int n = 0; n < points.size(); n++) {
+			int i = points[n][0];
+			int j = points[n][1];
+			adjacentHeights.clear();
+			float averageHeight = 0;
+			for (int x = std::max(i - 1, 0); x <= std::min(i + 1, _length - 1);
+					x++)
+				for (int y = std::max(j - 1, 0);
+						y <= std::min(j + 1, _width - 1); y++)
+					adjacentHeights.push_back(_heightMap[x][y]);
+			if (adjacentHeights.size() > 0) {
+				for (int k = 0; k < adjacentHeights.size(); k++)
+					averageHeight += adjacentHeights[k];
+				averageHeight /= adjacentHeights.size();
+				if (std::abs(averageHeight - _heightMap[i][j])
+						> (1 - smoothness))
+					_heightMap[i][j] = averageHeight;
+			}
 		}
 	}
 }

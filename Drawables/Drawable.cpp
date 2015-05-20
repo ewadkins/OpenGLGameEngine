@@ -23,6 +23,12 @@ Drawable::Drawable() {
 	_drawFaces = true;
 }
 
+void Drawable::cloneComponents(Drawable* other) {
+	_triangles = other->_triangles;
+	_lines = other->_lines;
+	_points = other->_points;
+}
+
 // Updates transformed version of this drawable
 void Drawable::applyTransformations() {
 

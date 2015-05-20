@@ -24,11 +24,11 @@ void main()
 {
     lights[0].enabled = true;
     lights[0].position = vec3(0.0, 30.0, 0.0);
-    //lights[0].position = cameraPosition;
+    lights[0].position = cameraPosition;
     lights[0].ambient = vec3(0.3, 0.3, 0.3);
-    lights[0].diffuse = vec3(0.5, 0.5, 0.5);
+    lights[0].diffuse = vec3(0.6, 0.6, 0.6);
     lights[0].specular = vec3(0.4, 0.4, 0.4);
-    lights[0].range = 300;
+    lights[0].range = 200;
     
     //vec3 ambient = vec3(0.0, 0.0, 0.0);
     //vec3 diffuse = vec3(0.0, 0.0, 0.0);
@@ -59,7 +59,7 @@ void main()
                 
                 // Specular lighting
                 //if (dot(passNormal, surfaceToLight) > 0)
-                if (shininess != 0)
+                if (shininess > 0)
                     specular += lights[i].specular * pow(max(0.0, dot(surfaceToCamera, lightReflection)), shininess) * k;
                 
                 //ambient = vec3((dot(passNormal, surfaceToLight)));

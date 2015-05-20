@@ -19,11 +19,13 @@
 class Drawable {
 public:
 	Drawable();
+	Drawable(Drawable* other);
 	virtual ~Drawable() {
 	}
 	virtual Drawable* clone() {
 		return new Drawable();
 	}
+	void cloneComponents(Drawable* other);
 	std::vector<GLTriangle> getTransformedTriangles();
 	std::vector<GLLine> getTransformedLines();
 	std::vector<GLPoint> getTransformedPoints();

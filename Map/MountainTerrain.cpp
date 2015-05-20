@@ -1,28 +1,28 @@
 /*
- * HillTerrain.cpp
+ * MountainTerrain.cpp
  *
- *  Created on: May 9, 2015
+ *  Created on: May 17, 2015
  *      Author: ericwadkins
  */
 
-#include "HillTerrain.h"
+#include "MountainTerrain.h"
 #include "../Application.h"
 
-HillTerrain::HillTerrain(Application* application, int length, int width) :
+MountainTerrain::MountainTerrain(Application* application, int length, int width) :
 		Terrain(application, length, width) {
-	_heightScale = 5;
-	_lightingType = SMOOTH;
+	_heightScale = 12;
+	_lightingType = ROUGH;
 }
 
-HillTerrain::HillTerrain(Application* application, int length, int width,
+MountainTerrain::MountainTerrain(Application* application, int length, int width,
 		long seed) :
 		Terrain(application, length, width, seed) {
-	_heightScale = 5;
-	_lightingType = SMOOTH;
+	_heightScale = 12;
+	_lightingType = ROUGH;
 }
 
-void HillTerrain::generate() {
-	_application->_logger->log("Generating hill terrain (").log(_length).log(
+void MountainTerrain::generate() {
+	_application->_logger->log("Generating mountain terrain (").log(_length).log(
 			"x").log(_width).log(")..").endLine().increaseIndent();
 
 	_application->_logger->log("Setting initial points..").endLine();
@@ -91,7 +91,7 @@ void HillTerrain::generate() {
 	_application->_logger->log("Done building height map!").endLine().decreaseIndent();
 
 	_application->_logger->log("Smoothing terrain..").endLine();
-	smooth(1.0, 1);
+	smooth(0.5, 1);
 
 	_application->_logger->log("Successfully generated terrain!").endLine().decreaseIndent();
 

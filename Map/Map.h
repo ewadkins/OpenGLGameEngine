@@ -11,6 +11,7 @@
 #include "../Drawables/Drawable.h"
 #include "Terrain.h"
 #include "HillTerrain.h"
+#include "MountainTerrain.h"
 
 class Application;
 

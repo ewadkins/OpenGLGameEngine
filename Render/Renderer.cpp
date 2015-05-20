@@ -308,7 +308,7 @@ void Renderer::render() {
 	_staticTriangleVBO->draw();
 	_dynamicTriangleVBO->draw();
 	_streamTriangleVBO->draw();
-	setShininess(2);
+	setShininess(0);
 	_terrainTriangleVBO->draw();
 
 	if (_lightingEnabled)

@@ -62,10 +62,7 @@ Cube::Cube() {
 }
 
 Cube::Cube(Cube* other) {
-	for (int i = 0; i < other->_triangles.size(); i++)
-		_triangles.push_back(other->_triangles[i]);
-	for (int i = 0; i < other->_lines.size(); i++)
-		_lines.push_back(other->_lines[i]);
+	cloneComponents(other);
 }
 
 Drawable* Cube::clone() {

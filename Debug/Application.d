@@ -1,4 +1,4 @@
-Main.d: ../Main.cpp ../Main.h ../Application.h ../Logger.h \
+Application.d: ../Application.cpp ../Application.h ../Logger.h \
   ../Math/Matrix.h ../Math/PolynomialMatrix.h ../Math/Polynomial.h \
   ../Math/Complex.h ../Math/ComplexMatrix.h ../Render/Renderer.h \
   ../Render/ShaderProgram.h \
@@ -12,10 +12,9 @@ Main.d: ../Main.cpp ../Main.h ../Application.h ../Logger.h \
   ../Render/../Drawables/Drawable.h \
   ../Render/../Drawables/../Math/GLMatrix.h \
   ../Render/../Drawables/Triangle.h ../Render/../Drawables/Cube.h \
-  ../Map/Map.h ../Map/Terrain.h ../Map/HillTerrain.h ../Render/Camera.h \
-  ../Input/Keyboard.h
-
-../Main.h:
+  ../Map/Map.h ../Map/Terrain.h ../Map/HillTerrain.h \
+  ../Map/MountainTerrain.h ../Render/Camera.h ../Input/Keyboard.h \
+  ../Main.h
 
 ../Application.h:
 
@@ -67,6 +66,10 @@ Main.d: ../Main.cpp ../Main.h ../Application.h ../Logger.h \
 
 ../Map/HillTerrain.h:
 
+../Map/MountainTerrain.h:
+
 ../Render/Camera.h:
 
 ../Input/Keyboard.h:
+
+../Main.h:

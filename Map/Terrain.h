@@ -34,7 +34,7 @@ public:
 	std::vector<Drawable*> getDrawables();
 protected:
 	float randomFloat();
-	void smooth(float smoothness);
+	void smooth(float smoothness, int num);
 	void logMatrixRepresentation();
 	Application* _application;
 	std::vector<Drawable*> _drawables;

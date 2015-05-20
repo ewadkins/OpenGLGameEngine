@@ -61,10 +61,7 @@ Triangle::Triangle(GLVertex v1, GLVertex v2, GLVertex v3) {
 }
 
 Triangle::Triangle(Triangle* other) {
-	for (int i = 0; i < other->_triangles.size(); i++)
-		_triangles.push_back(other->_triangles[i]);
-	for (int i = 0; i < other->_lines.size(); i++)
-		_lines.push_back(other->_lines[i]);
+	cloneComponents(other);
 }
 
 Drawable* Triangle::clone() {

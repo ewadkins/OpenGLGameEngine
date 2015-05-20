@@ -80,8 +80,8 @@ void Map::initialize() {
 	terrain->updateDrawables();
 	addTerrain(terrain);
 
-	_application->_logger->log("Initially updating VBOs..").endLine();
-	updateVBOs();
+	//_application->_logger->log("Initially updating VBOs..").endLine();
+	//updateVBOs();
 }
 
 void Map::update() {
