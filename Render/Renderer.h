@@ -30,26 +30,25 @@ public:
 	Renderer(Application* application);
 	virtual ~Renderer() {
 	}
+	void useProgram(ShaderProgram*);
+	void setProjectionMatrix(Matrix<float> projectionMatrix);
+	void setBackgroundColor(float r, float g, float b);
 	void createShaders();
 	void createVBOs();
 	void updateStaticVBOs();
 	void updateDynamicVBOs();
 	void updateStreamVBOs();
 	void updateTerrainVBOs();
+	void updateLights();
 	void render();
 	void display();
-	void useProgram(ShaderProgram*);
-	void enableLighting();
-	void disableLighting();
-	void setBackgroundColor(float r, float g, float b);
-	void setProjectionMatrix(Matrix<float> projectionMatrix);
 	ShaderProgram* _basicShader;
 	ShaderProgram* _lightingShader;
 	ShaderProgram* _currentProgram;
 private:
 	void setupShaders();
 	void updateUniforms();
-	void setLightingEnabled(bool lighting);
+	void setLightingEnabled(bool lightingEnabled);
 	void setShininess(float shininess);
 	Application* _application;
 
@@ -67,7 +66,7 @@ private:
 	VBO<GLPoint>* _terrainPointVBO;
 
 	bool _lightingEnabled;
-
+	float _shininess;
 	Matrix<float> _projectionMatrix;
 };
 

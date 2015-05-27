@@ -51,6 +51,15 @@ void Camera::useView() {
 
 }
 
+Vector<float> Camera::getEyeVector() {
+	Vector<float> result = Vector<float>(
+			sin(_rotationY * M_PI / 180) * cos(_rotationX * M_PI / 180),
+			-sin(_rotationX * M_PI / 180),
+			cos(_rotationY * M_PI / 180) * cos(_rotationX * M_PI / 180));
+	result.normalize();
+	return result;
+}
+
 // Updates the projection matrices as well as setting the desired projection matrix
 void Camera::updateProjectionMatrices() {
 
@@ -181,6 +190,11 @@ float Camera::getY() {
 // Returns the camera's z coordinate
 float Camera::getZ() {
 	return _z;
+}
+
+// Returns the camera's position vector
+Vector<float> Camera::getPosition() {
+	return Vector<float>(_x, _y, _z);
 }
 
 // Returns the camera's angle around the x axis

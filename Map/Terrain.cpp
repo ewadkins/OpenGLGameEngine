@@ -10,36 +10,61 @@
 
 Terrain::Terrain(Application* application, int length, int width) {
 	_application = application;
-	_length = length;
-	_width = width;
+	_length = length + 1;
+	_width = width + 1;
 	_seed = clock();
 	srand(_seed);
 	_heightScale = 1;
 	_lightingType = ROUGH;
+	_drawFaces = true;
+	_drawOutline = true;
+	_color = Vector<float>(0, 1, 0);
 
-	_heightMap = new float*[length];
-	for (int i = 0; i < length; i++) {
-		_heightMap[i] = new float[width];
-		for (int j = 0; j < width; j++)
+	_heightMap = new float*[_length];
+	for (int i = 0; i < _length; i++) {
+		_heightMap[i] = new float[_width];
+		for (int j = 0; j < _width; j++)
 			_heightMap[i][j] = -1;
 	}
 }
 
 Terrain::Terrain(Application* application, int length, int width, long seed) {
 	_application = application;
-	_length = length;
-	_width = width;
+	_length = length + 1;
+	_width = width + 1;
 	_seed = seed;
 	srand(_seed);
 	_heightScale = 1;
 	_lightingType = ROUGH;
+	_drawFaces = true;
+	_drawOutline = true;
+	_color = Vector<float>(0, 1, 0);
 
-	_heightMap = new float*[length];
-	for (int i = 0; i < length; i++) {
-		_heightMap[i] = new float[width];
-		for (int j = 0; j < width; j++)
+	_heightMap = new float*[_length];
+	for (int i = 0; i < _length; i++) {
+		_heightMap[i] = new float[_width];
+		for (int j = 0; j < _width; j++)
 			_heightMap[i][j] = -1;
 	}
+}
+
+std::vector<float> mergeColors(float r1, float g1, float b1, float r2, float g2,
+		float b2, float k) {
+	std::vector<float> result;
+	if (k >= 1) {
+		result.push_back(r1);
+		result.push_back(g1);
+		result.push_back(b1);
+	} else if (k <= 0) {
+		result.push_back(r2);
+		result.push_back(g2);
+		result.push_back(b2);
+	} else {
+		result.push_back(r1 * k + r2 * (1 - k));
+		result.push_back(g1 * k + g2 * (1 - k));
+		result.push_back(b1 * k + b2 * (1 - k));
+	}
+	return result;
 }
 
 void Terrain::updateDrawables() {
@@ -52,10 +77,13 @@ void Terrain::updateDrawables() {
 	std::vector<GLVertex> rowVertices;
 	for (int i = 0; i < _length; i++) {
 		rowVertices.clear();
-		for (int j = 0; j < _width; j++)
+		for (int j = 0; j < _width; j++) {
+			std::vector<float> color = mergeColors(1, 1, 1, _color[0],
+					_color[1], _color[2], 1 - _heightMap[i][j]);
 			rowVertices.push_back(
-					GLVertex(i, _heightMap[i][j] * _heightScale, j,
-							1 - _heightMap[i][j], 1, 1 - _heightMap[i][j]));
+					GLVertex(i, _heightMap[i][j] * _heightScale, j, color[0],
+							color[1], color[2]));
+		}
 		vertices.push_back(rowVertices);
 	}
 
@@ -131,8 +159,10 @@ void Terrain::updateDrawables() {
 			GLVertex v4 = vertices[i + 1][j];
 			Drawable* t1 = new Triangle(v1, v2, v4);
 			Drawable* t2 = new Triangle(v2, v3, v4);
-			t1->setDrawOutline(false);
-			t2->setDrawOutline(false);
+			t1->setDrawFaces(_drawFaces);
+			t2->setDrawFaces(_drawFaces);
+			t1->setDrawOutline(_drawOutline);
+			t2->setDrawOutline(_drawOutline);
 			_drawables.push_back(t1);
 			_drawables.push_back(t2);
 		}
@@ -143,6 +173,14 @@ void Terrain::setLightingType(LightingType lightingType) {
 		_lightingType = lightingType;
 		updateDrawables();
 	}
+}
+
+void Terrain::setDrawFaces(bool drawFaces) {
+	_drawFaces = drawFaces;
+}
+
+void Terrain::setDrawOutline(bool drawOutline) {
+	_drawOutline = drawOutline;
 }
 
 std::vector<Drawable*> Terrain::getDrawables() {
@@ -181,6 +219,10 @@ void Terrain::smooth(float smoothness, int num) {
 			}
 		}
 	}
+}
+
+void Terrain::setColor(float r, float g, float b) {
+	_color = Vector<float>(r, g, b);
 }
 
 void Terrain::logMatrixRepresentation() {

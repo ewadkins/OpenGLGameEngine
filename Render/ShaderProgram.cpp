@@ -104,6 +104,18 @@ void ShaderProgram::setUniformMatrix4x4d(const char* name, GLdouble* values) {
 	glProgramUniformMatrix4dv(_program, loc, 1, false, values);
 }
 
+std::string replace(std::string source, std::string search,
+		std::string replace) {
+	for (size_t pos = 0;; pos += replace.length()) {
+		pos = source.find(search, pos);
+		if (pos == std::string::npos)
+			break;
+		source.erase(pos, search.length());
+		source.insert(pos, replace);
+	}
+	return source;
+}
+
 // Loads the shader of the specified file
 GLuint ShaderProgram::loadShader(const char* shaderFile, GLenum type) {
 	// Loads shader source code
@@ -113,12 +125,18 @@ GLuint ShaderProgram::loadShader(const char* shaderFile, GLenum type) {
 	//_application->_logger->log("Source code:").endLine();
 	while (std::getline(in, line)) {
 		src += line + "\n";
-	//	_application->_logger->log(line).endLine();
+		//	_application->_logger->log(line).endLine();
 	}
-	GLuint shader;
+
+	std::string search = "NUM_LIGHTS";
+	int numLights = 1;
+	if (_application->_map != nullptr)
+		numLights = std::max(1, (int)_application->_map->_lights.size());
+	src = replace(src, std::string("NUM_LIGHTS"), std::to_string(numLights));
+	//_application->_logger->log(src).endLine();
 
 	// Creates shader ID
-	shader = glCreateShader(type);
+	GLuint shader = glCreateShader(type);
 
 	// Compiles shader
 	const char* source = src.c_str();
@@ -131,8 +149,7 @@ GLuint ShaderProgram::loadShader(const char* shaderFile, GLenum type) {
 	glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &maxLength);
 	GLchar* log = new char[maxLength];
 	glGetShaderInfoLog(shader, maxLength, &maxLength, &log[0]);
-	if(isCompiled == GL_FALSE)
-	{
+	if (isCompiled == GL_FALSE) {
 		glDeleteShader(shader);
 		_application->warn("Could not compile the shader");
 
@@ -140,8 +157,7 @@ GLuint ShaderProgram::loadShader(const char* shaderFile, GLenum type) {
 		_application->warn(log);
 
 		return 0;
-	}
-	else if (maxLength > 0)
+	} else if (maxLength > 0)
 		_application->warn(log);
 	return shader;
 }
@@ -190,7 +206,8 @@ GLuint ShaderProgram::create() {
 		_application->_logger->decreaseIndent().decreaseIndent();
 		return 0;
 	} else
-		_application->_logger->log("Shader program created and linked successfully!").endLine().decreaseIndent().decreaseIndent();
+		_application->_logger->log(
+				"Shader program created and linked successfully!").endLine().decreaseIndent().decreaseIndent();
 
 	return _program;
 }

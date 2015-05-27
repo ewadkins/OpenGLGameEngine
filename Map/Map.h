@@ -12,6 +12,8 @@
 #include "Terrain.h"
 #include "HillTerrain.h"
 #include "MountainTerrain.h"
+#include "CanyonTerrain.h"
+#include "LightSource.h"
 
 class Application;
 
@@ -29,15 +31,19 @@ public:
 	void removeDynamicDrawable(Drawable* drawable);
 	void removeStreamDrawable(Drawable* drawable);
 	void removeTerrain(Terrain* terrain);
+	void addLightSource(LightSource* light);
+	void removeLightSource(LightSource* light);
 	std::vector<Drawable*> _staticDrawables;
 	std::vector<Drawable*> _dynamicDrawables;
 	std::vector<Drawable*> _streamDrawables;
 	std::vector<Drawable*> _terrainDrawables;
+	std::vector<LightSource*> _lights;
 private:
 	Application* _application;
 	bool _staticsNeedUpdating;
 	bool _dynamicsNeedUpdating;
 	bool _terrainsNeedUpdating;
+	bool _lightCountChanged;
 };
 
 #endif /* MAP_MAP_H_ */

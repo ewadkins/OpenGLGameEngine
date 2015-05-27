@@ -10,6 +10,7 @@
 TestGame::TestGame(const char* windowName, int screenSizeX, int screenSizeY,
 		bool fullScreen) :
 		Application(windowName, screenSizeX, screenSizeY, fullScreen) {
+	_cameraLight = nullptr;
 
 }
 
@@ -44,12 +45,6 @@ void TestGame::initializeMap() {
 	t4->setColor(1, 0.5, 0);
 	_map->addStreamDrawable(t4);
 
-	Drawable* lightCube = new Cube();
-	lightCube->setXYZ(0, 30, 0);
-	lightCube->scaleXYZ(0.5, 0.5, 0.5);
-	lightCube->setColor(1, 1, 0);
-	_map->addStaticDrawable(lightCube);
-
 	Drawable* c1 = new Cube();
 	c1->setRotationXYZ(45, 45, 45);
 	c1->scaleXYZ(2, 2, 2);
@@ -80,10 +75,25 @@ void TestGame::initializeMap() {
 	c5->setColor(0, 1, 0);
 	_map->addStreamDrawable(c5);
 
-	Terrain* terrain = new HillTerrain(_application, 100, 100, 12345);
+	Terrain* terrain = new HillTerrain(this, 100, 100, 123456);
 	terrain->generate();
+	terrain->setDrawOutline(false);
 	terrain->updateDrawables();
 	_map->addTerrain(terrain);
+
+	_mainLight = new LightSource(LightSource::DIRECTIONAL);
+	_mainLight->setDirection(1, -0.5, 1);
+	_mainLight->setAmbient(0.3, 0.3, 0.3);
+	_mainLight->setDiffuse(0.6, 0.6, 0.6);
+	_mainLight->setSpecular(0.2, 0.2, 0.2);
+	_map->addLightSource(_mainLight);
+
+	_cameraLight = new LightSource(LightSource::SPOTLIGHT);
+	_cameraLight->setAmbient(0.3, 0.3, 0.3);
+	_cameraLight->setDiffuse(0.6, 0.6, 0.6);
+	_cameraLight->setSpecular(0.2, 0.2, 0.2);
+	_cameraLight->setRange(50);
+	_map->addLightSource(_cameraLight);
 }
 
 void TestGame::initializeCamera() {
@@ -94,6 +104,8 @@ void TestGame::onGameLoop() {
 	_logger->log("FPS: ").log(_fps).endLine();
 
 	handleInput();
+	_cameraLight->setPosition(_camera->getPosition());
+	_cameraLight->setDirection(_camera->getEyeVector());
 	_camera->useView();
 
 	for (int i = 0; i < _map->_streamDrawables.size(); i++) {
@@ -114,6 +126,31 @@ void TestGame::onKeyEvent(int key, int action) {
 		_camera->setProjectionType(_camera->ORTHOGRAPHIC);
 	if (key == GLFW_KEY_P && action == GLFW_PRESS)
 		_camera->setProjectionType(_camera->PERSPECTIVE);
+
+	if (key == GLFW_KEY_F && action == GLFW_PRESS) {
+		if(_cameraLight->isEnabled())
+			_cameraLight->setEnabled(false);
+		else
+			_cameraLight->setEnabled(true);
+	}
+
+	if (key == GLFW_KEY_L && action == GLFW_PRESS) {
+		LightSource* light = new LightSource(LightSource::SPOTLIGHT);
+		light->setPosition(_camera->getPosition());
+		light->setDirection(_camera->getEyeVector());
+		light->setAmbient(0.3, 0.3, 0.3);
+		light->setDiffuse(0.6, 0.6, 0.6);
+		light->setSpecular(0.2, 0.2, 0.2);
+		light->setRange(50);
+		_lights.push_back(light);
+		_map->addLightSource(light);
+	}
+
+	if (key == GLFW_KEY_R && action == GLFW_PRESS) {
+		for (int i = 0; i < _lights.size(); i++)
+			_map->removeLightSource(_lights[i]);
+		_lights.clear();
+	}
 }
 
 void TestGame::handleInput() {

@@ -74,7 +74,7 @@ void Application::_initializeWindow() {
 	// Create the window
 	if (!_fullScreen)
 		_window = glfwCreateWindow(_windowWidth, _windowHeight, _windowName,
-				NULL, NULL);
+		NULL, NULL);
 	else
 		_window = glfwCreateWindow(_windowWidth, _windowHeight, _windowName,
 				glfwGetPrimaryMonitor(), nullptr);
@@ -344,15 +344,23 @@ void Application::initialize() {
 	_logger->log("Initializing display..").endLine().increaseIndent();
 	start = clock();
 	{
-		// Depth buffer setup
 		glClearDepth(1.0f);
-
-		// Enables depth testing
 		glEnable(GL_DEPTH_TEST);
-
-		// Type of depth testing
 		glDepthFunc(GL_LEQUAL);
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		initializeDisplay();
+	}
+	finish = clock();
+	_logger->decreaseIndent().log("(Took ").log(
+			(double(finish) - double(start)) / CLOCKS_PER_SEC * 1000).log(
+			" ms)").endLine();
+
+	_logger->log("Initializing map..").endLine().increaseIndent();
+	start = clock();
+	{
+		_map = new Map(this);
+		initializeMap();
 	}
 	finish = clock();
 	_logger->decreaseIndent().log("(Took ").log(
@@ -379,17 +387,6 @@ void Application::initialize() {
 		_logger->decreaseIndent().log("(Took ").log(
 				(double(finish2) - double(start2)) / CLOCKS_PER_SEC * 1000).log(
 				" ms)").endLine();
-	}
-	finish = clock();
-	_logger->decreaseIndent().log("(Took ").log(
-			(double(finish) - double(start)) / CLOCKS_PER_SEC * 1000).log(
-			" ms)").endLine();
-
-	_logger->log("Initializing map..").endLine().increaseIndent();
-	start = clock();
-	{
-		_map = new Map(this);
-		initializeMap();
 	}
 	finish = clock();
 	_logger->decreaseIndent().log("(Took ").log(
@@ -444,6 +441,14 @@ void Application::gameLoop() {
 		long currentTime = clock();
 		long delta = currentTime - lastTime;
 		_fps = CLOCKS_PER_SEC / ((float) delta);
+
+		fpsList.push_back(_fps);
+		float avg = 0;
+		for (int i = 0; i < fpsList.size(); i++)
+			avg += fpsList[i];
+		avg /= fpsList.size();
+		std::cout << "Average FPS: " << avg << std::endl;
+
 		lastTime = clock();
 
 		onGameLoop();

@@ -1,30 +1,30 @@
 /*
- * MountainTerrain.cpp
+ * CanyonTerrain.cpp
  *
- *  Created on: May 17, 2015
+ *  Created on: May 20, 2015
  *      Author: ericwadkins
  */
 
-#include "MountainTerrain.h"
+#include "CanyonTerrain.h"
 #include "../Application.h"
 
-MountainTerrain::MountainTerrain(Application* application, int length, int width) :
+CanyonTerrain::CanyonTerrain(Application* application, int length, int width) :
 		Terrain(application, length, width) {
-	_heightScale = 12;
-	_lightingType = ROUGH;
-	setColor(0.4, 0.4, 0.4);
+	_heightScale = 5;
+	_lightingType = SMOOTH;
+	setColor(1, 0.4, 0.4);
 }
 
-MountainTerrain::MountainTerrain(Application* application, int length, int width,
+CanyonTerrain::CanyonTerrain(Application* application, int length, int width,
 		long seed) :
 		Terrain(application, length, width, seed) {
-	_heightScale = 12;
-	_lightingType = ROUGH;
-	setColor(0.4, 0.4, 0.4);
+	_heightScale = 5;
+	_lightingType = SMOOTH;
+	setColor(1, 0.4, 0.4);
 }
 
-void MountainTerrain::generate() {
-	_application->_logger->log("Generating mountain terrain (").log(_length).log(
+void CanyonTerrain::generate() {
+	_application->_logger->log("Generating canyon terrain (").log(_length).log(
 			"x").log(_width).log(")..").endLine().increaseIndent();
 
 	_application->_logger->log("Setting initial points..").endLine();
@@ -34,7 +34,7 @@ void MountainTerrain::generate() {
 		for (int i = 0; i < _length; i++)
 			for (int j = 0; j < _width; j++)
 				if (randomFloat() < .02) {
-					_heightMap[i][j] = randomFloat();
+					_heightMap[i][j] = 1 - randomFloat() / 10;
 					initPoints.push_back(Vector<float>(i, j));
 				}
 		for (int i = 0; i < _length; i++)
@@ -85,15 +85,19 @@ void MountainTerrain::generate() {
 					if (dist < minDist)
 						minDist = dist;
 				}
-				_heightMap[i][j] = std::fmax(
-						averageHeight - randomFloat() * minDist / 20, 0);
+				float temp = std::fmax(
+						averageHeight - randomFloat() * minDist / 50, 0);
+				if (1 - temp > 0.1)
+					_heightMap[i][j] = randomFloat() * 0.1;
+				else
+					_heightMap[i][j] = 1 - randomFloat() / 20;
 			}
 		}
 	}
 	_application->_logger->log("Done building height map!").endLine().decreaseIndent();
 
 	_application->_logger->log("Smoothing terrain..").endLine();
-	smooth(0.5, 1);
+	smooth(0.5, 2);
 
 	_application->_logger->log("Successfully generated terrain!").endLine().decreaseIndent();
 

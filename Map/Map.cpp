@@ -13,6 +13,7 @@ Map::Map(Application* application) {
 	_staticsNeedUpdating = false;
 	_dynamicsNeedUpdating = false;
 	_terrainsNeedUpdating = false;
+	_lightCountChanged = false;
 }
 
 void Map::updateVBOs() {
@@ -28,6 +29,19 @@ void Map::updateVBOs() {
 		_application->_renderer->updateTerrainVBOs();
 		_terrainsNeedUpdating = false;
 	}
+
+	if (_lightCountChanged) {
+		_application->_renderer->createShaders();
+		_lightCountChanged = false;
+	}
+	bool lightsNeedUpdating = false;
+	for (int i = 0; i < _lights.size(); i++)
+		if (_lights[i]->_needsUpdating) {
+			lightsNeedUpdating = true;
+			_lights[i]->_needsUpdating = false;
+		}
+	if (lightsNeedUpdating)
+		_application->_renderer->updateLights();
 }
 
 void Map::addStaticDrawable(Drawable* drawable) {
@@ -59,12 +73,16 @@ void Map::removeStaticDrawable(Drawable* drawable) {
 }
 
 void Map::removeDynamicDrawable(Drawable* drawable) {
-	_dynamicDrawables.push_back(drawable);
+	for (int i = 0; i < _dynamicDrawables.size(); i++)
+		if (_dynamicDrawables[i] == drawable)
+			_dynamicDrawables.erase(_dynamicDrawables.begin() + i);
 	_dynamicsNeedUpdating = true;
 }
 
 void Map::removeStreamDrawable(Drawable* drawable) {
-	_streamDrawables.push_back(drawable);
+	for (int i = 0; i < _streamDrawables.size(); i++)
+		if (_streamDrawables[i] == drawable)
+			_streamDrawables.erase(_streamDrawables.begin() + i);
 }
 
 void Map::removeTerrain(Terrain* terrain) {
@@ -74,5 +92,17 @@ void Map::removeTerrain(Terrain* terrain) {
 			if (_terrainDrawables[j] == drawables[i])
 				_terrainDrawables.erase(_terrainDrawables.begin() + j);
 	_terrainsNeedUpdating = true;
+}
+
+void Map::addLightSource(LightSource* light) {
+	_lights.push_back(light);
+	_lightCountChanged = true;
+}
+
+void Map::removeLightSource(LightSource* light) {
+	for (int i = 0; i < _lights.size(); i++)
+		if (_lights[i] == light)
+			_lights.erase(_lights.begin() + i);
+	_lightCountChanged = true;
 }
 

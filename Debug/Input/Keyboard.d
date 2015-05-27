@@ -17,7 +17,8 @@ Input/Keyboard.d: ../Input/Keyboard.cpp ../Input/Keyboard.h \
   ../Input/../Render/../Drawables/Triangle.h \
   ../Input/../Render/../Drawables/Cube.h ../Input/../Map/Map.h \
   ../Input/../Map/Terrain.h ../Input/../Map/HillTerrain.h \
-  ../Input/../Map/MountainTerrain.h ../Input/../Render/Camera.h
+  ../Input/../Map/MountainTerrain.h ../Input/../Map/CanyonTerrain.h \
+  ../Input/../Map/LightSource.h ../Input/../Render/Camera.h
 
 ../Input/Keyboard.h:
 
@@ -72,5 +73,9 @@ Input/Keyboard.d: ../Input/Keyboard.cpp ../Input/Keyboard.h \
 ../Input/../Map/HillTerrain.h:
 
 ../Input/../Map/MountainTerrain.h:
+
+../Input/../Map/CanyonTerrain.h:
+
+../Input/../Map/LightSource.h:
 
 ../Input/../Render/Camera.h:

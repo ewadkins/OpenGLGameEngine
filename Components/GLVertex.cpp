@@ -196,6 +196,12 @@ std::vector<float> GLVertex::getTexCoords() {
 	return vec;
 }
 
+std::vector<float> GLVertex::getData() {
+	float arr[] = { _x, _y, _z, _r, _g, _b, _normX, _normY, _normZ, _texX, _texY };
+	std::vector<float> vec(arr, arr + sizeof(arr) / sizeof(arr[0]));
+	return vec;
+}
+
 bool GLVertex::hasColor() {
 	return _hasColor;
 }

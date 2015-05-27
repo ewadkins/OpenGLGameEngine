@@ -27,25 +27,14 @@ void VBO<T>::clear() {
 template<typename T>
 void VBO<T>::updateData() {
 	_data.clear();
+	int vertexCount = 0;
+	for (int i = 0; i < _components.size(); i++)
+		vertexCount += _components[i]._vertices.size();
+	_data.reserve(vertexCount * 11);
 	for (int i = 0; i < _components.size(); i++) {
 		for (int j = 0; j < _components[i]._vertices.size(); j++) {
-			GLVertex v = _components[i]._vertices[j];
-			std::vector<float> pos = v.getPosition();
-			std::vector<float> color = v.getColor();
-			std::vector<float> norm = v.getNormal();
-			std::vector<float> tex = v.getTexCoords();
-
-			_data.push_back(pos[0]);
-			_data.push_back(pos[1]);
-			_data.push_back(pos[2]);
-			_data.push_back(color[0]);
-			_data.push_back(color[1]);
-			_data.push_back(color[2]);
-			_data.push_back(norm[0]);
-			_data.push_back(norm[1]);
-			_data.push_back(norm[2]);
-			_data.push_back(tex[0]);
-			_data.push_back(tex[1]);
+			std::vector<float> data = _components[i]._vertices[j].getData();
+			_data.insert(_data.end(), data.begin(), data.end());
 		}
 	}
 }

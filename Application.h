@@ -76,6 +76,7 @@ private:
 	int _windowWidth;
 	int _windowHeight;
 	bool _fullScreen;
+	std::vector<float> fpsList;
 };
 
 #endif /* APPLICATION_H_ */

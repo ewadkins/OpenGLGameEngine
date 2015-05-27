@@ -12,6 +12,7 @@ HillTerrain::HillTerrain(Application* application, int length, int width) :
 		Terrain(application, length, width) {
 	_heightScale = 5;
 	_lightingType = SMOOTH;
+	setColor(0, 1, 0);
 }
 
 HillTerrain::HillTerrain(Application* application, int length, int width,
@@ -19,6 +20,7 @@ HillTerrain::HillTerrain(Application* application, int length, int width,
 		Terrain(application, length, width, seed) {
 	_heightScale = 5;
 	_lightingType = SMOOTH;
+	setColor(0, 1, 0);
 }
 
 void HillTerrain::generate() {
@@ -84,14 +86,14 @@ void HillTerrain::generate() {
 						minDist = dist;
 				}
 				_heightMap[i][j] = std::fmax(
-						averageHeight - randomFloat() * minDist / 20, 0);
+						averageHeight - randomFloat() * minDist / 50, 0);
 			}
 		}
 	}
 	_application->_logger->log("Done building height map!").endLine().decreaseIndent();
 
 	_application->_logger->log("Smoothing terrain..").endLine();
-	smooth(1.0, 1);
+	smooth(1.0, 2);
 
 	_application->_logger->log("Successfully generated terrain!").endLine().decreaseIndent();
 

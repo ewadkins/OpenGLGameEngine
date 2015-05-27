@@ -13,7 +13,7 @@
 
 class TestGame: public Application {
 public:
-	TestGame(const char* windowName, int screenSizeX, int screenSizeY, bool fullScreen);
+	TestGame(const char* windowName, int screenSizeX, int screenSizeY, bool fullScreen = false);
 	virtual ~TestGame() {
 	}
 	virtual void initializeWindow();
@@ -23,6 +23,10 @@ public:
 	virtual void onGameLoop();
 	virtual void onKeyEvent(int key, int action);
 	void handleInput();
+private:
+	LightSource* _mainLight;
+	LightSource* _cameraLight;
+	std::vector<LightSource*> _lights;
 };
 
 #endif /* TESTGAME_H_ */

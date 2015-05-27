@@ -31,10 +31,13 @@ public:
 		ROUGH, SMOOTH
 	};
 	void setLightingType(LightingType lightingType);
+	void setDrawFaces(bool drawFaces);
+	void setDrawOutline(bool drawOutline);
 	std::vector<Drawable*> getDrawables();
 protected:
 	float randomFloat();
 	void smooth(float smoothness, int num);
+	void setColor(float r, float g, float b);
 	void logMatrixRepresentation();
 	Application* _application;
 	std::vector<Drawable*> _drawables;
@@ -43,6 +46,8 @@ protected:
 	long _seed;
 	float _heightScale;
 	LightingType _lightingType;
+	bool _drawFaces, _drawOutline;
+	Vector<float> _color;
 };
 
 #endif /* MAP_TERRAIN_H_ */

@@ -10,6 +10,8 @@
 
 #include "../Math/GLMatrix.h"
 #include "../Math/Matrix.h"
+#include "../Math/Vector.h"
+//#include <cmath>
 //#include <glm/glm.hpp>
 //#include <glm/gtx/transform.hpp>
 
@@ -23,6 +25,7 @@ public:
 	}
 	void initialize();
 	void useView();
+	Vector<float> getEyeVector();
 	void updateProjectionMatrices();
 	void useProjectionMatrix();
 	enum ProjectionType {ORTHOGRAPHIC, PERSPECTIVE};
@@ -44,6 +47,7 @@ public:
 	float getX();
 	float getY();
 	float getZ();
+	Vector<float> getPosition();
 	float getRotationX();
 	float getRotationY();
 	float getRotationZ();

@@ -12,23 +12,28 @@ uniform float shininess;
 
 struct Light
 {
+    int type; // 0 = point, 1 = directional, 2 = spotlight
     vec3 position;
+    vec3 direction;
     vec3 ambient;
     vec3 diffuse;
     vec3 specular;
-    float range; // range <= 0 = infinite range
+    float range; // 0 = infinite range
+    float spread;
     bool enabled;
-} lights[1];
+};
+
+uniform Light lights[NUM_LIGHTS];
 
 void main()
 {
-    lights[0].enabled = true;
-    lights[0].position = vec3(0.0, 30.0, 0.0);
-    lights[0].position = cameraPosition;
-    lights[0].ambient = vec3(0.3, 0.3, 0.3);
-    lights[0].diffuse = vec3(0.6, 0.6, 0.6);
-    lights[0].specular = vec3(0.4, 0.4, 0.4);
-    lights[0].range = 20;
+    //lights[0].enabled = true;
+    //lights[0].position = vec3(0.0, 30.0, 0.0);
+    ////lights[0].position = cameraPosition;
+    //lights[0].ambient = vec3(0.3, 0.3, 0.3);
+    //lights[0].diffuse = vec3(0.6, 0.6, 0.6);
+    //lights[0].specular = vec3(0.4, 0.4, 0.4);
+    //lights[0].range = 300;
     
     //vec3 ambient = vec3(0.0, 0.0, 0.0);
     //vec3 diffuse = vec3(0.0, 0.0, 0.0);
@@ -40,16 +45,26 @@ void main()
     vec3 color = passColor;
     
     if (lightingEnabled) {
-        for (int i = 0; i < lights.length(); i++)
+        for (int i = 0; i < NUM_LIGHTS; i++)
             if (lights[i].enabled)
             {
+                vec3 surfaceToLight;
+                if (lights[i].type == 1)
+                    surfaceToLight = normalize(-lights[i].direction);
+                else
+                    surfaceToLight = normalize(lights[i].position - passPosition);
+                vec3 surfaceToCamera = normalize(cameraPosition - passPosition);
+                vec3 lightReflection = reflect(-surfaceToLight, passNormal);
+                
                 float k = 1;
                 if (lights[i].range > 0)
                     k = pow(max(0.0, 1 - distance(lights[i].position, passPosition) / lights[i].range), 2);
-                
-                vec3 surfaceToLight = normalize(lights[i].position - passPosition);
-                vec3 surfaceToCamera = normalize(cameraPosition - passPosition);
-                vec3 lightReflection = reflect(-surfaceToLight, passNormal);
+                if (lights[i].type == 1)
+                    k = 1;
+                else if (lights[i].type == 2) {
+                    float cosTheta = dot(normalize(lights[i].direction), surfaceToLight);
+                    k *= max(0.0, sqrt(cosTheta - cos(radians(lights[i].spread))));
+                }
                 
                 // Ambient lighting
                 ambient += lights[i].ambient * k;

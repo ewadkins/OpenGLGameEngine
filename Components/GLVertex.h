@@ -40,12 +40,12 @@ public:
 	std::vector<float> getColor();
 	std::vector<float> getNormal();
 	std::vector<float> getTexCoords();
+	std::vector<float> getData();
 	bool hasColor();
 	bool hasNormal();
 	bool hasTexCoords();
 	GLVertex* clone();
 	std::string toString();
-private:
 	float _x, _y, _z, _r, _g, _b, _normX, _normY, _normZ, _texX, _texY;
 	bool _hasColor, _hasNormal, _hasTexCoords;
 };

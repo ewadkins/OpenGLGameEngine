@@ -15,6 +15,7 @@ Renderer::Renderer(Application* application) : // FIXME Random warning message
 	_lightingShader = nullptr;
 	_currentProgram = nullptr;
 	_lightingEnabled = true;
+	_shininess = 0;
 
 	/*_staticTriangleVBO = nullptr;
 	_staticLineVBO = nullptr;
@@ -24,7 +25,10 @@ Renderer::Renderer(Application* application) : // FIXME Random warning message
 	_dynamicPointVBO = nullptr;
 	_streamTriangleVBO = nullptr;
 	_streamLineVBO = nullptr;
-	_streamPointVBO = nullptr;*/
+	_streamPointVBO = nullptr;
+	_terrainTriangleVBO = nullptr;
+	_terrainLineVBO = nullptr;
+	_terrainPointVBO = nullptr;*/
 }
 
 // Sets up the shaders for use in rendering
@@ -43,33 +47,33 @@ void Renderer::useProgram(ShaderProgram* program) {
 	updateUniforms();
 }
 
-void Renderer::enableLighting() {
-	_lightingEnabled = true;
-}
-
-void Renderer::setLightingEnabled(bool lighting) {
-	_currentProgram->setUniform1i("lightingEnabled", lighting);
+void Renderer::setLightingEnabled(bool lightingEnabled) {
+	_currentProgram->setUniform1i("lightingEnabled", lightingEnabled);
+	_lightingEnabled = lightingEnabled;
 }
 
 void Renderer::setShininess(float shininess) {
 	_currentProgram->setUniform1f("shininess", shininess);
-}
-
-void Renderer::setBackgroundColor(float r, float g, float b) {
-	glClearColor(r, g, b, 1);
+	_shininess = shininess;
 }
 
 // Sets the projection matrix to be used in rendering
 void Renderer::setProjectionMatrix(Matrix<float> projectionMatrix) {
-	_projectionMatrix = projectionMatrix;
 	_currentProgram->setUniformMatrix4x4f("projectionMatrix",
-			_projectionMatrix.getArray());
+			projectionMatrix.getArray());
+	_projectionMatrix = projectionMatrix;
 }
 
 // Updates certain uniforms upon the use of a different shader program
 void Renderer::updateUniforms() {
+	_currentProgram->setUniform1i("lightingEnabled", _lightingEnabled);
+	_currentProgram->setUniform1i("shininess", _shininess);
 	_currentProgram->setUniformMatrix4x4f("projectionMatrix",
 			_projectionMatrix.getArray());
+}
+
+void Renderer::setBackgroundColor(float r, float g, float b) {
+	glClearColor(r, g, b, 1);
 }
 
 // Initialization method ran on startup
@@ -299,6 +303,27 @@ void Renderer::updateTerrainVBOs() {
 	_terrainPointVBO->pushToBuffer();
 }
 
+void Renderer::updateLights() {
+	std::vector<LightSource*> lights = _application->_map->_lights;
+	for (int i = 0; i < lights.size(); i++) {
+		std::string var = std::string("lights[") + std::to_string(i) + std::string("]");
+		_currentProgram->setUniform1i((var + ".type").c_str(), lights[i]->getType());
+		Vector<float> vec = lights[i]->getPosition();
+		_currentProgram->setUniform3f((var + ".position").c_str(), vec[0], vec[1], vec[2]);
+		vec = lights[i]->getDirection();
+		_currentProgram->setUniform3f((var + ".direction").c_str(), vec[0], vec[1], vec[2]);
+		vec = lights[i]->getAmbient();
+		_currentProgram->setUniform3f((var + ".ambient").c_str(), vec[0], vec[1], vec[2]);
+		vec = lights[i]->getDiffuse();
+		_currentProgram->setUniform3f((var + ".diffuse").c_str(), vec[0], vec[1], vec[2]);
+		vec = lights[i]->getSpecular();
+		_currentProgram->setUniform3f((var + ".specular").c_str(), vec[0], vec[1], vec[2]);
+		_currentProgram->setUniform1f((var + ".range").c_str(), lights[i]->getRange());
+		_currentProgram->setUniform1f((var + ".spread").c_str(), lights[i]->getSpread());
+		_currentProgram->setUniform1i((var + ".enabled").c_str(), lights[i]->isEnabled());
+	}
+}
+
 void Renderer::render() {
 
 	// Clear everything
@@ -306,16 +331,16 @@ void Renderer::render() {
 
 	updateStreamVBOs();
 
-	if (_lightingEnabled)
-		setLightingEnabled(true);
+	bool lightingEnabled = _lightingEnabled;
+
 	setShininess(20);
 	_staticTriangleVBO->draw();
 	_dynamicTriangleVBO->draw();
 	_streamTriangleVBO->draw();
-	setShininess(0);
+	setShininess(2);
 	_terrainTriangleVBO->draw();
 
-	if (_lightingEnabled)
+	if (lightingEnabled)
 		setLightingEnabled(false);
 	_staticLineVBO->draw();
 	_staticPointVBO->draw();
@@ -325,6 +350,9 @@ void Renderer::render() {
 	_streamPointVBO->draw();
 	_terrainLineVBO->draw();
 	_terrainPointVBO->draw();
+
+	if (lightingEnabled)
+		setLightingEnabled(true);
 }
 
 // Displays the rendered scene
