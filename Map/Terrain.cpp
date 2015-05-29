@@ -218,7 +218,7 @@ Vector<float> Terrain::project(Vector<float> pos) {
 	int i = (int) x;
 	int j = (int) y;
 
-	if (i < 0 || i >= _length || j < 0 || j >= _width)
+	if (i < 0 || i >= _length - 1 || j < 0 || j >= _width - 1)
 		return Vector<float>();
 
 	float height = 0;

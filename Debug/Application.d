@@ -1,4 +1,4 @@
-TestGame.d: ../TestGame.cpp ../TestGame.h ../Application.h ../Logger.h \
+Application.d: ../Application.cpp ../Application.h ../Logger.h \
   ../Math/Matrix.h ../Math/PolynomialMatrix.h ../Math/Polynomial.h \
   ../Math/Complex.h ../Math/ComplexMatrix.h ../Render/Renderer.h \
   ../Render/ShaderProgram.h \
@@ -16,8 +16,6 @@ TestGame.d: ../TestGame.cpp ../TestGame.h ../Application.h ../Logger.h \
   ../Map/Map.h ../Map/Terrain.h ../Map/HillTerrain.h \
   ../Map/MountainTerrain.h ../Map/CanyonTerrain.h ../Map/LightSource.h \
   ../Render/Camera.h ../Input/Keyboard.h
-
-../TestGame.h:
 
 ../Application.h:
 

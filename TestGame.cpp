@@ -119,8 +119,7 @@ void TestGame::onGameLoop() {
 	}
 
 	Vector<float> pos = _terrain->project(
-			Vector<float>(_camera->getX(), _camera->getY() - 1,
-					_camera->getZ()));
+			Vector<float>(_camera->getX(), _camera->getY(), _camera->getZ()));
 	if (pos.size() > 0)
 		//_testCube->setXYZ(pos[0], pos[1], pos[2]);
 		_camera->setXYZ(pos[0], pos[1] + 1, pos[2]);
