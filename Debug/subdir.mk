@@ -7,19 +7,22 @@ CPP_SRCS += \
 ../Application.cpp \
 ../Logger.cpp \
 ../Main.cpp \
-../TestGame.cpp 
+../TestGame.cpp \
+../Transformable.cpp 
 
 OBJS += \
 ./Application.o \
 ./Logger.o \
 ./Main.o \
-./TestGame.o 
+./TestGame.o \
+./Transformable.o 
 
 CPP_DEPS += \
 ./Application.d \
 ./Logger.d \
 ./Main.d \
-./TestGame.d 
+./TestGame.d \
+./Transformable.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes

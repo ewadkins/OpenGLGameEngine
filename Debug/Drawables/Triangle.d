@@ -1,5 +1,6 @@
 Drawables/Triangle.d: ../Drawables/Triangle.cpp ../Drawables/Triangle.h \
-  ../Drawables/Drawable.h ../Drawables/../Components/GLTriangle.h \
+  ../Drawables/Drawable.h ../Drawables/../Transformable.h \
+  ../Drawables/../Components/GLTriangle.h \
   ../Drawables/../Components/GLComponent.h \
   ../Drawables/../Components/GLVertex.h \
   ../Drawables/../Components/../Math/Matrix.h \
@@ -16,6 +17,8 @@ Drawables/Triangle.d: ../Drawables/Triangle.cpp ../Drawables/Triangle.h \
 ../Drawables/Triangle.h:
 
 ../Drawables/Drawable.h:
+
+../Drawables/../Transformable.h:
 
 ../Drawables/../Components/GLTriangle.h:
 

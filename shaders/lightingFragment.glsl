@@ -27,17 +27,6 @@ uniform Light lights[NUM_LIGHTS];
 
 void main()
 {
-    //lights[0].enabled = true;
-    //lights[0].position = vec3(0.0, 30.0, 0.0);
-    ////lights[0].position = cameraPosition;
-    //lights[0].ambient = vec3(0.3, 0.3, 0.3);
-    //lights[0].diffuse = vec3(0.6, 0.6, 0.6);
-    //lights[0].specular = vec3(0.4, 0.4, 0.4);
-    //lights[0].range = 300;
-    
-    //vec3 ambient = vec3(0.0, 0.0, 0.0);
-    //vec3 diffuse = vec3(0.0, 0.0, 0.0);
-    //vec3 specular = vec3(0.0, 0.0, 0.0);
     vec3 ambient;
     vec3 diffuse;
     vec3 specular;
@@ -45,7 +34,7 @@ void main()
     vec3 color = passColor;
     
     if (lightingEnabled) {
-        for (int i = 0; i < NUM_LIGHTS; i++)
+        for (int i = 0; i < lights.length(); i++)
             if (lights[i].enabled)
             {
                 vec3 surfaceToLight;
@@ -73,22 +62,10 @@ void main()
                 diffuse += lights[i].diffuse * max(0.0, dot(passNormal, surfaceToLight)) * k;
                 
                 // Specular lighting
-                //if (dot(passNormal, surfaceToLight) > 0)
                 if (shininess > 0)
                     specular += lights[i].specular * pow(max(0.0, dot(surfaceToCamera, lightReflection)), shininess) * k;
-                
-                //ambient = vec3((dot(passNormal, surfaceToLight)));
-                //diffuse = vec3((dot(passNormal, surfaceToLight)));
-                //specular = vec3((dot(passNormal, surfaceToLight)));
-                //ambient = vec3(passNormal[0], 0, passNormal[2]);
-                //diffuse = vec3(passNormal[0], 0, passNormal[2]);
-                //specular = vec3(passNormal[0], 0, passNormal[2]);
-                //ambient = passNormal;
-                //diffuse = passNormal;
-                //specular = passNormal;
-                
             }
-        color = color * (ambient + diffuse) + specular;
+        color = color * (ambient + diffuse) + specular; // adding specular directly to surface color allows for glare
     }
     outColor = vec4(color, 1.0);
 }

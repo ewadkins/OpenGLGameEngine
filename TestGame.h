@@ -24,9 +24,11 @@ public:
 	virtual void onKeyEvent(int key, int action);
 	void handleInput();
 private:
+	Terrain* _terrain;
 	LightSource* _mainLight;
 	LightSource* _cameraLight;
 	std::vector<LightSource*> _lights;
+	Drawable* _testCube;
 };
 
 #endif /* TESTGAME_H_ */

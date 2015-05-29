@@ -8,6 +8,7 @@
 #ifndef CAMERA_H_
 #define CAMERA_H_
 
+#include "../Transformable.h"
 #include "../Math/GLMatrix.h"
 #include "../Math/Matrix.h"
 #include "../Math/Vector.h"
@@ -17,18 +18,21 @@
 
 class Application;
 
-class Camera {
+class Camera: public Transformable {
 public:
-	Camera(Application* application, float x, float y, float z,
-			float rotationX, float rotationY, float rotationZ);
+	Camera(Application* application, float x, float y, float z, float rotationX,
+			float rotationY, float rotationZ);
 	virtual ~Camera() {
 	}
 	void initialize();
 	void useView();
+	Vector<float> getPosition();
 	Vector<float> getEyeVector();
 	void updateProjectionMatrices();
 	void useProjectionMatrix();
-	enum ProjectionType {ORTHOGRAPHIC, PERSPECTIVE};
+	enum ProjectionType {
+		ORTHOGRAPHIC, PERSPECTIVE
+	};
 	void setProjectionType(ProjectionType type);
 	float getFOV();
 	float getNear();
@@ -36,32 +40,13 @@ public:
 	void setFOV(float fov);
 	void setNear(float near);
 	void setFar(float far);
-	void translateX(float x);
-	void translateY(float y);
-	void translateZ(float z);
-	void translateXYZ(float x, float y, float z);
-	void rotateX(float theta);
-	void rotateY(float theta);
-	void rotateZ(float theta);
-	void rotateXYZ(float thetaX, float thetaY, float thetaZ);
-	float getX();
-	float getY();
-	float getZ();
-	Vector<float> getPosition();
-	float getRotationX();
-	float getRotationY();
-	float getRotationZ();
-	void setX(float x);
-	void setY(float y);
-	void setZ(float z);
-	void setXYZ(float x, float y, float z);
-	void setRotationX(float rotationX);
-	void setRotationY(float rotationY);
-	void setRotationZ(float rotationZ);
-	void setRotationXYZ(float rotationX, float rotationY, float rotationZ);
+	virtual void setRotationX(float rotationX);
+	virtual void setRotationY(float rotationY);
+	virtual void setRotationZ(float rotationZ);
+	virtual void setRotationXYZ(float rotationX, float rotationY, float rotationZ);
 private:
 	Application* _application;
-	float _fov, _near, _far, _x, _y, _z, _rotationX, _rotationY, _rotationZ;
+	float _fov, _near, _far;
 	Matrix<float> _orthographic, _perspective;
 	ProjectionType _projectionType;
 };

@@ -8,6 +8,7 @@
 #ifndef MAP_TERRAIN_H_
 #define MAP_TERRAIN_H_
 
+#include "../Transformable.h"
 #include "../Drawables/Drawable.h"
 #include "../Math/Matrix.h"
 #include "../Math/Vector.h"
@@ -18,7 +19,7 @@
 
 class Application;
 
-class Terrain {
+class Terrain: public Transformable {
 public:
 	Terrain(Application* application, int length, int width);
 	Terrain(Application* application, int length, int width, long seed);
@@ -27,6 +28,7 @@ public:
 	virtual void generate() {
 	}
 	void updateDrawables();
+	Vector<float> project(Vector<float> pos);
 	enum LightingType {
 		ROUGH, SMOOTH
 	};
@@ -34,6 +36,7 @@ public:
 	void setDrawFaces(bool drawFaces);
 	void setDrawOutline(bool drawOutline);
 	std::vector<Drawable*> getDrawables();
+	friend class Map;
 protected:
 	float randomFloat();
 	void smooth(float smoothness, int num);

@@ -22,7 +22,7 @@ public:
 	Map(Application* application);
 	virtual ~Map() {
 	}
-	void updateVBOs();
+	void update();
 	void addStaticDrawable(Drawable* drawable);
 	void addDynamicDrawable(Drawable* drawable);
 	void addStreamDrawable(Drawable* drawable);
@@ -36,9 +36,11 @@ public:
 	std::vector<Drawable*> _staticDrawables;
 	std::vector<Drawable*> _dynamicDrawables;
 	std::vector<Drawable*> _streamDrawables;
+	std::vector<Terrain*> _terrains;
 	std::vector<Drawable*> _terrainDrawables;
 	std::vector<LightSource*> _lights;
 private:
+	void updateTerrainDrawables();
 	Application* _application;
 	bool _staticsNeedUpdating;
 	bool _dynamicsNeedUpdating;

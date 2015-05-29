@@ -51,6 +51,11 @@ void Camera::useView() {
 
 }
 
+// Returns the camera's position vector
+Vector<float> Camera::getPosition() {
+	return Vector<float>(_x, _y, _z);
+}
+
 Vector<float> Camera::getEyeVector() {
 	Vector<float> result = Vector<float>(
 			sin(_rotationY * M_PI / 180) * cos(_rotationX * M_PI / 180),
@@ -131,107 +136,6 @@ void Camera::setNear(float near) {
 // Sets the far clipping plane
 void Camera::setFar(float far) {
 	_far = far;
-}
-
-// Moves the camera in the x direction by the specified distance
-void Camera::translateX(float x) {
-	setX(getX() + x);
-}
-
-// Moves the camera in the y direction by the specified distance
-void Camera::translateY(float y) {
-	setY(getY() + y);
-}
-
-// Moves the camera in the z direction by the specified distance
-void Camera::translateZ(float z) {
-	setZ(getZ() + z);
-}
-
-// Moves the camera by the distance specified in each direction
-void Camera::translateXYZ(float x, float y, float z) {
-	setX(getX() + x);
-	setY(getY() + y);
-	setZ(getZ() + z);
-}
-
-// Rotates the camera around the x axis by the specified angle
-void Camera::rotateX(float theta) {
-	setRotationX(getRotationX() + theta);
-}
-
-// Rotates the camera around the y axis by the specified angle
-void Camera::rotateY(float theta) {
-	setRotationY(getRotationY() + theta);
-}
-
-// Rotates the camera around the z axis by the specified angle
-void Camera::rotateZ(float theta) {
-	setRotationZ(getRotationZ() + theta);
-}
-
-// Rotates the camera by the angle specified around each axis
-void Camera::rotateXYZ(float thetaX, float thetaY, float thetaZ) {
-	setRotationX(getRotationX() + thetaX);
-	setRotationY(getRotationY() + thetaY);
-	setRotationZ(getRotationZ() + thetaZ);
-}
-
-// Returns the camera's x coordinate
-float Camera::getX() {
-	return _x;
-}
-
-// Returns the camera's y coordinate
-float Camera::getY() {
-	return _y;
-}
-
-// Returns the camera's z coordinate
-float Camera::getZ() {
-	return _z;
-}
-
-// Returns the camera's position vector
-Vector<float> Camera::getPosition() {
-	return Vector<float>(_x, _y, _z);
-}
-
-// Returns the camera's angle around the x axis
-float Camera::getRotationX() {
-	return _rotationX;
-}
-
-// Returns the camera's angle around the y axis
-float Camera::getRotationY() {
-	return _rotationY;
-}
-
-// Returns the camera's angle around the z axis
-float Camera::getRotationZ() {
-	return _rotationZ;
-}
-
-// Sets the camera's x coordinate
-void Camera::setX(float x) {
-	_x = x;
-}
-
-// Sets the camera's y coordinate
-void Camera::setY(float y) {
-	_y = y;
-}
-
-// Sets the camera's z coordinate
-void Camera::setZ(float z) {
-	_z = z;
-}
-
-// Sets the camera's x, y, and z coordinates
-void Camera::setXYZ(float x, float y, float z) {
-	_x = x;
-	_y = y;
-	_z = z;
 }
 
 // Sets the camera's angle around the x axis

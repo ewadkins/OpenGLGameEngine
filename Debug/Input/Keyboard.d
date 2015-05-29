@@ -13,6 +13,7 @@ Input/Keyboard.d: ../Input/Keyboard.cpp ../Input/Keyboard.h \
   ../Input/../Render/../Components/GLLine.h \
   ../Input/../Render/../Components/GLPoint.h \
   ../Input/../Render/../Drawables/Drawable.h \
+  ../Input/../Render/../Drawables/../Transformable.h \
   ../Input/../Render/../Drawables/../Math/GLMatrix.h \
   ../Input/../Render/../Drawables/Triangle.h \
   ../Input/../Render/../Drawables/Cube.h ../Input/../Map/Map.h \
@@ -59,6 +60,8 @@ Input/Keyboard.d: ../Input/Keyboard.cpp ../Input/Keyboard.h \
 ../Input/../Render/../Components/GLPoint.h:
 
 ../Input/../Render/../Drawables/Drawable.h:
+
+../Input/../Render/../Drawables/../Transformable.h:
 
 ../Input/../Render/../Drawables/../Math/GLMatrix.h:
 

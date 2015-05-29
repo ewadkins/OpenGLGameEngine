@@ -31,14 +31,6 @@ Renderer::Renderer(Application* application) : // FIXME Random warning message
 	_terrainPointVBO = nullptr;*/
 }
 
-// Sets up the shaders for use in rendering
-void Renderer::setupShaders() {
-	_basicShader = new ShaderProgram(_application, "Basic shader",
-			"shaders/basicVertex.glsl", "shaders/basicFragment.glsl");
-	_lightingShader = new ShaderProgram(_application, "Lighting shader",
-			"shaders/lightingVertex.glsl", "shaders/lightingFragment.glsl");
-}
-
 // Sets the shader program to be used in rendering
 void Renderer::useProgram(ShaderProgram* program) {
 	glUseProgram(program->getProgramId());
@@ -79,7 +71,10 @@ void Renderer::setBackgroundColor(float r, float g, float b) {
 // Initialization method ran on startup
 void Renderer::createShaders() {
 	// Create shader programs
-	setupShaders();
+	_basicShader = new ShaderProgram(_application, "Basic shader",
+			"shaders/basicVertex.glsl", "shaders/basicFragment.glsl");
+	_lightingShader = new ShaderProgram(_application, "Lighting shader",
+			"shaders/lightingVertex.glsl", "shaders/lightingFragment.glsl");
 
 	// Attempt to assign a shader program
 	if (_lightingShader->getProgramId() != 0)

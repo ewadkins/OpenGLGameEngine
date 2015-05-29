@@ -10,8 +10,8 @@
 TestGame::TestGame(const char* windowName, int screenSizeX, int screenSizeY,
 		bool fullScreen) :
 		Application(windowName, screenSizeX, screenSizeY, fullScreen) {
+	_mainLight = nullptr;
 	_cameraLight = nullptr;
-
 }
 
 void TestGame::initializeWindow() {
@@ -19,7 +19,7 @@ void TestGame::initializeWindow() {
 }
 
 void TestGame::initializeDisplay() {
-	//_renderer->setBackgroundColor(0.8, 1, 1);
+	_renderer->setBackgroundColor(0.8, 1, 1);
 }
 
 void TestGame::initializeMap() {
@@ -75,11 +75,16 @@ void TestGame::initializeMap() {
 	c5->setColor(0, 1, 0);
 	_map->addStreamDrawable(c5);
 
-	Terrain* terrain = new HillTerrain(this, 100, 100, 123456);
-	terrain->generate();
-	terrain->setDrawOutline(false);
-	terrain->updateDrawables();
-	_map->addTerrain(terrain);
+	_testCube = new Cube();
+	_testCube->scale(0.2);
+	_testCube->setColor(1, 1, 1);
+	_map->addStreamDrawable(_testCube);
+
+	_terrain = new HillTerrain(this, 100, 100, 123456);
+	_terrain->generate();
+	_terrain->setScale(1);
+	_terrain->updateDrawables();
+	_map->addTerrain(_terrain);
 
 	_mainLight = new LightSource(LightSource::DIRECTIONAL);
 	_mainLight->setDirection(1, -0.5, 1);
@@ -112,7 +117,15 @@ void TestGame::onGameLoop() {
 		_map->_streamDrawables[i]->rotateXYZ(0, 1, 0);
 		//_streamDrawables[i]->translateXYZ(0, 0.01, 0);
 	}
-	_map->updateVBOs();
+
+	Vector<float> pos = _terrain->project(
+			Vector<float>(_camera->getX(), _camera->getY() - 1,
+					_camera->getZ()));
+	if (pos.size() > 0)
+		//_testCube->setXYZ(pos[0], pos[1], pos[2]);
+		_camera->setXYZ(pos[0], pos[1] + 1, pos[2]);
+
+	_map->update();
 
 	_renderer->render();
 	_renderer->display();
@@ -128,10 +141,20 @@ void TestGame::onKeyEvent(int key, int action) {
 		_camera->setProjectionType(_camera->PERSPECTIVE);
 
 	if (key == GLFW_KEY_F && action == GLFW_PRESS) {
-		if(_cameraLight->isEnabled())
+		if (_cameraLight->isEnabled())
 			_cameraLight->setEnabled(false);
 		else
 			_cameraLight->setEnabled(true);
+	}
+
+	if (key == GLFW_KEY_X && action == GLFW_PRESS) {
+		if (_mainLight->isEnabled()) {
+			_mainLight->setEnabled(false);
+			_renderer->setBackgroundColor(0, 0, 0);
+		} else {
+			_mainLight->setEnabled(true);
+			_renderer->setBackgroundColor(0.8, 1, 1);
+		}
 	}
 
 	if (key == GLFW_KEY_L && action == GLFW_PRESS) {
@@ -150,6 +173,17 @@ void TestGame::onKeyEvent(int key, int action) {
 		for (int i = 0; i < _lights.size(); i++)
 			_map->removeLightSource(_lights[i]);
 		_lights.clear();
+	}
+
+	// FIXME Remove
+	if (key == GLFW_KEY_EQUAL && action == GLFW_PRESS)
+		_terrain->scale(1.5);
+	if (key == GLFW_KEY_MINUS && action == GLFW_PRESS)
+		_terrain->scale((float) 1 / 1.5);
+	if (key == GLFW_KEY_Z && action == GLFW_PRESS) {
+		_terrain->rotateXYZ(10, 10, 10);
+		_terrain->translateXYZ(10, 0, 30);
+		_terrain->scaleXYZ(1.5, 2, 1.5);
 	}
 }
 

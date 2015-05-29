@@ -73,6 +73,14 @@ void Terrain::updateDrawables() {
 
 	_drawables.clear();
 
+	Matrix<float> rotationMatrix = GLMatrix::rotationMatrixXYZ(getRotationX(),
+			getRotationY(), getRotationZ());
+
+	Matrix<float> modelTransformationMatrix =
+			GLMatrix::modelTransformationMatrix(getX(), getY(), getZ(),
+					getRotationX(), getRotationY(), getRotationZ(), getScaleX(),
+					getScaleY(), getScaleZ());
+
 	std::vector<std::vector<GLVertex> > vertices;
 	std::vector<GLVertex> rowVertices;
 	for (int i = 0; i < _length; i++) {
@@ -80,9 +88,12 @@ void Terrain::updateDrawables() {
 		for (int j = 0; j < _width; j++) {
 			std::vector<float> color = mergeColors(1, 1, 1, _color[0],
 					_color[1], _color[2], 1 - _heightMap[i][j]);
-			rowVertices.push_back(
-					GLVertex(i, _heightMap[i][j] * _heightScale, j, color[0],
-							color[1], color[2]));
+			GLVertex v = GLVertex(i - (float) (_width - 1) / 2,
+					_heightMap[i][j] * _heightScale,
+					j - (float) (_length - 1) / 2, color[0], color[1],
+					color[2]);
+			v.transform(modelTransformationMatrix, rotationMatrix);
+			rowVertices.push_back(v);
 		}
 		vertices.push_back(rowVertices);
 	}
@@ -168,19 +179,91 @@ void Terrain::updateDrawables() {
 		}
 }
 
+Vector<float> Terrain::project(Vector<float> pos) {
+
+	/*
+	 * Use the inverseModelTransformationMatrix of the terrain on the camera's position
+	 * This will return the terrain to the center of the map, untransformed, and will
+	 * also move the camera position relative to the terrain
+	 * Then add to the camera's x coord: (float) (_length - 1) / 2
+	 * And add to the camera's y coord: (float) (_width - 1) / 2
+	 * to reverse the centering in the middle of the map and make indexing easier
+	 * Now assume that the map's corner is at the origin and the camera is correctly placed
+	 * relative to it
+	 *
+	 */
+
+	Matrix<float> modelTransformationMatrix =
+			GLMatrix::modelTransformationMatrix(getX(), getY(), getZ(),
+					getRotationX(), getRotationY(), getRotationZ(), getScaleX(),
+					getScaleY(), getScaleZ());
+
+	Matrix<float> inverseModelTransformationMatrix =
+			GLMatrix::inverseModelTransformationMatrix(getX(), getY(), getZ(),
+					getRotationX(), getRotationY(), getRotationZ(), getScaleX(),
+					getScaleY(), getScaleZ());
+
+	Matrix<float> m = Matrix<float>(4, 1);
+
+	std::vector<float> pos1 = pos.getVector();
+	pos1.push_back(1);
+	m.setVector(pos1);
+	m = m << inverseModelTransformationMatrix;
+	pos = Vector<float>(m.get(0, 0), m.get(1, 0), m.get(2, 0));
+
+	pos = Vector<float>(pos[0] + (float) (_length - 1) / 2, pos[1], pos[2] + (float) (_width - 1) / 2);
+
+	float x = pos[0];
+	float y = pos[2];
+	int i = (int) x;
+	int j = (int) y;
+
+	if (i < 0 || i >= _length || j < 0 || j >= _width)
+		return Vector<float>();
+
+	float height = 0;
+	if (x - i <= 1 - (y - j)) {
+		float dydx = _heightMap[i + 1][j] - _heightMap[i][j];
+		float dydz = _heightMap[i][j + 1] - _heightMap[i][j];
+		height = _heightMap[i][j] + dydx * (x - i) + dydz * (y - j);
+	}
+	else {
+		float dydx = _heightMap[i + 1][j + 1] - _heightMap[i][j + 1];
+		float dydz = _heightMap[i + 1][j + 1] - _heightMap[i + 1][j];
+		height = _heightMap[i + 1][j + 1] - dydx * (1 - (x - i)) - dydz * (1 - (y - j));
+	}
+	pos = Vector<float>(x, height * _heightScale, y);
+
+	pos = Vector<float>(pos[0] - (float) (_length - 1) / 2, pos[1], pos[2] - (float) (_width - 1) / 2);
+
+	pos1 = pos.getVector();
+	pos1.push_back(1);
+	m.setVector(pos1);
+	m = m << modelTransformationMatrix;
+	pos = Vector<float>(m.get(0, 0), m.get(1, 0), m.get(2, 0));
+
+	return pos;
+}
+
 void Terrain::setLightingType(LightingType lightingType) {
 	if (_lightingType != lightingType) {
 		_lightingType = lightingType;
-		updateDrawables();
+		_needsUpdating = true;
 	}
 }
 
 void Terrain::setDrawFaces(bool drawFaces) {
-	_drawFaces = drawFaces;
+	if (_drawFaces != drawFaces) {
+		_drawFaces = drawFaces;
+		_needsUpdating = true;
+	}
 }
 
 void Terrain::setDrawOutline(bool drawOutline) {
-	_drawOutline = drawOutline;
+	if (_drawOutline != drawOutline) {
+		_drawOutline = drawOutline;
+		_needsUpdating = true;
+	}
 }
 
 std::vector<Drawable*> Terrain::getDrawables() {

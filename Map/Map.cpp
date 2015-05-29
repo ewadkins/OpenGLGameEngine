@@ -16,14 +16,27 @@ Map::Map(Application* application) {
 	_lightCountChanged = false;
 }
 
-void Map::updateVBOs() {
+void Map::update() {
+
 	if (_staticsNeedUpdating) {
 		_application->_renderer->updateStaticVBOs();
 		_staticsNeedUpdating = false;
 	}
+
 	if (_dynamicsNeedUpdating) {
 		_application->_renderer->updateDynamicVBOs();
 		_dynamicsNeedUpdating = false;
+	}
+
+	bool terrainUpdated = false;
+	for (int i = 0; i < _terrains.size(); i++)
+		if (_terrains[i]->_needsUpdating) {
+			_terrains[i]->updateDrawables();
+			_terrains[i]->_needsUpdating = false;
+			terrainUpdated = true;
+		}
+	if (terrainUpdated) {
+		updateTerrainDrawables();
 	}
 	if (_terrainsNeedUpdating) {
 		_application->_renderer->updateTerrainVBOs();
@@ -31,7 +44,7 @@ void Map::updateVBOs() {
 	}
 
 	if (_lightCountChanged) {
-		_application->_renderer->createShaders();
+		_application->_renderer->createShaders(); //FIXME Find a better way to do this
 		_lightCountChanged = false;
 	}
 	bool lightsNeedUpdating = false;
@@ -59,10 +72,8 @@ void Map::addStreamDrawable(Drawable* drawable) {
 }
 
 void Map::addTerrain(Terrain* terrain) {
-	std::vector<Drawable*> drawables = terrain->getDrawables();
-	for (int i = 0; i < drawables.size(); i++)
-		_terrainDrawables.push_back(drawables[i]);
-	_terrainsNeedUpdating = true;
+	_terrains.push_back(terrain);
+	updateTerrainDrawables();
 }
 
 void Map::removeStaticDrawable(Drawable* drawable) {
@@ -86,12 +97,10 @@ void Map::removeStreamDrawable(Drawable* drawable) {
 }
 
 void Map::removeTerrain(Terrain* terrain) {
-	std::vector<Drawable*> drawables = terrain->getDrawables();
-	for (int i = 0; i < drawables.size(); i++)
-		for (int j = 0; j < _terrainDrawables.size(); j++)
-			if (_terrainDrawables[j] == drawables[i])
-				_terrainDrawables.erase(_terrainDrawables.begin() + j);
-	_terrainsNeedUpdating = true;
+	for (int i = 0; i < _terrains.size(); i++)
+		if (_terrains[i] == terrain)
+			_terrains.erase(_terrains.begin() + i);
+	updateTerrainDrawables();
 }
 
 void Map::addLightSource(LightSource* light) {
@@ -104,5 +113,14 @@ void Map::removeLightSource(LightSource* light) {
 		if (_lights[i] == light)
 			_lights.erase(_lights.begin() + i);
 	_lightCountChanged = true;
+}
+
+void Map::updateTerrainDrawables() {
+	_terrainDrawables.clear();
+	for (int i = 0; i < _terrains.size(); i++) {
+		std::vector<Drawable*> drawables = _terrains[i]->getDrawables();
+		_terrainDrawables.insert(_terrainDrawables.end(), drawables.begin(), drawables.end());
+	}
+	_terrainsNeedUpdating = true;
 }
 

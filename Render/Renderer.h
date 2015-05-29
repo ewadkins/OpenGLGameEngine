@@ -46,7 +46,6 @@ public:
 	ShaderProgram* _lightingShader;
 	ShaderProgram* _currentProgram;
 private:
-	void setupShaders();
 	void updateUniforms();
 	void setLightingEnabled(bool lightingEnabled);
 	void setShininess(float shininess);

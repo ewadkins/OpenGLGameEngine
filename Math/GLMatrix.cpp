@@ -73,19 +73,85 @@ Matrix<float> GLMatrix::rotationMatrixXYZ(float thetaX, float thetaY,
 	float radsX = thetaX * M_PI / 180;
 	float radsY = thetaY * M_PI / 180;
 	float radsZ = thetaZ * M_PI / 180;
-	result.set(0, 0, cos(radsY) * cos(radsZ));
+	float sinX = sin(radsX);
+	float sinY = sin(radsY);
+	float sinZ = sin(radsZ);
+	float cosX = cos(radsX);
+	float cosY = cos(radsY);
+	float cosZ = cos(radsZ);
+	result.set(0, 0, cosY * cosZ);
+	result.set(0, 1, cosZ * sinX * sinY - cosX * sinZ);
+	result.set(0, 2, cosX * cosZ * sinY + sinX * sinZ);
+	result.set(1, 0, cosY * sinZ);
+	result.set(1, 1, cosX * cosZ + sinX * sinY * sinZ);
+	result.set(1, 2, cosX * sinY * sinZ - cosZ * sinX);
+	result.set(2, 0, -sinY);
+	result.set(2, 1, cosY * sinX);
+	result.set(2, 2, cosX * cosY);
+	result.set(3, 3, 1);
+	return result;
+}
+
+// Returns the inverse rotation matrix given the desired change in angle about the x, y, and z axes
+Matrix<float> GLMatrix::inverseRotationMatrixXYZ(float thetaX, float thetaY,
+		float thetaZ) {
+	Matrix<float> result = Matrix<float>(4);
+	float radsX = thetaX * M_PI / 180;
+	float radsY = thetaY * M_PI / 180;
+	float radsZ = thetaZ * M_PI / 180;
+	float sinX = sin(radsX);
+	float sinY = sin(radsY);
+	float sinZ = sin(radsZ);
+	float cosX = cos(radsX);
+	float cosY = cos(radsY);
+	float cosZ = cos(radsZ);
+	float sinX2 = sinX * sinX;
+	float sinY2 = sinY * sinY;
+	float sinZ2 = sinZ * sinZ;
+	float cosX2 = cosX * cosX;
+	float cosY2 = cosY * cosY;
+	float cosZ2 = cosZ * cosZ;
+	result.set(0, 0,
+			(cosY * cosZ)
+					/ (cosY2 * cosZ2 + cosY2 * sinZ2 + cosZ2 * sinY2
+							+ sinY2 * sinZ2));
 	result.set(0, 1,
-			cos(radsZ) * sin(radsX) * sin(radsY) - cos(radsX) * sin(radsZ));
-	result.set(0, 2,
-			cos(radsX) * cos(radsZ) * sin(radsY) + sin(radsX) * sin(radsZ));
-	result.set(1, 0, cos(radsY) * sin(radsZ));
+			(cosY * sinZ)
+					/ (cosY2 * cosZ2 + cosY2 * sinZ2 + cosZ2 * sinY2
+							+ sinY2 * sinZ2));
+	result.set(0, 2, -sinY / (cosY2 + sinY2));
+	result.set(1, 0,
+			-(cosX * cosY2 * sinZ - cosZ * sinX * sinY + cosX * sinY2 * sinZ)
+					/ (cosX2 * cosY2 * cosZ2 + cosX2 * cosY2 * sinZ2
+							+ cosX2 * cosZ2 * sinY2 + cosX2 * sinY2 * sinZ2
+							+ cosY2 * cosZ2 * sinX2 + cosY2 * sinX2 * sinZ2
+							+ cosZ2 * sinX2 * sinY2 + sinX2 * sinY2 * sinZ2));
 	result.set(1, 1,
-			cos(radsX) * cos(radsZ) + sin(radsX) * sin(radsY) * sin(radsZ));
+			(cosX * cosZ * cosY2 + cosX * cosZ * sinY2 + sinX * sinZ * sinY)
+					/ (cosX2 * cosY2 * cosZ2 + cosX2 * cosY2 * sinZ2
+							+ cosX2 * cosZ2 * sinY2 + cosX2 * sinY2 * sinZ2
+							+ cosY2 * cosZ2 * sinX2 + cosY2 * sinX2 * sinZ2
+							+ cosZ2 * sinX2 * sinY2 + sinX2 * sinY2 * sinZ2));
 	result.set(1, 2,
-			cos(radsX) * sin(radsY) * sin(radsZ) - cos(radsZ) * sin(radsX));
-	result.set(2, 0, -sin(radsY));
-	result.set(2, 1, cos(radsY) * sin(radsX));
-	result.set(2, 2, cos(radsX) * cos(radsY));
+			(cosY * sinX)
+					/ (cosX2 * cosY2 + cosX2 * sinY2 + cosY2 * sinX2
+							+ sinX2 * sinY2));
+	result.set(2, 0,
+			(sinX * sinZ * cosY2 + sinX * sinZ * sinY2 + cosX * cosZ * sinY)
+					/ (cosX2 * cosY2 * cosZ2 + cosX2 * cosY2 * sinZ2
+							+ cosX2 * cosZ2 * sinY2 + cosX2 * sinY2 * sinZ2
+							+ cosY2 * cosZ2 * sinX2 + cosY2 * sinX2 * sinZ2
+							+ cosZ2 * sinX2 * sinY2 + sinX2 * sinY2 * sinZ2));
+	result.set(2, 1,
+			-(cosY2 * cosZ * sinX - cosX * sinY * sinZ + cosZ * sinX * sinY2)
+					/ (cosX2 * cosY2 * cosZ2 + cosX2 * cosY2 * sinZ2
+							+ cosX2 * cosZ2 * sinY2 + cosX2 * sinY2 * sinZ2
+							+ cosY2 * cosZ2 * sinX2 + cosY2 * sinX2 * sinZ2
+							+ cosZ2 * sinX2 * sinY2 + sinX2 * sinY2 * sinZ2));
+	result.set(2, 2,
+			(cosX * cosY)
+					/ (cosX2 * cosY2 + cosX2 * sinY2 + cosY2 * sinX2
+							+ sinX2 * sinY2));
 	result.set(3, 3, 1);
 	return result;
 }
@@ -95,47 +161,43 @@ Matrix<float> GLMatrix::rotationMatrixLine(float x, float y, float z, float u,
 		float v, float w, float theta) {
 	Matrix<float> result = Matrix<float>(4);
 	float rads = theta * M_PI / 180;
+	float sinX = sin(rads);
+	float cosX = cos(rads);
 	result.set(0, 0,
-			(u * u + (v * v + w * w) * cos(rads)) / (u * u + v * v + w * w));
+			(u * u + (v * v + w * w) * cosX) / (u * u + v * v + w * w));
 	result.set(0, 1,
-			(u * v * (-cos(rads) + 1)
-					- w * sqrt(u * u + v * v + w * w) * sin(rads))
+			(u * v * (-cosX + 1) - w * sqrt(u * u + v * v + w * w) * sinX)
 					/ (u * u + v * v + w * w));
 	result.set(0, 2,
-			(u * w * (-cos(rads) + 1)
-					+ v * sqrt(u * u + v * v + w * w) * sin(rads))
+			(u * w * (-cosX + 1) + v * sqrt(u * u + v * v + w * w) * sinX)
 					/ (u * u + v * v + w * w));
 	result.set(0, 3,
-			((x * (v * v + w * w) - u * (y * v + z * w)) * (-cos(rads) + 1)
-					+ (y * w - z * v) * sqrt(u * u + v * v + w * w) * sin(rads))
+			((x * (v * v + w * w) - u * (y * v + z * w)) * (-cosX + 1)
+					+ (y * w - z * v) * sqrt(u * u + v * v + w * w) * sinX)
 					/ (u * u + v * v + w * w));
 	result.set(1, 0,
-			(u * v * (-cos(rads) + 1)
-					+ w * sqrt(u * u + v * v + w * w) * sin(rads))
+			(u * v * (-cosX + 1) + w * sqrt(u * u + v * v + w * w) * sinX)
 					/ (u * u + v * v + w * w));
 	result.set(1, 1,
-			(v * v + (u * u + w * w) * cos(rads)) / (u * u + v * v + w * w));
+			(v * v + (u * u + w * w) * cosX) / (u * u + v * v + w * w));
 	result.set(1, 2,
-			(v * w * (-cos(rads) + 1)
-					- u * sqrt(u * u + v * v + w * w) * sin(rads))
+			(v * w * (-cosX + 1) - u * sqrt(u * u + v * v + w * w) * sinX)
 					/ (u * u + v * v + w * w));
 	result.set(1, 3,
-			((y * (u * u + w * w) - v * (x * u + z * w)) * (-cos(rads) + 1)
-					+ (z * u - x * w) * sqrt(u * u + v * v + w * w) * sin(rads))
+			((y * (u * u + w * w) - v * (x * u + z * w)) * (-cosX + 1)
+					+ (z * u - x * w) * sqrt(u * u + v * v + w * w) * sinX)
 					/ (u * u + v * v + w * w));
 	result.set(2, 0,
-			(u * w * (-cos(rads) + 1)
-					- v * sqrt(u * u + v * v + w * w) * sin(rads))
+			(u * w * (-cosX + 1) - v * sqrt(u * u + v * v + w * w) * sinX)
 					/ (u * u + v * v + w * w));
 	result.set(2, 1,
-			(v * w * (-cos(rads) + 1)
-					+ u * sqrt(u * u + v * v + w * w) * sin(rads))
+			(v * w * (-cosX + 1) + u * sqrt(u * u + v * v + w * w) * sinX)
 					/ (u * u + v * v + w * w));
 	result.set(2, 2,
-			(w * w + (u * u + v * v) * cos(rads)) / (u * u + v * v + w * w));
+			(w * w + (u * u + v * v) * cosX) / (u * u + v * v + w * w));
 	result.set(2, 3,
-			((z * (u * u + v * v) - w * (x * u + y * v)) * (-cos(rads) + 1)
-					+ (x * v - y * u) * sqrt(u * u + v * v + w * w) * sin(rads))
+			((z * (u * u + v * v) - w * (x * u + y * v)) * (-cosX + 1)
+					+ (x * v - y * u) * sqrt(u * u + v * v + w * w) * sinX)
 					/ (u * u + v * v + w * w));
 	result.set(3, 3, 1);
 	return result;
@@ -148,30 +210,174 @@ Matrix<float> GLMatrix::modelTransformationMatrix(float deltaX, float deltaY,
 	float radsX = thetaX * M_PI / 180;
 	float radsY = thetaY * M_PI / 180;
 	float radsZ = thetaZ * M_PI / 180;
-	result.set(0, 0, scaleX * cos(radsY) * cos(radsZ));
-	result.set(0, 1,
-			-scaleY
-					* (cos(radsX) * sin(radsZ)
-							- cos(radsZ) * sin(radsX) * sin(radsY)));
-	result.set(0, 2,
-			scaleZ
-					* (sin(radsX) * sin(radsZ)
-							+ cos(radsX) * cos(radsZ) * sin(radsY)));
+	float sinX = sin(radsX);
+	float sinY = sin(radsY);
+	float sinZ = sin(radsZ);
+	float cosX = cos(radsX);
+	float cosY = cos(radsY);
+	float cosZ = cos(radsZ);
+	result.set(0, 0, scaleX * cosY * cosZ);
+	result.set(0, 1, -scaleY * (cosX * sinZ - cosZ * sinX * sinY));
+	result.set(0, 2, scaleZ * (sinX * sinZ + cosX * cosZ * sinY));
 	result.set(0, 3, deltaX);
-	result.set(1, 0, scaleX * cos(radsY) * sin(radsZ));
-	result.set(1, 1,
-			scaleY
-					* (cos(radsX) * cos(radsZ)
-							+ sin(radsX) * sin(radsY) * sin(radsZ)));
-	result.set(1, 2,
-			-scaleZ
-					* (cos(radsZ) * sin(radsX)
-							- cos(radsX) * sin(radsY) * sin(radsZ)));
+	result.set(1, 0, scaleX * cosY * sinZ);
+	result.set(1, 1, scaleY * (cosX * cosZ + sinX * sinY * sinZ));
+	result.set(1, 2, -scaleZ * (cosZ * sinX - cosX * sinY * sinZ));
 	result.set(1, 3, deltaY);
-	result.set(2, 0, -scaleX * sin(radsY));
-	result.set(2, 1, scaleY * cos(radsY) * sin(radsX));
-	result.set(2, 2, scaleZ * cos(radsX) * cos(radsY));
+	result.set(2, 0, -scaleX * sinY);
+	result.set(2, 1, scaleY * cosY * sinX);
+	result.set(2, 2, scaleZ * cosX * cosY);
 	result.set(2, 3, deltaZ);
+	result.set(3, 3, 1);
+	return result;
+}
+
+Matrix<float> GLMatrix::inverseModelTransformationMatrix(float deltaX,
+		float deltaY, float deltaZ, float thetaX, float thetaY, float thetaZ,
+		float scaleX, float scaleY, float scaleZ) {
+	Matrix<float> result = Matrix<float>(4);
+	float radsX = thetaX * M_PI / 180;
+	float radsY = thetaY * M_PI / 180;
+	float radsZ = thetaZ * M_PI / 180;
+	float sinX = sin(radsX);
+	float sinY = sin(radsY);
+	float sinZ = sin(radsZ);
+	float cosX = cos(radsX);
+	float cosY = cos(radsY);
+	float cosZ = cos(radsZ);
+	float sinX2 = sinX * sinX;
+	float sinY2 = sinY * sinY;
+	float sinZ2 = sinZ * sinZ;
+	float cosX2 = cosX * cosX;
+	float cosY2 = cosY * cosY;
+	float cosZ2 = cosZ * cosZ;
+	result.set(0, 0,
+			(cosY * cosZ)
+					/ (scaleX
+							* (cosY2 * cosZ2 + cosY2 * sinZ2 + cosZ2 * sinY2
+									+ sinY2 * sinZ2)));
+	result.set(0, 1,
+			(cosY * sinZ)
+					/ (scaleX
+							* (cosY2 * cosZ2 + cosY2 * sinZ2 + cosZ2 * sinY2
+									+ sinY2 * sinZ2)));
+	result.set(0, 2, -sinY / (scaleX * (cosY2 + sinY2)));
+	result.set(0, 3,
+			(deltaZ * sinY) / (scaleX * (cosY2 + sinY2))
+					- (deltaX * cosY * cosZ)
+							/ (scaleX
+									* (cosY2 * cosZ2 + cosY2 * sinZ2
+											+ cosZ2 * sinY2 + sinY2 * sinZ2))
+					- (deltaY * cosY * sinZ)
+							/ (scaleX
+									* (cosY2 * cosZ2 + cosY2 * sinZ2
+											+ cosZ2 * sinY2 + sinY2 * sinZ2)));
+	result.set(1, 0,
+			-(cosX * cosY2 * sinZ - cosZ * sinX * sinY + cosX * sinY2 * sinZ)
+					/ (scaleY
+							* (cosX2 * cosY2 * cosZ2 + cosX2 * cosY2 * sinZ2
+									+ cosX2 * cosZ2 * sinY2
+									+ cosX2 * sinY2 * sinZ2
+									+ cosY2 * cosZ2 * sinX2
+									+ cosY2 * sinX2 * sinZ2
+									+ cosZ2 * sinX2 * sinY2
+									+ sinX2 * sinY2 * sinZ2)));
+	result.set(1, 1,
+			(cosX * cosZ * cosY2 + cosX * cosZ * sinY2 + sinX * sinZ * sinY)
+					/ (scaleY
+							* (cosX2 * cosY2 * cosZ2 + cosX2 * cosY2 * sinZ2
+									+ cosX2 * cosZ2 * sinY2
+									+ cosX2 * sinY2 * sinZ2
+									+ cosY2 * cosZ2 * sinX2
+									+ cosY2 * sinX2 * sinZ2
+									+ cosZ2 * sinX2 * sinY2
+									+ sinX2 * sinY2 * sinZ2)));
+	result.set(1, 2,
+			(cosY * sinX)
+					/ (scaleY
+							* (cosX2 * cosY2 + cosX2 * sinY2 + cosY2 * sinX2
+									+ sinX2 * sinY2)));
+	result.set(1, 3,
+			(deltaX
+					* (cosX * cosY2 * sinZ - cosZ * sinX * sinY
+							+ cosX * sinY2 * sinZ))
+					/ (scaleY
+							* (cosX2 * cosY2 * cosZ2 + cosX2 * cosY2 * sinZ2
+									+ cosX2 * cosZ2 * sinY2
+									+ cosX2 * sinY2 * sinZ2
+									+ cosY2 * cosZ2 * sinX2
+									+ cosY2 * sinX2 * sinZ2
+									+ cosZ2 * sinX2 * sinY2
+									+ sinX2 * sinY2 * sinZ2))
+					- (deltaY
+							* (cosX * cosZ * cosY2 + cosX * cosZ * sinY2
+									+ sinX * sinZ * sinY))
+							/ (scaleY
+									* (cosX2 * cosY2 * cosZ2
+											+ cosX2 * cosY2 * sinZ2
+											+ cosX2 * cosZ2 * sinY2
+											+ cosX2 * sinY2 * sinZ2
+											+ cosY2 * cosZ2 * sinX2
+											+ cosY2 * sinX2 * sinZ2
+											+ cosZ2 * sinX2 * sinY2
+											+ sinX2 * sinY2 * sinZ2))
+					- (deltaZ * cosY * sinX)
+							/ (scaleY
+									* (cosX2 * cosY2 + cosX2 * sinY2
+											+ cosY2 * sinX2 + sinX2 * sinY2)));
+	result.set(2, 0,
+			(sinX * sinZ * cosY2 + sinX * sinZ * sinY2 + cosX * cosZ * sinY)
+					/ (scaleZ
+							* (cosX2 * cosY2 * cosZ2 + cosX2 * cosY2 * sinZ2
+									+ cosX2 * cosZ2 * sinY2
+									+ cosX2 * sinY2 * sinZ2
+									+ cosY2 * cosZ2 * sinX2
+									+ cosY2 * sinX2 * sinZ2
+									+ cosZ2 * sinX2 * sinY2
+									+ sinX2 * sinY2 * sinZ2)));
+	result.set(2, 1,
+			-(cosY2 * cosZ * sinX - cosX * sinY * sinZ + cosZ * sinX * sinY2)
+					/ (scaleZ
+							* (cosX2 * cosY2 * cosZ2 + cosX2 * cosY2 * sinZ2
+									+ cosX2 * cosZ2 * sinY2
+									+ cosX2 * sinY2 * sinZ2
+									+ cosY2 * cosZ2 * sinX2
+									+ cosY2 * sinX2 * sinZ2
+									+ cosZ2 * sinX2 * sinY2
+									+ sinX2 * sinY2 * sinZ2)));
+	result.set(2, 2,
+			(cosX * cosY)
+					/ (scaleZ
+							* (cosX2 * cosY2 + cosX2 * sinY2 + cosY2 * sinX2
+									+ sinX2 * sinY2)));
+	result.set(2, 3,
+			(deltaY
+					* (cosY2 * cosZ * sinX - cosX * sinY * sinZ
+							+ cosZ * sinX * sinY2))
+					/ (scaleZ
+							* (cosX2 * cosY2 * cosZ2 + cosX2 * cosY2 * sinZ2
+									+ cosX2 * cosZ2 * sinY2
+									+ cosX2 * sinY2 * sinZ2
+									+ cosY2 * cosZ2 * sinX2
+									+ cosY2 * sinX2 * sinZ2
+									+ cosZ2 * sinX2 * sinY2
+									+ sinX2 * sinY2 * sinZ2))
+					- (deltaX
+							* (sinX * sinZ * cosY2 + sinX * sinZ * sinY2
+									+ cosX * cosZ * sinY))
+							/ (scaleZ
+									* (cosX2 * cosY2 * cosZ2
+											+ cosX2 * cosY2 * sinZ2
+											+ cosX2 * cosZ2 * sinY2
+											+ cosX2 * sinY2 * sinZ2
+											+ cosY2 * cosZ2 * sinX2
+											+ cosY2 * sinX2 * sinZ2
+											+ cosZ2 * sinX2 * sinY2
+											+ sinX2 * sinY2 * sinZ2))
+					- (deltaZ * cosX * cosY)
+							/ (scaleZ
+									* (cosX2 * cosY2 + cosX2 * sinY2
+											+ cosY2 * sinX2 + sinX2 * sinY2)));
 	result.set(3, 3, 1);
 	return result;
 }
@@ -182,38 +388,31 @@ Matrix<float> GLMatrix::cameraTransformationMatrix(float deltaX, float deltaY,
 	float radsX = thetaX * M_PI / 180;
 	float radsY = thetaY * M_PI / 180;
 	float radsZ = thetaZ * M_PI / 180;
-	result.set(0, 0, cos(radsY) * cos(radsZ));
-	result.set(0, 1,
-			-(cos(radsX) * sin(radsZ) - cos(radsZ) * sin(radsX) * sin(radsY)));
-	result.set(0, 2,
-			(sin(radsX) * sin(radsZ) + cos(radsX) * cos(radsZ) * sin(radsY)));
-	result.set(1, 0, cos(radsY) * sin(radsZ));
-	result.set(1, 1,
-			(cos(radsX) * cos(radsZ) + sin(radsX) * sin(radsY) * sin(radsZ)));
-	result.set(1, 2,
-			-(cos(radsZ) * sin(radsX) - cos(radsX) * sin(radsY) * sin(radsZ)));
-	result.set(2, 0, -sin(radsY));
-	result.set(2, 1, cos(radsY) * sin(radsX));
-	result.set(2, 2, cos(radsX) * cos(radsY));
+	float sinX = sin(radsX);
+	float sinY = sin(radsY);
+	float sinZ = sin(radsZ);
+	float cosX = cos(radsX);
+	float cosY = cos(radsY);
+	float cosZ = cos(radsZ);
+	result.set(0, 0, cosY * cosZ);
+	result.set(0, 1, -(cosX * sinZ - cosZ * sinX * sinY));
+	result.set(0, 2, (sinX * sinZ + cosX * cosZ * sinY));
+	result.set(1, 0, cosY * sinZ);
+	result.set(1, 1, (cosX * cosZ + sinX * sinY * sinZ));
+	result.set(1, 2, -(cosZ * sinX - cosX * sinY * sinZ));
+	result.set(2, 0, -sinY);
+	result.set(2, 1, cosY * sinX);
+	result.set(2, 2, cosX * cosY);
 	result.set(3, 0,
-			deltaZ * sin(radsY) - deltaX * cos(radsY) * cos(radsZ)
-					- deltaY * cos(radsY) * sin(radsZ));
+			deltaZ * sinY - deltaX * cosY * cosZ - deltaY * cosY * sinZ);
 	result.set(3, 1,
-			deltaX
-					* (cos(radsX) * sin(radsZ)
-							- cos(radsZ) * sin(radsX) * sin(radsY))
-					- deltaY
-							* (cos(radsX) * cos(radsZ)
-									+ sin(radsX) * sin(radsY) * sin(radsZ))
-					- deltaZ * cos(radsY) * sin(radsX));
+			deltaX * (cosX * sinZ - cosZ * sinX * sinY)
+					- deltaY * (cosX * cosZ + sinX * sinY * sinZ)
+					- deltaZ * cosY * sinX);
 	result.set(3, 2,
-			deltaY
-					* (cos(radsZ) * sin(radsX)
-							- cos(radsX) * sin(radsY) * sin(radsZ))
-					- deltaX
-							* (sin(radsX) * sin(radsZ)
-									+ cos(radsX) * cos(radsZ) * sin(radsY))
-					- deltaZ * cos(radsX) * cos(radsY));
+			deltaY * (cosZ * sinX - cosX * sinY * sinZ)
+					- deltaX * (sinX * sinZ + cosX * cosZ * sinY)
+					- deltaZ * cosX * cosY);
 	result.set(3, 3, 1);
 	return result;
 }

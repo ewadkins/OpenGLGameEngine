@@ -21,9 +21,14 @@ public:
 	static Matrix<float> rotationMatrixZ(float theta);
 	static Matrix<float> rotationMatrixXYZ(float thetaX, float thetaY,
 			float thetaZ);
+	static Matrix<float> inverseRotationMatrixXYZ(float thetaX, float thetaY,
+			float thetaZ);
 	static Matrix<float> rotationMatrixLine(float a, float b, float c, float u,
 			float v, float w, float theta);
 	static Matrix<float> modelTransformationMatrix(float deltaX, float deltaY,
+			float deltaZ, float thetaX, float thetaY, float thetaZ,
+			float scaleX, float scaleY, float scaleZ);
+	static Matrix<float> inverseModelTransformationMatrix(float deltaX, float deltaY,
 			float deltaZ, float thetaX, float thetaY, float thetaZ,
 			float scaleX, float scaleY, float scaleZ);
 	static Matrix<float> cameraTransformationMatrix(float deltaX, float deltaY,
