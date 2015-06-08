@@ -19,7 +19,7 @@ struct Light
     vec3 diffuse;
     vec3 specular;
     float range; // 0 = infinite range
-    float spread;
+    float beamAngle;
     bool enabled;
 };
 
@@ -52,7 +52,7 @@ void main()
                     k = 1;
                 else if (lights[i].type == 2) {
                     float cosTheta = dot(normalize(lights[i].direction), surfaceToLight);
-                    k *= max(0.0, sqrt(cosTheta - cos(radians(lights[i].spread))));
+                    k *= max(0.0, sqrt(cosTheta - cos(radians(lights[i].beamAngle))));
                 }
                 
                 // Ambient lighting

@@ -10,8 +10,10 @@
 TestGame::TestGame(const char* windowName, int screenSizeX, int screenSizeY,
 		bool fullScreen) :
 		Application(windowName, screenSizeX, screenSizeY, fullScreen) {
+	_terrain = nullptr;
 	_mainLight = nullptr;
 	_cameraLight = nullptr;
+	_playerHeight = 1;
 }
 
 void TestGame::initializeWindow() {
@@ -26,63 +28,60 @@ void TestGame::initializeMap() {
 	_application->_logger->log("Adding objects..").endLine();
 
 	Drawable* t1 = new Triangle();
-	t1->setXYZ(-5, 0, 0);
+	t1->setXYZ(-5, 3, 0);
 	_map->addStaticDrawable(t1);
 
 	Drawable* t2 = new Triangle();
-	t2->setXYZ(-4, 0, 0);
+	t2->setXYZ(-4, 3, 0);
 	t2->rotateXYZ(45, 45, 45);
 	_map->addStaticDrawable(t2);
 
 	Drawable* t3 = new Triangle();
-	t3->setXYZ(-3, 0, 0);
+	t3->setXYZ(-3, 3, 0);
 	t3->rotateXYZ(-80, 0, 0);
 	t3->scaleXYZ(1, 2, 1);
 	_map->addStaticDrawable(t3);
 
 	Drawable* t4 = new Triangle();
-	t4->setXYZ(-2, 3, 0);
+	t4->setXYZ(-2, 6, 0);
 	t4->setColor(1, 0.5, 0);
 	_map->addStreamDrawable(t4);
 
 	Drawable* c1 = new Cube();
+	c1->setXYZ(0, 3, 0);
 	c1->setRotationXYZ(45, 45, 45);
 	c1->scaleXYZ(2, 2, 2);
 	_map->addStaticDrawable(c1);
 
 	Drawable* c2 = new Cube();
-	c2->setXYZ(3, 0, 0);
+	c2->setXYZ(3, 3, 0);
 	c2->setRotationXYZ(30, 30, 30);
 	c2->scaleXYZ(1, 1, 2);
 	c2->setColor(0, 0, 1);
 	_map->addStaticDrawable(c2);
 
 	Drawable* c3 = new Cube();
-	c3->setXYZ(5, 0, 0);
+	c3->setXYZ(5, 3, 0);
 	c3->setColor(1, 0, 1);
 	_map->addStaticDrawable(c3);
 
 	for (int i = 0; i < 1; i++) {
 		Drawable* c4 = new Cube();
-		c4->setXYZ(i, 5, 0);
+		c4->setXYZ(i, 8, 0);
 		c4->setColor(1, 0, 0);
 		_map->addStreamDrawable(c4);
 	}
 
 	Drawable* c5 = new Cube();
-	c5->setXYZ(2, 3, 0);
+	c5->setXYZ(2, 6, 0);
 	c5->setRotationXYZ(45, 0, 45);
 	c5->setColor(0, 1, 0);
 	_map->addStreamDrawable(c5);
 
-	_testCube = new Cube();
-	_testCube->scale(0.2);
-	_testCube->setColor(1, 1, 1);
-	_map->addStreamDrawable(_testCube);
-
 	_terrain = new HillTerrain(this, 100, 100, 123456);
 	_terrain->generate();
 	_terrain->setScale(1);
+	_terrain->setDrawOutline(false);
 	_terrain->updateDrawables();
 	_map->addTerrain(_terrain);
 
@@ -94,10 +93,10 @@ void TestGame::initializeMap() {
 	_map->addLightSource(_mainLight);
 
 	_cameraLight = new LightSource(LightSource::SPOTLIGHT);
-	_cameraLight->setAmbient(0.3, 0.3, 0.3);
+	_cameraLight->setAmbient(0.4, 0.4, 0.4);
 	_cameraLight->setDiffuse(0.6, 0.6, 0.6);
 	_cameraLight->setSpecular(0.2, 0.2, 0.2);
-	_cameraLight->setRange(50);
+	_cameraLight->setBeamAngle(40);
 	_map->addLightSource(_cameraLight);
 }
 
@@ -109,20 +108,23 @@ void TestGame::onGameLoop() {
 	_logger->log("FPS: ").log(_fps).endLine();
 
 	handleInput();
+
+	// Snap to terrain
+	/*Vector<float> pos = _terrain->project(
+			Vector<float>(_camera->getX(), _camera->getY() - _playerHeight,
+					_camera->getZ()));
+	if (pos.size() > 0)
+		_camera->setXYZ(pos[0], pos[1] + _playerHeight, pos[2]);*/
+
+	_camera->useView();
+
 	_cameraLight->setPosition(_camera->getPosition());
 	_cameraLight->setDirection(_camera->getEyeVector());
-	_camera->useView();
 
 	for (int i = 0; i < _map->_streamDrawables.size(); i++) {
 		_map->_streamDrawables[i]->rotateXYZ(0, 1, 0);
 		//_streamDrawables[i]->translateXYZ(0, 0.01, 0);
 	}
-
-	Vector<float> pos = _terrain->project(
-			Vector<float>(_camera->getX(), _camera->getY(), _camera->getZ()));
-	if (pos.size() > 0)
-		//_testCube->setXYZ(pos[0], pos[1], pos[2]);
-		_camera->setXYZ(pos[0], pos[1] + 1, pos[2]);
 
 	_map->update();
 
@@ -160,10 +162,9 @@ void TestGame::onKeyEvent(int key, int action) {
 		LightSource* light = new LightSource(LightSource::SPOTLIGHT);
 		light->setPosition(_camera->getPosition());
 		light->setDirection(_camera->getEyeVector());
-		light->setAmbient(0.3, 0.3, 0.3);
+		light->setAmbient(0.4, 0.4, 0.4);
 		light->setDiffuse(0.6, 0.6, 0.6);
 		light->setSpecular(0.2, 0.2, 0.2);
-		light->setRange(50);
 		_lights.push_back(light);
 		_map->addLightSource(light);
 	}

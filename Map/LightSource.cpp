@@ -19,7 +19,7 @@ LightSource::LightSource(int type) {
 	_diffuse = Vector<float>(0, 0, 0);
 	_specular = Vector<float>(0, 0, 0);
 	_range = 30;
-	_spread = 35;
+	_beamAngle = 35;
 	_enabled = true;
 	_needsUpdating = true;
 }
@@ -32,7 +32,7 @@ LightSource::LightSource(float x, float y, float z) {
 	_diffuse = Vector<float>(0, 0, 0);
 	_specular = Vector<float>(0, 0, 0);
 	_range = 30;
-	_spread = 35;
+	_beamAngle = 35;
 	_enabled = true;
 	_needsUpdating = true;
 }
@@ -96,8 +96,8 @@ void LightSource::setRange(float range) {
 	_needsUpdating = true;
 }
 
-void LightSource::setSpread(float spread) {
-	_spread = spread;
+void LightSource::setBeamAngle(float beamAngle) {
+	_beamAngle = beamAngle;
 	_needsUpdating = true;
 }
 
@@ -134,8 +134,8 @@ float LightSource::getRange() {
 	return _range;
 }
 
-float LightSource::getSpread() {
-	return _spread;
+float LightSource::getBeamAngle() {
+	return _beamAngle;
 }
 
 bool LightSource::isEnabled() {

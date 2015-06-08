@@ -344,7 +344,7 @@ void Application::initialize() {
 	_logger->log("Initializing display..").endLine().increaseIndent();
 	start = clock();
 	{
-		glClearDepth(1.0f);
+		glClearDepth(1.0);
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LEQUAL);
 		glEnable(GL_BLEND);

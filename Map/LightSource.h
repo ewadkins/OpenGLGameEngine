@@ -28,7 +28,7 @@ public:
 	void setSpecular(float r, float g, float b);
 	void setSpecular(Vector<float> color);
 	void setRange(float range);
-	void setSpread(float spread);
+	void setBeamAngle(float beamAngle);
 	void setEnabled(bool enabled);
 	int getType();
 	Vector<float> getPosition();
@@ -37,7 +37,7 @@ public:
 	Vector<float> getDiffuse();
 	Vector<float> getSpecular();
 	float getRange();
-	float getSpread();
+	float getBeamAngle();
 	bool isEnabled();
 	bool _needsUpdating;
     static const int POINT, DIRECTIONAL, SPOTLIGHT;
@@ -49,7 +49,7 @@ private:
     Vector<float> _diffuse;
     Vector<float> _specular;
     float _range;
-    float _spread;
+    float _beamAngle;
     bool _enabled;
 
 };

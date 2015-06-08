@@ -180,19 +180,6 @@ void Terrain::updateDrawables() {
 }
 
 Vector<float> Terrain::project(Vector<float> pos) {
-
-	/*
-	 * Use the inverseModelTransformationMatrix of the terrain on the camera's position
-	 * This will return the terrain to the center of the map, untransformed, and will
-	 * also move the camera position relative to the terrain
-	 * Then add to the camera's x coord: (float) (_length - 1) / 2
-	 * And add to the camera's y coord: (float) (_width - 1) / 2
-	 * to reverse the centering in the middle of the map and make indexing easier
-	 * Now assume that the map's corner is at the origin and the camera is correctly placed
-	 * relative to it
-	 *
-	 */
-
 	Matrix<float> modelTransformationMatrix =
 			GLMatrix::modelTransformationMatrix(getX(), getY(), getZ(),
 					getRotationX(), getRotationY(), getRotationZ(), getScaleX(),
@@ -211,7 +198,8 @@ Vector<float> Terrain::project(Vector<float> pos) {
 	m = m << inverseModelTransformationMatrix;
 	pos = Vector<float>(m.get(0, 0), m.get(1, 0), m.get(2, 0));
 
-	pos = Vector<float>(pos[0] + (float) (_length - 1) / 2, pos[1], pos[2] + (float) (_width - 1) / 2);
+	pos = Vector<float>(pos[0] + (float) (_length - 1) / 2, pos[1],
+			pos[2] + (float) (_width - 1) / 2);
 
 	float x = pos[0];
 	float y = pos[2];
@@ -226,15 +214,16 @@ Vector<float> Terrain::project(Vector<float> pos) {
 		float dydx = _heightMap[i + 1][j] - _heightMap[i][j];
 		float dydz = _heightMap[i][j + 1] - _heightMap[i][j];
 		height = _heightMap[i][j] + dydx * (x - i) + dydz * (y - j);
-	}
-	else {
+	} else {
 		float dydx = _heightMap[i + 1][j + 1] - _heightMap[i][j + 1];
 		float dydz = _heightMap[i + 1][j + 1] - _heightMap[i + 1][j];
-		height = _heightMap[i + 1][j + 1] - dydx * (1 - (x - i)) - dydz * (1 - (y - j));
+		height = _heightMap[i + 1][j + 1] - dydx * (1 - (x - i))
+				- dydz * (1 - (y - j));
 	}
 	pos = Vector<float>(x, height * _heightScale, y);
 
-	pos = Vector<float>(pos[0] - (float) (_length - 1) / 2, pos[1], pos[2] - (float) (_width - 1) / 2);
+	pos = Vector<float>(pos[0] - (float) (_length - 1) / 2, pos[1],
+			pos[2] - (float) (_width - 1) / 2);
 
 	pos1 = pos.getVector();
 	pos1.push_back(1);

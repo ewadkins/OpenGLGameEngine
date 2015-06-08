@@ -226,7 +226,7 @@ void Renderer::updateStreamVBOs() {
 		lines = streamDrawables[i]->_lines;
 		points = streamDrawables[i]->_points;
 
-		if (streamDrawables[i]->getDrawFaces()) {
+		if (d->getDrawFaces()) {
 			for (int j = 0; j < triangles.size(); j++) {
 				for (int k = 0; k < triangles[j]._vertices.size(); k++)
 					triangles[j]._vertices[k].transform(modelTransformationMatrix,
@@ -235,7 +235,7 @@ void Renderer::updateStreamVBOs() {
 			}
 		}
 
-		if (streamDrawables[i]->getDrawOutline()) {
+		if (d->getDrawOutline()) {
 			for (int j = 0; j < lines.size(); j++) {
 				for (int k = 0; k < lines[j]._vertices.size(); k++)
 					lines[j]._vertices[k].transform(modelTransformationMatrix,
@@ -314,7 +314,7 @@ void Renderer::updateLights() {
 		vec = lights[i]->getSpecular();
 		_currentProgram->setUniform3f((var + ".specular").c_str(), vec[0], vec[1], vec[2]);
 		_currentProgram->setUniform1f((var + ".range").c_str(), lights[i]->getRange());
-		_currentProgram->setUniform1f((var + ".spread").c_str(), lights[i]->getSpread());
+		_currentProgram->setUniform1f((var + ".beamAngle").c_str(), lights[i]->getBeamAngle());
 		_currentProgram->setUniform1i((var + ".enabled").c_str(), lights[i]->isEnabled());
 	}
 }

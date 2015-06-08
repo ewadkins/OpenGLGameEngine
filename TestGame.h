@@ -28,7 +28,7 @@ private:
 	LightSource* _mainLight;
 	LightSource* _cameraLight;
 	std::vector<LightSource*> _lights;
-	Drawable* _testCube;
+	float _playerHeight;
 };
 
 #endif /* TESTGAME_H_ */
