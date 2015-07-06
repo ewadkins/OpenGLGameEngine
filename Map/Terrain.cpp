@@ -136,7 +136,8 @@ void Terrain::updateDrawables() {
 		int deltaX[] = { 0, 0, 0, -1, -1, -1 };
 		int deltaY[] = { 0, -1, -1, 0, 0, -1 };
 		int face[] = { 0, 0, 1, 0, 1, 1 };
-		int i, j, k;
+		float mult[] = { 1, 0.5, 0.5, 0.5, 0.5, 1 };
+		int i, j, k, l;
 		float normX, normY, normZ;
 		for (int x = 0; x < vertices.size(); x++)
 			for (int y = 0; y < vertices[0].size(); y++) {
@@ -147,11 +148,12 @@ void Terrain::updateDrawables() {
 					i = x + deltaX[n];
 					j = y + deltaY[n];
 					k = face[n];
+					l = mult[n];
 					if (i >= 0 && i < normals.size() && j >= 0
 							&& j < normals[0].size()) {
-						normX += normals[i][j][k][0];
-						normY += normals[i][j][k][1];
-						normZ += normals[i][j][k][2];
+						normX += normals[i][j][k][0] * l;
+						normY += normals[i][j][k][1] * l;
+						normZ += normals[i][j][k][2] * l;
 					}
 				}
 				float mag = sqrt(normX * normX + normY * normY + normZ * normZ);
@@ -164,10 +166,15 @@ void Terrain::updateDrawables() {
 
 	for (int i = 0; i < _length - 1; i++)
 		for (int j = 0; j < _width - 1; j++) {
+			int texIndex = 0;
 			GLVertex v1 = vertices[i][j];
+			v1.setTexCoords(0, 0, texIndex);
 			GLVertex v2 = vertices[i][j + 1];
+			v2.setTexCoords(0, 1, texIndex);
 			GLVertex v3 = vertices[i + 1][j + 1];
+			v3.setTexCoords(1, 1, texIndex);
 			GLVertex v4 = vertices[i + 1][j];
+			v4.setTexCoords(1, 0, texIndex);
 			Drawable* t1 = new Triangle(v1, v2, v4);
 			Drawable* t2 = new Triangle(v2, v3, v4);
 			t1->setDrawFaces(_drawFaces);
@@ -220,10 +227,9 @@ Vector<float> Terrain::project(Vector<float> pos) {
 		height = _heightMap[i + 1][j + 1] - dydx * (1 - (x - i))
 				- dydz * (1 - (y - j));
 	}
-	pos = Vector<float>(x, height * _heightScale, y);
 
-	pos = Vector<float>(pos[0] - (float) (_length - 1) / 2, pos[1],
-			pos[2] - (float) (_width - 1) / 2);
+	pos = Vector<float>(x - (float) (_length - 1) / 2, height * _heightScale,
+			y - (float) (_width - 1) / 2);
 
 	pos1 = pos.getVector();
 	pos1.push_back(1);

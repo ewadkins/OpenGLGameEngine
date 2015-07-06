@@ -11,7 +11,7 @@ GLVertex::GLVertex() {
 	setPosition(0, 0, 0);
 	setColor(0, 0, 0);
 	setNormal(0, 0, 0);
-	setTexCoords(0, 0);
+	setTexCoords(0, 0, 0);
 	_hasColor = false;
 	_hasNormal = false;
 	_hasTexCoords = false;
@@ -21,7 +21,7 @@ GLVertex::GLVertex(float x, float y, float z) {
 	setPosition(x, y, z);
 	setColor(0, 0, 0);
 	setNormal(0, 0, 0);
-	setTexCoords(0, 0);
+	setTexCoords(0, 0, 0);
 	_hasColor = false;
 	_hasNormal = false;
 	_hasTexCoords = false;
@@ -31,7 +31,7 @@ GLVertex::GLVertex(float x, float y, float z, float r, float g, float b) {
 	setPosition(x, y, z);
 	setColor(r, g, b);
 	setNormal(0, 0, 0);
-	setTexCoords(0, 0);
+	setTexCoords(0, 0, 0);
 	_hasColor = true;
 	_hasNormal = false;
 	_hasTexCoords = false;
@@ -42,18 +42,18 @@ GLVertex::GLVertex(float x, float y, float z, float r, float g, float b,
 	setPosition(x, y, z);
 	setColor(r, g, b);
 	setNormal(normX, normY, normZ);
-	setTexCoords(0, 0);
+	setTexCoords(0, 0, 0);
 	_hasColor = true;
 	_hasNormal = true;
 	_hasTexCoords = false;
 }
 
 GLVertex::GLVertex(float x, float y, float z, float r, float g, float b,
-		float normX, float normY, float normZ, float texX, float texY) {
+		float normX, float normY, float normZ, float texX, float texY, float texIndex) {
 	setPosition(x, y, z);
 	setColor(r, g, b);
 	setNormal(normX, normY, normZ);
-	setTexCoords(texX, texY);
+	setTexCoords(texX, texY, texIndex);
 	_hasColor = true;
 	_hasNormal = true;
 	_hasTexCoords = true;
@@ -63,7 +63,7 @@ GLVertex::GLVertex(std::vector<float> pos) {
 	setPosition(pos);
 	setColor(0, 0, 0);
 	setNormal(0, 0, 0);
-	setTexCoords(0, 0);
+	setTexCoords(0, 0, 0);
 	_hasColor = false;
 	_hasNormal = false;
 	_hasTexCoords = false;
@@ -73,7 +73,7 @@ GLVertex::GLVertex(std::vector<float> pos, std::vector<float> color) {
 	setPosition(pos);
 	setColor(color);
 	setNormal(0, 0, 0);
-	setTexCoords(0, 0);
+	setTexCoords(0, 0, 0);
 	_hasColor = true;
 	_hasNormal = false;
 	_hasTexCoords = false;
@@ -84,7 +84,7 @@ GLVertex::GLVertex(std::vector<float> pos, std::vector<float> color,
 	setPosition(pos);
 	setColor(color);
 	setNormal(norm);
-	setTexCoords(0, 0);
+	setTexCoords(0, 0, 0);
 	_hasColor = true;
 	_hasNormal = true;
 	_hasTexCoords = false;
@@ -140,9 +140,10 @@ void GLVertex::setNormal(float normX, float normY, float normZ) {
 	_hasNormal = true;
 }
 
-void GLVertex::setTexCoords(float texX, float texY) {
+void GLVertex::setTexCoords(float texX, float texY, float texIndex) {
 	_texX = texX;
 	_texY = texY;
+	_texIndex = texIndex;
 	_hasTexCoords = true;
 }
 
@@ -169,6 +170,7 @@ void GLVertex::setNormal(std::vector<float> norm) {
 void GLVertex::setTexCoords(std::vector<float> tex) {
 	_texX = tex[0];
 	_texY = tex[1];
+	_texIndex = tex[2];
 	_hasTexCoords = true;
 }
 
@@ -191,13 +193,13 @@ std::vector<float> GLVertex::getNormal() {
 }
 
 std::vector<float> GLVertex::getTexCoords() {
-	float arr[] = { _texX, _texY };
+	float arr[] = { _texX, _texY, _texIndex };
 	std::vector<float> vec(arr, arr + sizeof(arr) / sizeof(arr[0]));
 	return vec;
 }
 
 std::vector<float> GLVertex::getData() {
-	float arr[] = { _x, _y, _z, _r, _g, _b, _normX, _normY, _normZ, _texX, _texY };
+	float arr[] = { _x, _y, _z, _r, _g, _b, _normX, _normY, _normZ, _texX, _texY, _texIndex };
 	std::vector<float> vec(arr, arr + sizeof(arr) / sizeof(arr[0]));
 	return vec;
 }
@@ -227,7 +229,7 @@ std::string GLVertex::toString() {
 	str += "Normal(" + std::to_string(_normX) + ", " + std::to_string(_normY)
 			+ ", " + std::to_string(_normZ) + "), ";
 	str += "TexCoords(" + std::to_string(_texX) + ", " + std::to_string(_texY)
-			+ ")";
+	+ ", " + std::to_string(_texIndex) + ")";
 	str += "}";
 	return str;
 }

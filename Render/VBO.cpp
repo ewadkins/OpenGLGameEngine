@@ -30,7 +30,7 @@ void VBO<T>::updateData() {
 	int vertexCount = 0;
 	for (int i = 0; i < _components.size(); i++)
 		vertexCount += _components[i]._vertices.size();
-	_data.reserve(vertexCount * 11);
+	_data.reserve(vertexCount * 12);
 	for (int i = 0; i < _components.size(); i++) {
 		for (int j = 0; j < _components[i]._vertices.size(); j++) {
 			std::vector<float> data = _components[i]._vertices[j].getData();
@@ -72,15 +72,15 @@ void VBO<T>::create() {
 	glBindBuffer(GL_ARRAY_BUFFER, _vbo);
 
 	// Add position attribute
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 11 * sizeof(GLfloat), 0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 12 * sizeof(GLfloat), 0);
 	// Add color attribute
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 11 * sizeof(GLfloat),
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 12 * sizeof(GLfloat),
 			reinterpret_cast<GLvoid*>(3 * sizeof(GLfloat)));
 	// Add normal attribute
-	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 11 * sizeof(GLfloat),
+	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 12 * sizeof(GLfloat),
 			reinterpret_cast<GLvoid*>(6 * sizeof(GLfloat)));
 	// Add tex coord attribute
-	glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, 11 * sizeof(GLfloat),
+	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, 12 * sizeof(GLfloat),
 			reinterpret_cast<GLvoid*>(9 * sizeof(GLfloat)));
 
 	// Enable the attributes

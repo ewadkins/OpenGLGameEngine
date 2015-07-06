@@ -19,6 +19,7 @@ public:
 	virtual void initializeWindow();
 	virtual void initializeDisplay();
 	virtual void initializeMap();
+	virtual void initializeTextures();
 	virtual void initializeCamera();
 	virtual void onGameLoop();
 	virtual void onKeyEvent(int key, int action);

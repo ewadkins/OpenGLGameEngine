@@ -24,8 +24,8 @@ CanyonTerrain::CanyonTerrain(Application* application, int length, int width,
 }
 
 void CanyonTerrain::generate() {
-	_application->_logger->log("Generating canyon terrain (").log(_length).log(
-			"x").log(_width).log(")..").endLine().increaseIndent();
+	_application->_logger->log("Generating canyon terrain (").log(_length - 1).log(
+			"x").log(_width - 1).log(")..").endLine().increaseIndent();
 
 	_application->_logger->log("Setting initial points..").endLine();
 	std::vector<Vector<float> > initPoints;

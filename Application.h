@@ -12,6 +12,7 @@
 #include "Render/Renderer.h"
 #include "Map/Map.h"
 #include "Render/Camera.h"
+#include "Render/Textures.h"
 #include "Math/Matrix.h"
 #include "Input/Keyboard.h"
 #include <string>
@@ -21,6 +22,8 @@
 #include <stdlib.h>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+#include <ft2build.h>
+#include <freetype.h>
 
 class Application {
 public:
@@ -39,6 +42,7 @@ public:
 	Logger* _logger;
 	Renderer* _renderer;
 	Map* _map;
+	Textures* _textures;
 	Camera* _camera;
 	Keyboard* _keyboard;
 	static std::vector<Application*> _applications;
@@ -47,6 +51,7 @@ public:
 protected:
 	int _frameCount;
 	int _fps;
+	FT_Face font1;
 private:
 	void initialize();
 	void _initializeWindow();
@@ -58,6 +63,9 @@ private:
 	}
 	virtual void initializeMap() {
 		warn("Missing function: initializeMap()");
+	}
+	virtual void initializeTextures() {
+		warn("Missing function: initializeTextures()");
 	}
 	virtual void initializeCamera() {
 		warn("Missing function: initializeCamera()");

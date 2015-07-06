@@ -43,10 +43,11 @@ void Map::update() {
 		_terrainsNeedUpdating = false;
 	}
 
-	if (_lightCountChanged) {
-		_application->_renderer->createShaders(); //FIXME Find a better way to do this
-		_lightCountChanged = false;
-	}
+	if (_application->_renderer != nullptr)
+		if (_lightCountChanged) {
+			_application->_renderer->createShaders();
+			_lightCountChanged = false;
+		}
 	bool lightsNeedUpdating = false;
 	for (int i = 0; i < _lights.size(); i++)
 		if (_lights[i]->_needsUpdating) {

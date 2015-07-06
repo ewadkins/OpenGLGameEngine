@@ -10,6 +10,8 @@ uniform vec3 cameraPosition;
 uniform bool lightingEnabled;
 uniform float shininess;
 
+uniform sampler2D textures[NUM_TEXTURES];
+
 struct Light
 {
     int type; // 0 = point, 1 = directional, 2 = spotlight
@@ -67,5 +69,14 @@ void main()
             }
         color = color * (ambient + diffuse) + specular; // adding specular directly to surface color allows for glare
     }
+    
+    
+    int texIndex = int(passTexCoords.z + (passTexCoords.z >= 0 ? 0.5 : -0.5));
+    if (texIndex != 0) {
+        if (texIndex == -1)
+            texIndex = 0;
+        color = color * texture(textures[texIndex], passTexCoords.st).rgb;
+    }
+    
     outColor = vec4(color, 1.0);
 }

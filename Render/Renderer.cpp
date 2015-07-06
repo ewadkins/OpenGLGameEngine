@@ -15,6 +15,7 @@ Renderer::Renderer(Application* application) : // FIXME Random warning message
 	_lightingShader = nullptr;
 	_currentProgram = nullptr;
 	_lightingEnabled = true;
+	_modelViewProjectionEnabled = true;
 	_shininess = 0;
 
 	/*_staticTriangleVBO = nullptr;
@@ -44,6 +45,11 @@ void Renderer::setLightingEnabled(bool lightingEnabled) {
 	_lightingEnabled = lightingEnabled;
 }
 
+void Renderer::setModelViewProjectionEnabled(bool modelViewProjectionEnabled) {
+	_currentProgram->setUniform1i("modelViewProjectionEnabled", modelViewProjectionEnabled);
+	_modelViewProjectionEnabled = modelViewProjectionEnabled;
+}
+
 void Renderer::setShininess(float shininess) {
 	_currentProgram->setUniform1f("shininess", shininess);
 	_shininess = shininess;
@@ -59,9 +65,11 @@ void Renderer::setProjectionMatrix(Matrix<float> projectionMatrix) {
 // Updates certain uniforms upon the use of a different shader program
 void Renderer::updateUniforms() {
 	_currentProgram->setUniform1i("lightingEnabled", _lightingEnabled);
+	_currentProgram->setUniform1i("modelViewProjectionEnabled", _modelViewProjectionEnabled);
 	_currentProgram->setUniform1i("shininess", _shininess);
 	_currentProgram->setUniformMatrix4x4f("projectionMatrix",
 			_projectionMatrix.getArray());
+	//_application->_textures->setUniforms();
 }
 
 void Renderer::setBackgroundColor(float r, float g, float b) {
@@ -83,6 +91,8 @@ void Renderer::createShaders() {
 		useProgram(_basicShader);
 	else
 		throw "No shader assigned";
+
+	//useProgram(_basicShader);
 }
 
 void Renderer::createVBOs() {
@@ -118,6 +128,27 @@ void Renderer::createVBOs() {
 	_terrainTriangleVBO->create();
 	_terrainLineVBO->create();
 	_terrainPointVBO->create();
+
+
+	glGenVertexArrays(1, &_textVao);
+	glBindVertexArray(_textVao);
+
+	glGenBuffers(1, &_textVbo);
+
+	glBindBuffer(GL_ARRAY_BUFFER, _textVbo);
+
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(GLfloat), 0);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(GLfloat),
+			reinterpret_cast<GLvoid*>(3 * sizeof(GLfloat)));
+	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(GLfloat),
+			reinterpret_cast<GLvoid*>(6 * sizeof(GLfloat)));
+
+	glEnableVertexAttribArray(0);
+	glEnableVertexAttribArray(1);
+	glEnableVertexAttribArray(3);
+
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindVertexArray(0);
 }
 
 void Renderer::updateStaticVBOs() {
@@ -317,6 +348,88 @@ void Renderer::updateLights() {
 		_currentProgram->setUniform1f((var + ".beamAngle").c_str(), lights[i]->getBeamAngle());
 		_currentProgram->setUniform1i((var + ".enabled").c_str(), lights[i]->isEnabled());
 	}
+}
+
+void Renderer::renderText(std::string &str, FT_Face face, float x, float y, float sx, float sy) {
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+	FT_GlyphSlot glyph = face->glyph;
+
+	int width = glyph->bitmap.width;
+	int height = glyph->bitmap.rows;
+
+	std::cout << str << std::endl;
+
+	for (int i = 0; i < str.length(); i++) {
+		if(FT_Load_Char(face, str[i], FT_LOAD_RENDER))
+			continue;
+
+		glBindTexture(GL_TEXTURE_2D, _application->_textures->_textureMap[_application->_textures->_dynamic]);
+
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_R8, width, height, 0, GL_RED, GL_UNSIGNED_BYTE, glyph->bitmap.buffer);
+		//glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, glyph->bitmap.buffer);
+
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		float vx = x + glyph->bitmap_left * sx;
+		float vy = y + glyph->bitmap_top * sy;
+		float w = width * sx;
+		float h = height * sy;
+
+		std::cout << "vx: " << vx << ", vy: " << vy << std::endl;
+
+		float r = 1;
+		float g = 1;
+		float b = 1;
+
+		 GLfloat arr[] = {
+				 vx, vy, -1, r, g, b, 0, 0, -1,
+				 vx, vy - h, -1, r, g, b, 0, 1, -1,
+				 vx + w, vy, -1, r, g, b, 1, 0, -1,
+				 vx + w, vy, -1, r, g, b, 1, 0, -1,
+				 vx, vy - h, -1, r, g, b, 0, 1, -1,
+				 vx + w, vy - h, -1, r, g, b, 1, 1, -1
+		 };
+		 /*GLfloat arr[] = {
+				 vx, vy, -1, r, g, b, 0, 0, -1,
+				 vx + w, vy, -1, r, g, b, 1, 0, -1,
+				 vx, vy - h, -1, r, g, b, 0, 1, -1,
+				 vx + w, vy - h, -1, r, g, b, 1, 1, -1
+		 };*/
+		 std::vector<float> data(arr, arr + sizeof(arr) / sizeof(arr[0]));
+
+		/*struct {
+			float x, y, z, r, g, b, s, t;
+		} data[6] = {
+				{vx    , vy    , z, r, g, b, 0, 0},
+				{vx    , vy - h, z, r, g, b, 0, 1},
+				{vx + w, vy    , z, r, g, b, 1, 0},
+				{vx + w, vy    , z, r, g, b, 1, 0},
+				{vx    , vy - h, z, r, g, b, 0, 1},
+				{vx + w, vy - h, z, r, g, b, 1, 1}
+		};*/
+
+		glBindBuffer(GL_ARRAY_BUFFER, _textVbo);
+		glBufferData(GL_ARRAY_BUFFER, data.size() * sizeof(GLfloat), &data[0], GL_DYNAMIC_DRAW);
+
+		bool lightingEnabled = _lightingEnabled;
+		if (lightingEnabled)
+			setLightingEnabled(false);
+		setModelViewProjectionEnabled(false);
+
+		glBindVertexArray(_textVao);
+		glDrawArrays(GL_TRIANGLES, 0, 6);
+
+		if (lightingEnabled)
+			setLightingEnabled(true);
+		setModelViewProjectionEnabled(true);
+
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+		x += (glyph->advance.x >> 6) * sx;
+		y += (glyph->advance.y >> 6) * sy;
+	}
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
 }
 
 void Renderer::render() {

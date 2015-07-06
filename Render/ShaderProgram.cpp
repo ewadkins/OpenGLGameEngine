@@ -122,17 +122,21 @@ GLuint ShaderProgram::loadShader(const char* shaderFile, GLenum type) {
 	std::ifstream in(shaderFile);
 	std::string src = "";
 	std::string line = "";
-	//_application->_logger->log("Source code:").endLine();
+	_application->_logger->log("Source code:").endLine();
 	while (std::getline(in, line)) {
 		src += line + "\n";
-		//	_application->_logger->log(line).endLine();
+			_application->_logger->log(line).endLine();
 	}
 
-	std::string search = "NUM_LIGHTS";
 	int numLights = 1;
 	if (_application->_map != nullptr)
 		numLights = std::max(1, (int)_application->_map->_lights.size());
 	src = replace(src, std::string("NUM_LIGHTS"), std::to_string(numLights));
+
+	int numTextures = 1;
+	if (_application->_textures != nullptr)
+		numTextures = std::max(1, (int)_application->_textures->_textureMap.size());
+	src = replace(src, std::string("NUM_TEXTURES"), std::to_string(numTextures));
 	//_application->_logger->log(src).endLine();
 
 	// Creates shader ID

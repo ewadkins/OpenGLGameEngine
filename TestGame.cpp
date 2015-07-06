@@ -100,6 +100,11 @@ void TestGame::initializeMap() {
 	_map->addLightSource(_cameraLight);
 }
 
+void TestGame::initializeTextures() {
+	int grass = _textures->registerTexture("textures/grass.png");
+	_logger->log("Grass texture index: ").log(grass).endLine();
+}
+
 void TestGame::initializeCamera() {
 	_camera->setXYZ(0, 1.5, 8);
 }
@@ -127,8 +132,16 @@ void TestGame::onGameLoop() {
 	}
 
 	_map->update();
+	_textures->update();
 
 	_renderer->render();
+
+	float sx = 2.0 / getWindowWidth();
+	float sy = 2.0 / getWindowHeight();
+	std::string str = "The quick brown fox jumps over the lazy dog!";
+	//_renderer->renderText(str, font1, 0, 0, 0.1, 0.1);
+	_renderer->renderText(str, font1, -1 + 8 * sx, 1 - 50 * sy, sx, sy);
+
 	_renderer->display();
 }
 

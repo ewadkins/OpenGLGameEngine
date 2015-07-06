@@ -341,6 +341,39 @@ void Application::initialize() {
 			(double(finish) - double(start)) / CLOCKS_PER_SEC * 1000).log(
 			" ms)").endLine();
 
+	_logger->log("Initializing FreeType..").endLine().increaseIndent();
+	start = clock();
+	{
+		// Initialize GLEW
+		FT_Library ft;
+		if (FT_Init_FreeType(&ft))
+		    stop("FreeType failed to initialize");
+
+		if (FT_New_Face(ft, "fonts/montserrat/Montserrat-Regular.ttf", 0, &font1))
+		    _logger->log("Failed to load font!").endLine();
+		FT_Set_Pixel_Sizes(font1, 0, 24);
+
+		/*
+		FT_GlyphSlot glyph;
+		if (FT_Load_Char(font1, 'X', FT_LOAD_RENDER)) {
+			_logger->log("Could not load character 'X'").endLine();
+		}
+		else {
+			glyph = font1->glyph;
+			_logger->log("Loaded character 'X'").endLine().increaseIndent();
+			_logger->log("Width: ").log((int)(glyph->bitmap.width)).endLine();
+			_logger->log("Height: ").log((int)(glyph->bitmap.rows)).endLine();
+			_logger->decreaseIndent();
+		}
+		*/
+
+
+	}
+	finish = clock();
+	_logger->decreaseIndent().log("(Took ").log(
+			(double(finish) - double(start)) / CLOCKS_PER_SEC * 1000).log(
+			" ms)").endLine();
+
 	_logger->log("Initializing display..").endLine().increaseIndent();
 	start = clock();
 	{
@@ -349,6 +382,14 @@ void Application::initialize() {
 		glDepthFunc(GL_LEQUAL);
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+		// To prevent certain artifacts when a character is not rendered exactly on pixel boundaries,
+		// we should clamp the texture at the edges, and enable linear interpolation:
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
 		initializeDisplay();
 	}
 	finish = clock();
@@ -387,6 +428,19 @@ void Application::initialize() {
 		_logger->decreaseIndent().log("(Took ").log(
 				(double(finish2) - double(start2)) / CLOCKS_PER_SEC * 1000).log(
 				" ms)").endLine();
+	}
+	finish = clock();
+	_logger->decreaseIndent().log("(Took ").log(
+			(double(finish) - double(start)) / CLOCKS_PER_SEC * 1000).log(
+			" ms)").endLine();
+
+	_logger->log("Initializing textures..").endLine().increaseIndent();
+	start = clock();
+	{
+		// Create and initialize the camera
+		_textures = new Textures(this);
+		_textures->initialize();
+		initializeTextures();
 	}
 	finish = clock();
 	_logger->decreaseIndent().log("(Took ").log(

@@ -22,6 +22,8 @@
 #include <fstream>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+#include <ft2build.h>
+#include <freetype.h>
 
 class Application;
 
@@ -40,6 +42,7 @@ public:
 	void updateStreamVBOs();
 	void updateTerrainVBOs();
 	void updateLights();
+	void renderText(std::string &str, FT_Face face, float x, float y, float sx, float sy);
 	void render();
 	void display();
 	ShaderProgram* _basicShader;
@@ -48,6 +51,7 @@ public:
 private:
 	void updateUniforms();
 	void setLightingEnabled(bool lightingEnabled);
+	void setModelViewProjectionEnabled(bool modelViewProjectionEnabled);
 	void setShininess(float shininess);
 	Application* _application;
 
@@ -64,7 +68,11 @@ private:
 	VBO<GLLine>* _terrainLineVBO;
 	VBO<GLPoint>* _terrainPointVBO;
 
+	std::vector<GLfloat> _textData;
+	GLuint _textVao, _textVbo;
+
 	bool _lightingEnabled;
+	bool _modelViewProjectionEnabled;
 	float _shininess;
 	Matrix<float> _projectionMatrix;
 };

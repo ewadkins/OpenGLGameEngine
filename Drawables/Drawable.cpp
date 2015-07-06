@@ -39,9 +39,9 @@ void Drawable::applyTransformations() {
 		for (int j = 0; j < _transformed->_lines[i]._vertices.size(); j++)
 			_transformed->_lines[i]._vertices[j].transform(modelTransformationMatrix, rotationMatrix);
 
-		for (int i = 0; i < _transformed->_points.size(); i++)
-			for (int j = 0; j < _transformed->_points[i]._vertices.size(); j++)
-				_transformed->_points[i]._vertices[j].transform(modelTransformationMatrix, rotationMatrix);
+	for (int i = 0; i < _transformed->_points.size(); i++)
+		for (int j = 0; j < _transformed->_points[i]._vertices.size(); j++)
+			_transformed->_points[i]._vertices[j].transform(modelTransformationMatrix, rotationMatrix);
 
 	_needsUpdating = false;
 }
