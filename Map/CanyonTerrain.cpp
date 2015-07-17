@@ -10,7 +10,7 @@
 
 CanyonTerrain::CanyonTerrain(Application* application, int length, int width) :
 		Terrain(application, length, width) {
-	_heightScale = 5;
+	_internalScaleY = 5;
 	_lightingType = SMOOTH;
 	setColor(1, 0.4, 0.4);
 }
@@ -18,7 +18,7 @@ CanyonTerrain::CanyonTerrain(Application* application, int length, int width) :
 CanyonTerrain::CanyonTerrain(Application* application, int length, int width,
 		long seed) :
 		Terrain(application, length, width, seed) {
-	_heightScale = 5;
+	_internalScaleY = 5;
 	_lightingType = SMOOTH;
 	setColor(1, 0.4, 0.4);
 }

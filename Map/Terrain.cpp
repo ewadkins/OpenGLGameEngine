@@ -14,7 +14,7 @@ Terrain::Terrain(Application* application, int length, int width) {
 	_width = width + 1;
 	_seed = clock();
 	srand(_seed);
-	_heightScale = 1;
+	_internalScaleY = 1;
 	_lightingType = ROUGH;
 	_drawFaces = true;
 	_drawOutline = true;
@@ -34,7 +34,7 @@ Terrain::Terrain(Application* application, int length, int width, long seed) {
 	_width = width + 1;
 	_seed = seed;
 	srand(_seed);
-	_heightScale = 1;
+	_internalScaleY = 1;
 	_lightingType = ROUGH;
 	_drawFaces = true;
 	_drawOutline = true;
@@ -88,10 +88,11 @@ void Terrain::updateDrawables() {
 		for (int j = 0; j < _width; j++) {
 			std::vector<float> color = mergeColors(1, 1, 1, _color[0],
 					_color[1], _color[2], 1 - _heightMap[i][j]);
-			GLVertex v = GLVertex(i - (float) (_width - 1) / 2,
-					_heightMap[i][j] * _heightScale,
-					j - (float) (_length - 1) / 2, color[0], color[1],
-					color[2]);
+			GLVertex v = GLVertex(
+					i - (float) (_width - 1) / 2 * _internalScaleX,
+					_heightMap[i][j] * _internalScaleY,
+					j - (float) (_length - 1) / 2 * _internalScaleZ, color[0],
+					color[1], color[2]);
 			v.transform(modelTransformationMatrix, rotationMatrix);
 			rowVertices.push_back(v);
 		}
@@ -228,7 +229,7 @@ Vector<float> Terrain::project(Vector<float> pos) {
 				- dydz * (1 - (y - j));
 	}
 
-	pos = Vector<float>(x - (float) (_length - 1) / 2, height * _heightScale,
+	pos = Vector<float>(x - (float) (_length - 1) / 2, height * _internalScaleY,
 			y - (float) (_width - 1) / 2);
 
 	pos1 = pos.getVector();

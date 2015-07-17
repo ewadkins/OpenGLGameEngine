@@ -47,7 +47,7 @@ protected:
 	float** _heightMap;
 	int _length, _width;
 	long _seed;
-	float _heightScale;
+	float _internalScaleX, _internalScaleY, _internalScaleZ;
 	LightingType _lightingType;
 	bool _drawFaces, _drawOutline;
 	Vector<float> _color;

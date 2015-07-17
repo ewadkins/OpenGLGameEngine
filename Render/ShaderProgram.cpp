@@ -122,10 +122,10 @@ GLuint ShaderProgram::loadShader(const char* shaderFile, GLenum type) {
 	std::ifstream in(shaderFile);
 	std::string src = "";
 	std::string line = "";
-	_application->_logger->log("Source code:").endLine();
+	//_application->_logger->log("Source code:").endLine();
 	while (std::getline(in, line)) {
 		src += line + "\n";
-			_application->_logger->log(line).endLine();
+		//_application->_logger->log(line).endLine();
 	}
 
 	int numLights = 1;

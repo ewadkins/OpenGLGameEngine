@@ -140,7 +140,7 @@ void TestGame::onGameLoop() {
 	float sy = 2.0 / getWindowHeight();
 	std::string str = "The quick brown fox jumps over the lazy dog!";
 	//_renderer->renderText(str, font1, 0, 0, 0.1, 0.1);
-	_renderer->renderText(str, font1, -1 + 8 * sx, 1 - 50 * sy, sx, sy);
+	_renderer->renderText(str, _font1, -1 + 8 * sx, 1 - 50 * sy, sx, sy);
 
 	_renderer->display();
 }

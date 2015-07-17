@@ -57,6 +57,7 @@ Application::Application(const char* windowName, int screenSizeX,
 	_camera = nullptr;
 	_keyboard = nullptr;
 	_fps = 0;
+	_font1 = FT_Face();
 
 	_applications.push_back(this);
 }
@@ -349,9 +350,9 @@ void Application::initialize() {
 		if (FT_Init_FreeType(&ft))
 		    stop("FreeType failed to initialize");
 
-		if (FT_New_Face(ft, "fonts/montserrat/Montserrat-Regular.ttf", 0, &font1))
+		if (FT_New_Face(ft, "fonts/montserrat/Montserrat-Regular.ttf", 0, &_font1))
 		    _logger->log("Failed to load font!").endLine();
-		FT_Set_Pixel_Sizes(font1, 0, 24);
+		FT_Set_Pixel_Sizes(_font1, 0, 24);
 
 		/*
 		FT_GlyphSlot glyph;

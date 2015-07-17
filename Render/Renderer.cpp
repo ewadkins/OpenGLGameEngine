@@ -358,7 +358,7 @@ void Renderer::renderText(std::string &str, FT_Face face, float x, float y, floa
 	int width = glyph->bitmap.width;
 	int height = glyph->bitmap.rows;
 
-	std::cout << str << std::endl;
+	//std::cout << str << std::endl;
 
 	for (int i = 0; i < str.length(); i++) {
 		if(FT_Load_Char(face, str[i], FT_LOAD_RENDER))
@@ -376,7 +376,7 @@ void Renderer::renderText(std::string &str, FT_Face face, float x, float y, floa
 		float w = width * sx;
 		float h = height * sy;
 
-		std::cout << "vx: " << vx << ", vy: " << vy << std::endl;
+		//std::cout << "vx: " << vx << ", vy: " << vy << std::endl;
 
 		float r = 1;
 		float g = 1;

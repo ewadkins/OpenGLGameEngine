@@ -10,7 +10,7 @@
 
 MountainTerrain::MountainTerrain(Application* application, int length, int width) :
 		Terrain(application, length, width) {
-	_heightScale = 12;
+	_internalScaleY = 12;
 	_lightingType = ROUGH;
 	setColor(0.4, 0.4, 0.4);
 }
@@ -18,7 +18,7 @@ MountainTerrain::MountainTerrain(Application* application, int length, int width
 MountainTerrain::MountainTerrain(Application* application, int length, int width,
 		long seed) :
 		Terrain(application, length, width, seed) {
-	_heightScale = 12;
+	_internalScaleY = 12;
 	_lightingType = ROUGH;
 	setColor(0.4, 0.4, 0.4);
 }

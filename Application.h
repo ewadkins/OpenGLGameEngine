@@ -51,7 +51,7 @@ public:
 protected:
 	int _frameCount;
 	int _fps;
-	FT_Face font1;
+	FT_Face _font1;
 private:
 	void initialize();
 	void _initializeWindow();
