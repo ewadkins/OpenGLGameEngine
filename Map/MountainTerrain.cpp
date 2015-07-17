@@ -9,7 +9,7 @@
 #include "../Application.h"
 
 MountainTerrain::MountainTerrain(Application* application, int length, int width) :
-		Terrain(application, length, width) {
+		Terrain(application, length, width, 1) {
 	_internalScaleY = 12;
 	_lightingType = ROUGH;
 	setColor(0.4, 0.4, 0.4);
@@ -17,28 +17,28 @@ MountainTerrain::MountainTerrain(Application* application, int length, int width
 
 MountainTerrain::MountainTerrain(Application* application, int length, int width,
 		long seed) :
-		Terrain(application, length, width, seed) {
+		Terrain(application, length, width, 1, seed) {
 	_internalScaleY = 12;
 	_lightingType = ROUGH;
 	setColor(0.4, 0.4, 0.4);
 }
 
 void MountainTerrain::generate() {
-	_application->_logger->log("Generating mountain terrain (").log(_length - 1).log(
-			"x").log(_width - 1).log(")..").endLine().increaseIndent();
+	_application->_logger->log("Generating mountain terrain (").log(_i - 1).log(
+			"x").log(_j - 1).log(")..").endLine().increaseIndent();
 
 	_application->_logger->log("Setting initial points..").endLine();
 	std::vector<Vector<float> > initPoints;
 	bool success = false;
 	while (!success) {
-		for (int i = 0; i < _length; i++)
-			for (int j = 0; j < _width; j++)
+		for (int i = 0; i < _i; i++)
+			for (int j = 0; j < _j; j++)
 				if (randomFloat() < .02) {
 					_heightMap[i][j] = randomFloat();
 					initPoints.push_back(Vector<float>(i, j));
 				}
-		for (int i = 0; i < _length; i++)
-			for (int j = 0; j < _width; j++)
+		for (int i = 0; i < _i; i++)
+			for (int j = 0; j < _j; j++)
 				if (_heightMap[i][j] != -1)
 					success = true;
 	}
@@ -52,8 +52,8 @@ void MountainTerrain::generate() {
 		attemptCount++;
 		_application->_logger->log("Attempt ").log(attemptCount).log("..").endLine();
 		unvisited.clear();
-		for (int i = 0; i < _length; i++)
-			for (int j = 0; j < _width; j++)
+		for (int i = 0; i < _i; i++)
+			for (int j = 0; j < _j; j++)
 				if (_heightMap[i][j] == -1)
 					unvisited.push_back(Vector<float>(i, j));
 		if (unvisited.size() == 0)
@@ -65,10 +65,10 @@ void MountainTerrain::generate() {
 			int j = unvisited[n][1];
 			adjacentHeights.clear();
 			float averageHeight = 0;
-			for (int x = std::max(i - 1, 0); x <= std::min(i + 1, _length - 1);
+			for (int x = std::max(i - 1, 0); x <= std::min(i + 1, _i - 1);
 					x++)
 				for (int y = std::max(j - 1, 0);
-						y <= std::min(j + 1, _width - 1); y++)
+						y <= std::min(j + 1, _j - 1); y++)
 					if (_heightMap[x][y] != -1)
 						adjacentHeights.push_back(_heightMap[x][y]);
 			if (adjacentHeights.size() > 0) {

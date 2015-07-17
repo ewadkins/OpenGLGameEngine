@@ -13,6 +13,7 @@
 #include "HillTerrain.h"
 #include "MountainTerrain.h"
 #include "CanyonTerrain.h"
+#include "FractalMountainTerrain.h"
 #include "LightSource.h"
 
 class Application;

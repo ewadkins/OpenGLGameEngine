@@ -21,8 +21,8 @@ class Application;
 
 class Terrain: public Transformable {
 public:
-	Terrain(Application* application, int length, int width);
-	Terrain(Application* application, int length, int width, long seed);
+	Terrain(Application* application, int length, int width, int resolution);
+	Terrain(Application* application, int length, int width, int resolution, long seed);
 	virtual ~Terrain() {
 	}
 	virtual void generate() {
@@ -42,12 +42,15 @@ protected:
 	void smooth(float smoothness, int num);
 	void setColor(float r, float g, float b);
 	void logMatrixRepresentation();
+	bool checkFractal();
 	Application* _application;
 	std::vector<Drawable*> _drawables;
 	float** _heightMap;
 	int _length, _width;
+	int _i, _j;
 	long _seed;
 	float _internalScaleX, _internalScaleY, _internalScaleZ;
+	int _resolution;
 	LightingType _lightingType;
 	bool _drawFaces, _drawOutline;
 	Vector<float> _color;

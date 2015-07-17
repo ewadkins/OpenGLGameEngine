@@ -78,7 +78,7 @@ void TestGame::initializeMap() {
 	c5->setColor(0, 1, 0);
 	_map->addStreamDrawable(c5);
 
-	_terrain = new HillTerrain(this, 100, 100, 123456);
+	_terrain = new FractalMountainTerrain(this, 256, 256, 123456);
 	_terrain->generate();
 	_terrain->setScale(1);
 	_terrain->setDrawOutline(false);
@@ -239,5 +239,13 @@ void TestGame::handleInput() {
 		_camera->rotateX(rotationSpeed);
 	if (_keyboard->isKeyDown(GLFW_KEY_DOWN))
 		_camera->rotateX(-rotationSpeed);
+
+	if (_keyboard->isKeyDown(GLFW_KEY_G)) {
+		Vector<float> pos = _terrain->project(
+				Vector<float>(_camera->getX(), _camera->getY() - _playerHeight,
+						_camera->getZ()));
+		if (pos.size() > 0)
+			_camera->setXYZ(pos[0], pos[1] + _playerHeight, pos[2]);
+	}
 }
 

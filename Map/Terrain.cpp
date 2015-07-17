@@ -8,43 +8,55 @@
 #include "Terrain.h"
 #include "../Application.h"
 
-Terrain::Terrain(Application* application, int length, int width) {
+Terrain::Terrain(Application* application, int length, int width,
+		int resolution) {
 	_application = application;
-	_length = length + 1;
-	_width = width + 1;
+	_length = length;
+	_width = width;
+	_i = length * resolution + 1;
+	_j = width * resolution + 1;
+	_resolution = resolution;
 	_seed = clock();
 	srand(_seed);
+	_internalScaleX = 1;
 	_internalScaleY = 1;
+	_internalScaleZ = 1;
 	_lightingType = ROUGH;
 	_drawFaces = true;
 	_drawOutline = true;
 	_color = Vector<float>(0, 1, 0);
 
-	_heightMap = new float*[_length];
-	for (int i = 0; i < _length; i++) {
-		_heightMap[i] = new float[_width];
-		for (int j = 0; j < _width; j++)
+	_heightMap = new float*[_i];
+	for (int i = 0; i < _i; i++) {
+		_heightMap[i] = new float[_j];
+		for (int j = 0; j < _j; j++)
 			_heightMap[i][j] = -1;
 	}
 }
 
-Terrain::Terrain(Application* application, int length, int width, long seed) {
+Terrain::Terrain(Application* application, int length, int width,
+		int resolution, long seed) {
 	_application = application;
-	_length = length + 1;
-	_width = width + 1;
+	_length = length;
+	_width = width;
+	_i = length * resolution + 1;
+	_j = width * resolution + 1;
+	_resolution = resolution;
 	_seed = seed;
 	srand(_seed);
+	_internalScaleX = 1;
 	_internalScaleY = 1;
+	_internalScaleZ = 1;
 	_lightingType = ROUGH;
 	_drawFaces = true;
 	_drawOutline = true;
 	_color = Vector<float>(0, 1, 0);
 
-	_heightMap = new float*[_length];
-	for (int i = 0; i < _length; i++) {
-		_heightMap[i] = new float[_width];
-		for (int j = 0; j < _width; j++)
-			_heightMap[i][j] = -1;
+	_heightMap = new float*[_i];
+	for (int i = 0; i < _i; i++) {
+		_heightMap[i] = new float[_j];
+		for (int j = 0; j < _j; j++)
+			_heightMap[i][j] = 0;
 	}
 }
 
@@ -83,16 +95,16 @@ void Terrain::updateDrawables() {
 
 	std::vector<std::vector<GLVertex> > vertices;
 	std::vector<GLVertex> rowVertices;
-	for (int i = 0; i < _length; i++) {
+	for (int i = 0; i < _i; i++) {
 		rowVertices.clear();
-		for (int j = 0; j < _width; j++) {
+		for (int j = 0; j < _j; j++) {
 			std::vector<float> color = mergeColors(1, 1, 1, _color[0],
 					_color[1], _color[2], 1 - _heightMap[i][j]);
 			GLVertex v = GLVertex(
-					i - (float) (_width - 1) / 2 * _internalScaleX,
+					i * _internalScaleX / _resolution - (float) (_length) / 2,
 					_heightMap[i][j] * _internalScaleY,
-					j - (float) (_length - 1) / 2 * _internalScaleZ, color[0],
-					color[1], color[2]);
+					j * _internalScaleZ / _resolution - (float) (_width) / 2,
+					color[0], color[1], color[2]);
 			v.transform(modelTransformationMatrix, rotationMatrix);
 			rowVertices.push_back(v);
 		}
@@ -106,9 +118,9 @@ void Terrain::updateDrawables() {
 		std::vector<Vector<float> > faceNormals;
 		Vector<float> normal, v1, v2;
 		std::vector<float> pos1, pos2, pos3, pos4;
-		for (int i = 0; i < _length - 1; i++) {
+		for (int i = 0; i < _i - 1; i++) {
 			rowNormals.clear();
-			for (int j = 0; j < _width - 1; j++) {
+			for (int j = 0; j < _j - 1; j++) {
 				faceNormals.clear();
 				pos1 = vertices[i][j].getPosition();
 				pos2 = vertices[i][j + 1].getPosition();
@@ -165,8 +177,8 @@ void Terrain::updateDrawables() {
 			}
 	}
 
-	for (int i = 0; i < _length - 1; i++)
-		for (int j = 0; j < _width - 1; j++) {
+	for (int i = 0; i < _i - 1; i++)
+		for (int j = 0; j < _j - 1; j++) {
 			int texIndex = 0;
 			GLVertex v1 = vertices[i][j];
 			v1.setTexCoords(0, 0, texIndex);
@@ -206,31 +218,31 @@ Vector<float> Terrain::project(Vector<float> pos) {
 	m = m << inverseModelTransformationMatrix;
 	pos = Vector<float>(m.get(0, 0), m.get(1, 0), m.get(2, 0));
 
-	pos = Vector<float>(pos[0] + (float) (_length - 1) / 2, pos[1],
-			pos[2] + (float) (_width - 1) / 2);
+	pos = Vector<float>(pos[0] + (float) (_length) / 2, pos[1],
+			pos[2] + (float) (_width) / 2);
 
 	float x = pos[0];
 	float y = pos[2];
 	int i = (int) x;
 	int j = (int) y;
 
-	if (i < 0 || i >= _length - 1 || j < 0 || j >= _width - 1)
+	if (i < 0 || i >= _length || j < 0 || j >= _width)
 		return Vector<float>();
 
 	float height = 0;
 	if (x - i <= 1 - (y - j)) {
-		float dydx = _heightMap[i + 1][j] - _heightMap[i][j];
-		float dydz = _heightMap[i][j + 1] - _heightMap[i][j];
+		float dydx = (_heightMap[i + 1][j] - _heightMap[i][j]);// / _internalScaleX * _resolution;
+		float dydz = (_heightMap[i][j + 1] - _heightMap[i][j]);// / _internalScaleZ * _resolution;
 		height = _heightMap[i][j] + dydx * (x - i) + dydz * (y - j);
 	} else {
-		float dydx = _heightMap[i + 1][j + 1] - _heightMap[i][j + 1];
-		float dydz = _heightMap[i + 1][j + 1] - _heightMap[i + 1][j];
+		float dydx = (_heightMap[i + 1][j + 1] - _heightMap[i][j + 1]);// / _internalScaleX * _resolution;
+		float dydz = (_heightMap[i + 1][j + 1] - _heightMap[i + 1][j]);// / _internalScaleZ * _resolution;
 		height = _heightMap[i + 1][j + 1] - dydx * (1 - (x - i))
 				- dydz * (1 - (y - j));
 	}
 
-	pos = Vector<float>(x - (float) (_length - 1) / 2, height * _internalScaleY,
-			y - (float) (_width - 1) / 2);
+	pos = Vector<float>(x - (float) (_length) / 2, height * _internalScaleY,
+			y - (float) (_width) / 2);
 
 	pos1 = pos.getVector();
 	pos1.push_back(1);
@@ -273,8 +285,8 @@ float Terrain::randomFloat() {
 void Terrain::smooth(float smoothness, int num) {
 	std::vector<float> adjacentHeights;
 	std::vector<Vector<float> > points;
-	for (int i = 0; i < _length; i++)
-		for (int j = 0; j < _width; j++)
+	for (int i = 0; i < _i; i++)
+		for (int j = 0; j < _j; j++)
 			points.push_back(Vector<float>(i, j));
 	for (int n = 0; n < num; n++) {
 		random_shuffle(points.begin(), points.end());
@@ -283,10 +295,9 @@ void Terrain::smooth(float smoothness, int num) {
 			int j = points[n][1];
 			adjacentHeights.clear();
 			float averageHeight = 0;
-			for (int x = std::max(i - 1, 0); x <= std::min(i + 1, _length - 1);
-					x++)
-				for (int y = std::max(j - 1, 0);
-						y <= std::min(j + 1, _width - 1); y++)
+			for (int x = std::max(i - 1, 0); x <= std::min(i + 1, _i - 1); x++)
+				for (int y = std::max(j - 1, 0); y <= std::min(j + 1, _j - 1);
+						y++)
 					adjacentHeights.push_back(_heightMap[x][y]);
 			if (adjacentHeights.size() > 0) {
 				for (int k = 0; k < adjacentHeights.size(); k++)
@@ -305,8 +316,12 @@ void Terrain::setColor(float r, float g, float b) {
 }
 
 void Terrain::logMatrixRepresentation() {
-	Matrix<float> m = Matrix<float>(_length, _width);
+	Matrix<float> m = Matrix<float>(_i, _j);
 	m.setMatrix(_heightMap);
 	_application->_logger->log(m);
+}
+
+bool Terrain::checkFractal() {
+	return (_i == _j && _i > 1 && ((_i - 1) & (_i - 2)) == 0);
 }
 
