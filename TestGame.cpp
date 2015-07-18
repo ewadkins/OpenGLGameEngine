@@ -78,10 +78,11 @@ void TestGame::initializeMap() {
 	c5->setColor(0, 1, 0);
 	_map->addStreamDrawable(c5);
 
-	_terrain = new FractalMountainTerrain(this, 256, 256, 123456);
+	_terrain = new FractalMountainTerrain(this, 128, 128, 123456);
 	_terrain->generate();
 	_terrain->setScale(1);
 	_terrain->setDrawOutline(false);
+	_terrain->setDrawFaces(true);
 	_terrain->updateDrawables();
 	_map->addTerrain(_terrain);
 
@@ -110,7 +111,7 @@ void TestGame::initializeCamera() {
 }
 
 void TestGame::onGameLoop() {
-	_logger->log("FPS: ").log(_fps).endLine();
+	//_logger->log("FPS: ").log(_fps).endLine();
 
 	handleInput();
 

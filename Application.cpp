@@ -502,7 +502,7 @@ void Application::gameLoop() {
 		for (int i = 0; i < fpsList.size(); i++)
 			avg += fpsList[i];
 		avg /= fpsList.size();
-		std::cout << "* Average FPS: " << avg << std::endl;
+		//std::cout << "* Average FPS: " << avg << std::endl;
 
 		lastTime = clock();
 

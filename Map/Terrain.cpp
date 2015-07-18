@@ -56,7 +56,7 @@ Terrain::Terrain(Application* application, int length, int width,
 	for (int i = 0; i < _i; i++) {
 		_heightMap[i] = new float[_j];
 		for (int j = 0; j < _j; j++)
-			_heightMap[i][j] = 0;
+			_heightMap[i][j] = -1;
 	}
 }
 
@@ -95,10 +95,17 @@ void Terrain::updateDrawables() {
 
 	std::vector<std::vector<GLVertex> > vertices;
 	std::vector<GLVertex> rowVertices;
+	int count = 0;
+	int progress = 0;
 	for (int i = 0; i < _i; i++) {
 		rowVertices.clear();
 		for (int j = 0; j < _j; j++) {
-			std::vector<float> color = mergeColors(1, 1, 1, _color[0],
+			count++;
+			int temp = count * 100 / ((_i - 1) * (_j - 1));
+			if (progress != temp)
+				std::cout << "Creating vertices " << temp << "% (" << count << " / " << ((_i - 1) * (_j - 1)) << ")" << std::endl;
+			progress = temp;
+			std::vector<float> color = mergeColors(0.4, 0.4, 0.4, _color[0],
 					_color[1], _color[2], 1 - _heightMap[i][j]);
 			GLVertex v = GLVertex(
 					i * _internalScaleX / _resolution - (float) (_length) / 2,
@@ -111,8 +118,9 @@ void Terrain::updateDrawables() {
 		vertices.push_back(rowVertices);
 	}
 
+	count = 0;
+	progress = 0;
 	if (_lightingType == SMOOTH) {
-
 		std::vector<std::vector<std::vector<Vector<float> > > > normals;
 		std::vector<std::vector<Vector<float> > > rowNormals;
 		std::vector<Vector<float> > faceNormals;
@@ -121,6 +129,11 @@ void Terrain::updateDrawables() {
 		for (int i = 0; i < _i - 1; i++) {
 			rowNormals.clear();
 			for (int j = 0; j < _j - 1; j++) {
+				count++;
+				int temp = count * 100 / ((_i - 1) * (_j - 1));
+				if (progress != temp)
+					std::cout << "Calculating normals " << temp << "% (" << count << " / " << ((_i - 1) * (_j - 1)) << ")" << std::endl;
+				progress = temp;
 				faceNormals.clear();
 				pos1 = vertices[i][j].getPosition();
 				pos2 = vertices[i][j + 1].getPosition();
@@ -177,8 +190,15 @@ void Terrain::updateDrawables() {
 			}
 	}
 
+	count = 0;
+	progress = 0;
 	for (int i = 0; i < _i - 1; i++)
 		for (int j = 0; j < _j - 1; j++) {
+			count++;
+			int temp = count * 100 / ((_i - 1) * (_j - 1));
+			if (progress != temp)
+				std::cout << "Creating drawables " << temp << "% (" << count << " / " << ((_i - 1) * (_j - 1)) << ")" << std::endl;
+			progress = temp;
 			int texIndex = 0;
 			GLVertex v1 = vertices[i][j];
 			v1.setTexCoords(0, 0, texIndex);
@@ -197,6 +217,8 @@ void Terrain::updateDrawables() {
 			_drawables.push_back(t1);
 			_drawables.push_back(t2);
 		}
+
+	_needsUpdating = false;
 }
 
 Vector<float> Terrain::project(Vector<float> pos) {
