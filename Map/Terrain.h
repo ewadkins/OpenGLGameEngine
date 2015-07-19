@@ -28,7 +28,7 @@ public:
 	virtual void generate() {
 	}
 	void updateDrawables();
-	Vector<float> project(Vector<float> pos);
+	Vector<float> project(Vector<float> pos, bool bounded);
 	enum LightingType {
 		ROUGH, SMOOTH
 	};

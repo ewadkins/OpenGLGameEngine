@@ -79,6 +79,7 @@ void TestGame::initializeMap() {
 	c5->setColor(0, 1, 0);
 	_map->addStreamDrawable(c5);
 
+	//_terrain = new HillTerrain(this, 100, 100, 123456);
 	_terrain = new FractalMountainTerrain(this, 128, 128, 123456);
 	_terrain->generate();
 	_terrain->setScale(1);
@@ -120,7 +121,7 @@ void TestGame::onGameLoop() {
 	if (_snapToGround) {
 		Vector<float> pos = _terrain->project(
 				Vector<float>(_camera->getX(), _camera->getY() - _playerHeight,
-						_camera->getZ()));
+						_camera->getZ()), true);
 		if (pos.size() > 0)
 			_camera->setXYZ(pos[0], pos[1] + _playerHeight, pos[2]);
 	}

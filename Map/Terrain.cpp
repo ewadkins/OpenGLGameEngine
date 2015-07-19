@@ -225,7 +225,7 @@ void Terrain::updateDrawables() {
 	_needsUpdating = false;
 }
 
-Vector<float> Terrain::project(Vector<float> pos) {
+Vector<float> Terrain::project(Vector<float> pos, bool bounded) {
 	Matrix<float> modelTransformationMatrix =
 			GLMatrix::modelTransformationMatrix(getX(), getY(), getZ(),
 					getRotationX(), getRotationY(), getRotationZ(), getScaleX(),
@@ -250,11 +250,16 @@ Vector<float> Terrain::project(Vector<float> pos) {
 
 	float x = pos[0] / _internalScaleX * _resolution;
 	float y = pos[2] / _internalScaleZ * _resolution;
+	if (x < 0 || x >= _i - 1 || y < 0 || y >= _j - 1) {
+		if (bounded) {
+			x = std::fmax(0, std::fmin(_i - 1.001, x));
+			y = std::fmax(0, std::fmin(_j - 1.001, y));
+		}
+		else
+			return Vector<float>();
+	}
 	int i = (int) x;
 	int j = (int) y;
-
-	if (i < 0 || i >= _i - 1 || j < 0 || j >= _j - 1)
-		return Vector<float>();
 
 	float height = 0;
 	if (x - i <= 1 - (y - j)) {
