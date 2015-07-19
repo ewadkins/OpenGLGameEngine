@@ -103,7 +103,8 @@ void Terrain::updateDrawables() {
 			count++;
 			int temp = count * 100 / ((_i - 1) * (_j - 1));
 			if (progress != temp)
-				std::cout << "Creating vertices " << temp << "% (" << count << " / " << ((_i - 1) * (_j - 1)) << ")" << std::endl;
+				std::cout << "Creating vertices " << temp << "% (" << count
+						<< " / " << ((_i - 1) * (_j - 1)) << ")" << std::endl;
 			progress = temp;
 			std::vector<float> color = mergeColors(0.4, 0.4, 0.4, _color[0],
 					_color[1], _color[2], 1 - _heightMap[i][j]);
@@ -132,7 +133,9 @@ void Terrain::updateDrawables() {
 				count++;
 				int temp = count * 100 / ((_i - 1) * (_j - 1));
 				if (progress != temp)
-					std::cout << "Calculating normals " << temp << "% (" << count << " / " << ((_i - 1) * (_j - 1)) << ")" << std::endl;
+					std::cout << "Calculating normals " << temp << "% ("
+							<< count << " / " << ((_i - 1) * (_j - 1)) << ")"
+							<< std::endl;
 				progress = temp;
 				faceNormals.clear();
 				pos1 = vertices[i][j].getPosition();
@@ -197,7 +200,8 @@ void Terrain::updateDrawables() {
 			count++;
 			int temp = count * 100 / ((_i - 1) * (_j - 1));
 			if (progress != temp)
-				std::cout << "Creating drawables " << temp << "% (" << count << " / " << ((_i - 1) * (_j - 1)) << ")" << std::endl;
+				std::cout << "Creating drawables " << temp << "% (" << count
+						<< " / " << ((_i - 1) * (_j - 1)) << ")" << std::endl;
 			progress = temp;
 			int texIndex = 0;
 			GLVertex v1 = vertices[i][j];
@@ -239,32 +243,35 @@ Vector<float> Terrain::project(Vector<float> pos) {
 	m.setVector(pos1);
 	m = m << inverseModelTransformationMatrix;
 	pos = Vector<float>(m.get(0, 0), m.get(1, 0), m.get(2, 0));
+	//pos = Vector<float>(pos[0] / _resolution, pos[1], pos[2] / _resolution);
 
 	pos = Vector<float>(pos[0] + (float) (_length) / 2, pos[1],
 			pos[2] + (float) (_width) / 2);
 
-	float x = pos[0];
-	float y = pos[2];
+	float x = pos[0] / _internalScaleX * _resolution;
+	float y = pos[2] / _internalScaleZ * _resolution;
 	int i = (int) x;
 	int j = (int) y;
 
-	if (i < 0 || i >= _length || j < 0 || j >= _width)
+	if (i < 0 || i >= _i - 1 || j < 0 || j >= _j - 1)
 		return Vector<float>();
 
 	float height = 0;
 	if (x - i <= 1 - (y - j)) {
-		float dydx = (_heightMap[i + 1][j] - _heightMap[i][j]);// / _internalScaleX * _resolution;
-		float dydz = (_heightMap[i][j + 1] - _heightMap[i][j]);// / _internalScaleZ * _resolution;
+		float dydx = (_heightMap[i + 1][j] - _heightMap[i][j]);
+		float dydz = (_heightMap[i][j + 1] - _heightMap[i][j]);
 		height = _heightMap[i][j] + dydx * (x - i) + dydz * (y - j);
 	} else {
-		float dydx = (_heightMap[i + 1][j + 1] - _heightMap[i][j + 1]);// / _internalScaleX * _resolution;
-		float dydz = (_heightMap[i + 1][j + 1] - _heightMap[i + 1][j]);// / _internalScaleZ * _resolution;
+		float dydx = (_heightMap[i + 1][j + 1] - _heightMap[i][j + 1]);
+		float dydz = (_heightMap[i + 1][j + 1] - _heightMap[i + 1][j]);
 		height = _heightMap[i + 1][j + 1] - dydx * (1 - (x - i))
 				- dydz * (1 - (y - j));
 	}
 
-	pos = Vector<float>(x - (float) (_length) / 2, height * _internalScaleY,
-			y - (float) (_width) / 2);
+	pos = Vector<float>(
+			x * _internalScaleX / _resolution - (float) (_length) / 2,
+			height * _internalScaleY,
+			y * _internalScaleZ / _resolution - (float) (_width) / 2);
 
 	pos1 = pos.getVector();
 	pos1.push_back(1);

@@ -30,6 +30,7 @@ private:
 	LightSource* _cameraLight;
 	std::vector<LightSource*> _lights;
 	float _playerHeight;
+	bool _snapToGround;
 };
 
 #endif /* TESTGAME_H_ */

@@ -14,6 +14,7 @@ TestGame::TestGame(const char* windowName, int screenSizeX, int screenSizeY,
 	_mainLight = nullptr;
 	_cameraLight = nullptr;
 	_playerHeight = 1;
+	_snapToGround = false;
 }
 
 void TestGame::initializeWindow() {
@@ -116,11 +117,13 @@ void TestGame::onGameLoop() {
 	handleInput();
 
 	// Snap to terrain
-	/*Vector<float> pos = _terrain->project(
-			Vector<float>(_camera->getX(), _camera->getY() - _playerHeight,
-					_camera->getZ()));
-	if (pos.size() > 0)
-		_camera->setXYZ(pos[0], pos[1] + _playerHeight, pos[2]);*/
+	if (_snapToGround) {
+		Vector<float> pos = _terrain->project(
+				Vector<float>(_camera->getX(), _camera->getY() - _playerHeight,
+						_camera->getZ()));
+		if (pos.size() > 0)
+			_camera->setXYZ(pos[0], pos[1] + _playerHeight, pos[2]);
+	}
 
 	_camera->useView();
 
@@ -189,6 +192,13 @@ void TestGame::onKeyEvent(int key, int action) {
 		_lights.clear();
 	}
 
+	if (key == GLFW_KEY_G && action == GLFW_PRESS) {
+		if (_snapToGround)
+			_snapToGround = false;
+		else
+			_snapToGround = true;
+	}
+
 	// FIXME Remove
 	if (key == GLFW_KEY_EQUAL && action == GLFW_PRESS)
 		_terrain->scale(1.5);
@@ -240,13 +250,5 @@ void TestGame::handleInput() {
 		_camera->rotateX(rotationSpeed);
 	if (_keyboard->isKeyDown(GLFW_KEY_DOWN))
 		_camera->rotateX(-rotationSpeed);
-
-	if (_keyboard->isKeyDown(GLFW_KEY_G)) {
-		Vector<float> pos = _terrain->project(
-				Vector<float>(_camera->getX(), _camera->getY() - _playerHeight,
-						_camera->getZ()));
-		if (pos.size() > 0)
-			_camera->setXYZ(pos[0], pos[1] + _playerHeight, pos[2]);
-	}
 }
 
